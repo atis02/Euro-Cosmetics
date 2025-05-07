@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setHoveredNavbar } from "../redux/reducers/swiperSlice";
+import { setHoveredNavbar, setScrolled } from "../redux/reducers/swiperSlice";
 
 interface CustomContainerProps {
   children: React.ReactNode;
@@ -14,36 +14,31 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
   borderBottom,
   isNav,
 }) => {
-  const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const currentSlide = useSelector((state: any) => state.swiper.color);
+  const scrolled = useSelector((state: any) => state.swiper.scrolled);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
-        setScrolled(true);
+        dispatch(setScrolled(true));
       } else {
-        setScrolled(false);
+        dispatch(setScrolled(false));
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
- 
     };
   }, []);
-
+  // : !isMobile ? "absolute" : "relative"
   return (
     <Box
       sx={{
-        position: !isMobile
-          ? "absolute"
-          : scrolled && isNav
-          ? "sticky"
-          : "relative",
-        top: scrolled && isNav ? 0 : "auto",
+        position: scrolled ? "fixed" : !isMobile ? "absolute" : "relative",
+        top: scrolled ? 0 : "auto",
         zIndex: 10,
         width: "100%",
         "&:hover": {
@@ -51,9 +46,10 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
         },
         ...(scrolled
           ? {
-              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.3)",
               opacity: "100%",
-              backdropFilter: "blur(10px)",
+              backdropFilter: "blur(15px)",
+              backgroundColor: "#fff",
             }
           : {
               boxShadow: "0",

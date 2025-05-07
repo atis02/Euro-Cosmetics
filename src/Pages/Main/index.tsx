@@ -4,6 +4,8 @@ import { MainPageSwiper } from "../../Components/utils/swiper/MainPageSwiper";
 import Story from "../../Components/Story/index";
 import StoryButton from "./components/StoryButton";
 import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper";
+import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
+import { data } from "../../Components/utils/actionSwiper/constants";
 
 const Main: React.FC = () => {
   const [openStory, setOpenStory] = useState(false);
@@ -25,6 +27,9 @@ const Main: React.FC = () => {
 
       <Story open={openStory} onClose={() => setOpenStory(false)} />
       <ProductSwiper text="новинки" />
+      <ActionSwiper text="Акции" data={data} />
+      <ProductSwiper text="хиты" />
+      <ActionSwiper text="Клиентские дни" data={data} />
     </Box>
   );
 };

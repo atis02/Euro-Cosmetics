@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
   const currentTextColor = useSelector(
     (state: any) => state.swiper.colorNavbarText
   );
+  const scrolled = useSelector((state: any) => state.swiper.scrolled);
 
   return (
     <CustomContainer borderBottom isNav>
@@ -27,7 +28,11 @@ const Navbar: React.FC = () => {
               key={index}
               color="inherit"
               sx={{
-                color: currentTextColor ? "#000" : currentSlide,
+                color: scrolled
+                  ? "#000"
+                  : currentTextColor
+                  ? "#000"
+                  : currentSlide,
                 fontSize: 16,
                 fontWeight: 400,
                 textTransform: "lowercase",

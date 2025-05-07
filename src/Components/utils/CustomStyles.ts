@@ -35,8 +35,9 @@ export const mainPageTextDescStyle = {
   mb: { lg: 5, md: 5, sm: 5, xs: 5 },
 };
 export const hoverStyle = {
+  cursor: "pointer",
   transition: "color 0.3s ease",
-  "&:hover": {
+  "&:hover *": {
     color: mainColor,
   },
 };

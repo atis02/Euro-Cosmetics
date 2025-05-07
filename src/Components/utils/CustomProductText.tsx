@@ -9,6 +9,14 @@ type Props = {
   discountPrice?: number;
   lineThrough?: boolean;
   discounted?: boolean;
+  ta?:
+    | "left"
+    | "right"
+    | "center"
+    | "justify"
+    | "inherit"
+    | "initial"
+    | "unset";
 };
 
 const CustomProductText: FC<Props> = ({
@@ -16,14 +24,16 @@ const CustomProductText: FC<Props> = ({
   fz = 15,
   text = "",
   mainText = "",
-  discountPrice = "",
+  discountPrice = 0,
   lineThrough = false,
   discounted = false,
+  ta = "inherit",
 }) => {
   return (
     <Stack>
       <Typography
         variant="caption"
+        textAlign={ta}
         fontFamily="Graphic"
         fontWeight={fw}
         fontSize={fz}
@@ -32,8 +42,14 @@ const CustomProductText: FC<Props> = ({
           color: discounted ? "#b3b3b3" : "#000",
         }}
       >
-        {text !== "" ? text : mainText !== "" ? mainText : discountPrice}
-        {discountPrice !== "" ? "$" : ""}
+        {text !== ""
+          ? text
+          : mainText !== ""
+          ? mainText
+          : discountPrice !== 0
+          ? discountPrice
+          : ""}
+        {discountPrice !== 0 ? "$" : ""}
       </Typography>
     </Stack>
   );

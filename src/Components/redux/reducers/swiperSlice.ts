@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   color: "#000000",
   colorNavbarText: false,
+  scrolled: false,
 };
 
 const textColorSlice = createSlice({
@@ -16,8 +17,12 @@ const textColorSlice = createSlice({
     setHoveredNavbar: (state, action) => {
       state.colorNavbarText = action.payload;
     },
+    setScrolled: (state, action) => {
+      state.scrolled = action.payload;
+    },
   },
 });
 
-export const { setTextColor, setHoveredNavbar } = textColorSlice.actions;
+export const { setTextColor, setHoveredNavbar, setScrolled } =
+  textColorSlice.actions;
 export default textColorSlice.reducer;

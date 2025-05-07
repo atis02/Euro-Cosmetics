@@ -8,6 +8,14 @@ type Props = {
   mainText: string;
   discountPrice: number;
   sellPrice: number;
+  ta?:
+    | "left"
+    | "right"
+    | "center"
+    | "justify"
+    | "inherit"
+    | "initial"
+    | "unset";
 };
 
 const CustomProductTextConatiner: FC<Props> = ({
@@ -15,11 +23,12 @@ const CustomProductTextConatiner: FC<Props> = ({
   mainText,
   discountPrice,
   sellPrice,
+  ta,
 }) => {
   return (
     <Stack sx={hoverStyle}>
       <CustomProductText text={textCategory} />
-      <CustomProductText fz={20} fw={500} mainText={mainText} />
+      <CustomProductText fz={20} fw={500} mainText={mainText} ta={ta} />
       <Stack direction="row" gap={2} justifyContent="flex-end">
         <CustomProductText fz={20} fw={500} discountPrice={sellPrice} />
         <CustomProductText

@@ -4,9 +4,12 @@ import { mainColor } from "./CustomStyles";
 
 type Props = {
   text: string;
+  sx?: {
+    transform: string;
+  };
 };
 
-const CustomSectionText: FC<Props> = ({ text }) => {
+const CustomSectionText: FC<Props> = ({ text, sx }) => {
   return (
     <Stack
       alignItems="center"
@@ -22,6 +25,7 @@ const CustomSectionText: FC<Props> = ({ text }) => {
           cursor: "pointer",
           fontFamily: "Graphic",
           fontWeight: 500,
+          sx,
         }}
       >
         {text}

@@ -1,35 +1,50 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Box, Stack } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { images, itemVariants, VISIBLE_COUNT } from "./constants";
 import { FC, useState } from "react";
 import CustomSectionText from "../CustomSectionText";
 import Buttons from "./Buttons";
 import CustomContainerMain from "../CustomContainerMain";
-
 import CustomProductTextConatiner from "../CustomProductTextConatiner";
+import { hoverStyle } from "../CustomStyles";
+import { East } from "@mui/icons-material";
 
 interface Props {
   text: string;
 }
+
 interface images {
-  image: string;
-  productStatus: string;
+  image?: string;
+  productStatus?: string;
   title: string;
-  sellPrice: number;
-  discountPrice: number;
-  category: string;
+  sellPrice?: number;
+  discountPrice?: number;
+  category?: string;
 }
+
 const ProductSwiper: FC<Props> = ({ text }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
-  const maxIndex = Math.max(0, images.length - VISIBLE_COUNT);
-  const visibleImages = images.slice(index, index + VISIBLE_COUNT);
+  const extendedImages = [...images];
+  if (images.length % VISIBLE_COUNT !== 0) {
+    extendedImages.push({
+      image: "",
+      productStatus: "",
+      sellPrice: 0,
+      discountPrice: 0,
+      category: "",
+      title: "Ваша персональная подборка новинок",
+    });
+  }
+
+  const maxIndex = Math.max(0, extendedImages.length - VISIBLE_COUNT);
+  const visibleImages = extendedImages.slice(index, index + VISIBLE_COUNT);
 
   const handleNext = () => {
     if (index < maxIndex) {
       setDirection(1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT)); // сохраняем весь объект
+      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
       setIndex((prev) => prev + VISIBLE_COUNT);
     }
   };
@@ -37,7 +52,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
   const handlePrev = () => {
     if (index > 0) {
       setDirection(-1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT)); // сохраняем весь объект
+      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
       setIndex((prev) => prev - VISIBLE_COUNT);
     }
   };
@@ -90,7 +105,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                 }}
               >
                 <img
-                  src={item.image}
+                  src={item?.image}
                   alt={`background-${i}`}
                   style={{
                     width: "100%",
@@ -102,10 +117,10 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                   sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
                 >
                   <CustomProductTextConatiner
-                    textCategory={item.category}
+                    textCategory={item.category || ""}
                     mainText={item.title}
-                    discountPrice={item.discountPrice}
-                    sellPrice={item.sellPrice}
+                    discountPrice={item.discountPrice || 0}
+                    sellPrice={item.sellPrice || 0}
                   />
                 </Stack>
               </Box>
@@ -123,43 +138,100 @@ const ProductSwiper: FC<Props> = ({ text }) => {
             }}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">
-              {visibleImages.map((item, i) => (
-                <motion.div
-                  key={index + "-" + i}
-                  custom={direction}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  variants={itemVariants}
-                  style={{
-                    width: 280,
-                    height: 450,
-                    overflow: "hidden",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  }}
-                >
-                  <img
-                    src={item.image}
-                    alt={`product-${i}`}
+              {visibleImages.map((item, i) => {
+                return (
+                  <motion.div
+                    key={index + "-" + i}
+                    custom={direction}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={itemVariants}
                     style={{
-                      width: "100%",
-                      height: 280,
-                      objectFit: "cover",
+                      width: 280,
+                      height: 450,
+                      overflow: "hidden",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                     }}
-                  />
-
-                  <Stack
-                    sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
                   >
-                    <CustomProductTextConatiner
-                      textCategory={item.category}
-                      mainText={item.title}
-                      discountPrice={item.discountPrice}
-                      sellPrice={item.sellPrice}
-                    />
-                  </Stack>
-                </motion.div>
-              ))}
+                    {item.image !== "" ? (
+                      <img
+                        src={item.image}
+                        alt={`product-${i}`}
+                        style={{
+                          width: "100%",
+                          height: 280,
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <Box
+                        sx={{
+                          width: "100%",
+                          height: 280,
+                          display: "flex",
+                          alignItems: "start",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          backgroundColor: "#fff",
+                          ...hoverStyle,
+                          gap: 2,
+                        }}
+                      >
+                        <CustomProductTextConatiner
+                          textCategory={item.category}
+                          mainText={item.title}
+                          discountPrice={item.discountPrice}
+                          sellPrice={item.sellPrice}
+                          ta="left"
+                        />
+                        <Button
+                          sx={{
+                            gap: 2,
+                            p: 0,
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: 12,
+                              fontWeight: 400,
+                              fontFamily: "Graphic",
+                              color: "#000",
+                            }}
+                          >
+                            Смотреть всё
+                          </Typography>
+                          <East
+                            sx={{
+                              color: "#000",
+                              width: 15,
+                              height: 15,
+                            }}
+                          />
+                        </Button>
+                      </Box>
+                    )}
+                    {item.image !== "" ? (
+                      <Stack
+                        sx={{
+                          p: 1,
+                          textAlign: "right",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <CustomProductTextConatiner
+                          textCategory={item.category}
+                          mainText={item.title}
+                          discountPrice={item.discountPrice}
+                          sellPrice={item.sellPrice}
+                        />
+                      </Stack>
+                    ) : (
+                      ""
+                    )}
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </Box>
         </Box>
