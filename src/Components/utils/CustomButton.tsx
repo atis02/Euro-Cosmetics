@@ -40,12 +40,16 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
           transform: "scaleX(1)",
           transformOrigin: "left",
           backgroundColor:
-            isMobile && currentSlide === "#ffffff" ? "#000" : "#fff",
+            isMobile && currentSlide === "#ffffff"
+              ? "#000"
+              : currentSlide === "#ffffff"
+              ? "#000"
+              : "#fff",
         },
         "& span": {
           position: "relative",
           zIndex: 2,
-          transition: "color 0.4s ease-in-out",
+          transition: "color 0.1s ease-in-out",
         },
         "&:hover span": {
           color:
@@ -63,7 +67,7 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
           position: "relative",
           zIndex: 2,
           marginLeft: 1,
-          transition: "color 0.4s ease-in-out",
+          transition: "color 0.2s ease-in-out",
           color: currentSlide === "#000000" ? "#fff" : "#000",
           ".MuiButton-root:hover &": {
             color:

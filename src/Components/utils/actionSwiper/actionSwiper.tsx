@@ -58,6 +58,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         loop={true}
         speed={1000}
         parallax={true}
+        initialSlide={2}
         pagination={{ clickable: true }}
         watchSlidesProgress
         style={{

@@ -104,11 +104,6 @@ export const MainPageSwiper: React.FC = () => {
     <Stack
       ref={containerRef}
       style={{
-        // position: isMobile ? "relative" : "relative",
-        // top: 0,
-        // zIndex: 10,
-        // width: "90vw",
-        // height: "80%",
         overflow: "hidden",
       }}
     >
@@ -171,7 +166,7 @@ export const MainPageSwiper: React.FC = () => {
           clickable: true,
           dynamicBullets: true,
         }}
-        autoplay={{ delay: 6000, disableOnInteraction: false }}
+        // autoplay={{ delay: 6000, disableOnInteraction: false }}
         loop={false}
         effect={"creative"}
         creativeEffect={{

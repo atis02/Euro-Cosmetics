@@ -1,11 +1,20 @@
 import { Box, Stack, Typography, Link, IconButton } from "@mui/material";
-import { Facebook, Twitter, Instagram, YouTube } from "@mui/icons-material"; // Import social icons
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  YouTube,
+  WhatsApp,
+  Telegram,
+} from "@mui/icons-material";
 import { FC } from "react";
 import { hoverStyle } from "../../Components/utils/CustomStyles";
 import CustomContainerMain from "../../Components/utils/CustomContainerMain";
 
 const Footer: FC = () => {
   const icons = [
+    { icon: <WhatsApp />, href: "https://whatsapp.com" },
+    { icon: <Telegram />, href: "https://telegram.com" },
     { icon: <Facebook />, href: "https://facebook.com" },
     { icon: <Twitter />, href: "https://twitter.com" },
     { icon: <Instagram />, href: "https://instagram.com" },
