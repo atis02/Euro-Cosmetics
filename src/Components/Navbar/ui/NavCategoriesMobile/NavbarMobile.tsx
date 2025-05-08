@@ -8,14 +8,14 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useState } from "react";
-import CustomContainer from "../../utils/CustomContainer";
-import { rowSpaceStyle } from "../../utils/CustomStyles";
-import { navs } from "./navs";
-import NavbarIconsPath from "./NavbarIconsPath";
+import CustomContainer from "../../../utils/CustomContainer";
+import { rowSpaceStyle } from "../../../utils/CustomStyles";
+import { navs } from "../navs";
+import NavbarIconsPath from "../NavbarIconsPath";
 import { Link } from "react-router-dom";
 import { NavigateNextOutlined } from "@mui/icons-material";
-import NavbarCategory from "./NavbarCategory";
 import { AnimatePresence, motion } from "framer-motion";
+import { NavbarCategoryMobile } from "./NavbarCategoryMobile";
 
 const NavbarMobile: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -143,7 +143,7 @@ const NavbarMobile: React.FC = () => {
           }}
           onClose={() => setDrawerOpen(false)}
         />
-        <NavbarCategory
+        <NavbarCategoryMobile
           open={categoryDrawerOpen}
           onClose={() => {
             setDrawerOpen(true);

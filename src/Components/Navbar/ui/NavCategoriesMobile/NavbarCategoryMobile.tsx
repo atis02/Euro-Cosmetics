@@ -1,14 +1,14 @@
 import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { KeyboardArrowLeftOutlined } from "@mui/icons-material";
-import { rowSpaceStyle } from "../../utils/CustomStyles";
+import { rowSpaceStyle } from "../../../utils/CustomStyles";
 
 interface CategoryDrawer {
   open: boolean;
   onClose: () => void;
 }
 
-const NavbarCategory: FC<CategoryDrawer> = ({ open, onClose }) => {
+export const NavbarCategoryMobile: FC<CategoryDrawer> = ({ open, onClose }) => {
   return (
     <Stack pt={4}>
       <Drawer
@@ -74,5 +74,3 @@ const NavbarCategory: FC<CategoryDrawer> = ({ open, onClose }) => {
     </Stack>
   );
 };
-
-export default NavbarCategory;

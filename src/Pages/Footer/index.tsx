@@ -37,13 +37,12 @@ const Footer: FC = () => {
           spacing={3}
           sx={{ px: 2 }}
         >
-          {/* Left Section */}
           <Stack spacing={1}>
             <Typography variant="h6" sx={hoverStyle}>
               Euro Cosmetics
             </Typography>
             <Typography variant="body2">
-              © 2025 Euro Cosmetics. All Rights Reserved.
+              © 2025 Alem Tilsimat. All Rights Reserved.
             </Typography>
           </Stack>
 

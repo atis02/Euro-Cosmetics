@@ -1,6 +1,6 @@
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
-import NavbarMobile from "./ui/NavbarMobile";
+import NavbarMobile from "./ui/NavCategoriesMobile/NavbarMobile";
 import Navbar from "./ui/Navbar";
 
 const index: React.FC = () => {

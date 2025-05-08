@@ -57,7 +57,7 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
             }),
         transition:
           "background-color 0.8s ease-in-out, transform 0.3s ease-in-out",
-        padding: isMobile ? "10px 20px" : "15px 40px",
+        padding: isMobile ? "10px 20px" : "15px 40px 0 40px",
         borderBottom:
           borderBottom && currentSlide
             ? "0.5px solid #c6b09f4d"
