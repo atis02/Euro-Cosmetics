@@ -37,8 +37,13 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
   return (
     <Box
       sx={{
-        position: scrolled ? "fixed" : !isMobile ? "absolute" : "relative",
-        top: scrolled ? 0 : "auto",
+        position:
+          scrolled && isNav
+            ? "fixed"
+            : !isMobile && isNav
+            ? "absolute"
+            : "relative",
+        top: 0,
         zIndex: 10,
         width: "100%",
         "&:hover": {

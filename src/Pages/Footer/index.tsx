@@ -27,6 +27,8 @@ const Footer: FC = () => {
         color: "white",
         py: 3,
         mt: 4,
+        position: "relative",
+        marginTop: "auto",
       }}
     >
       <CustomContainerMain>

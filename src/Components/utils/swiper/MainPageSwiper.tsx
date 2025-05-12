@@ -240,7 +240,11 @@ export const MainPageSwiper: React.FC = () => {
                         {slide.desc}
                       </Typography>
                     </Stack>
-                    <CustomButton isMobile={isMobile} />
+                    <CustomButton
+                      isMobile={isMobile}
+                      text="Перейти к бренду"
+                      textColor="#fff"
+                    />
                   </Stack>
                 </Stack>
               </SwiperSlide>
@@ -293,7 +297,7 @@ export const MainPageSwiper: React.FC = () => {
                     <Typography color={currentSlide} sx={mainPageTextDescStyle}>
                       {slide.desc}
                     </Typography>
-                    <CustomButton />
+                    <CustomButton text="Перейти к бренду" textColor="#fff" />
                   </Stack>
                 </Stack>
               </SwiperSlide>

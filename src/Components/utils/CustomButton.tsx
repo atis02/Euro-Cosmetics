@@ -1,11 +1,23 @@
 import { Button } from "@mui/material";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { TrendingFlat } from "@mui/icons-material";
 interface Props {
   isMobile?: boolean;
+  text: string | ReactNode;
+  textColor: string;
+  width?: number;
+  showIcon?: boolean;
+  height?: number;
 }
-export const CustomButton: FC<Props> = ({ isMobile }) => {
+export const CustomButton: FC<Props> = ({
+  isMobile,
+  text,
+  textColor = "#fff",
+  width = 205,
+  height,
+  showIcon = true,
+}) => {
   const currentSlide = useSelector((state: any) => state.swiper.color);
 
   return (
@@ -16,10 +28,12 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
         color: currentSlide === "#ffffff" ? "#000" : "#fff",
         padding: "12px 20px",
         fontSize: "12px",
-        maxWidth: 205,
+        maxWidth: width,
+        minWidth: width,
+        height: height,
         fontFamily: "Graphic",
         fontWeight: 400,
-        backgroundColor: currentSlide === "#ffffff" ? "#fff" : "#000",
+        backgroundColor: currentSlide === "#ffffff" ? textColor : "#000",
         borderRadius: "0",
         marginBottom: { lg: 0, md: 0, sm: 0, xs: 7 },
         transition: "color 0.4s ease-in-out",
@@ -30,7 +44,7 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundColor: currentSlide === "#ffffff" ? "#000" : "#fff",
+          backgroundColor: currentSlide === "#ffffff" ? "#000" : textColor,
           transform: "scaleX(0)",
           transformOrigin: "right",
           transition: "transform 0.5s ease-in-out",
@@ -44,7 +58,7 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
               ? "#000"
               : currentSlide === "#ffffff"
               ? "#000"
-              : "#fff",
+              : textColor,
         },
         "& span": {
           position: "relative",
@@ -54,31 +68,33 @@ export const CustomButton: FC<Props> = ({ isMobile }) => {
         "&:hover span": {
           color:
             isMobile && currentSlide === "#ffffff"
-              ? "#fff"
+              ? textColor
               : currentSlide === "#ffffff"
-              ? "#fff"
+              ? textColor
               : "#000",
         },
       }}
     >
-      <span>Перейти к бренду</span>
-      <TrendingFlat
-        sx={{
-          position: "relative",
-          zIndex: 2,
-          marginLeft: 1,
-          transition: "color 0.2s ease-in-out",
-          color: currentSlide === "#000000" ? "#fff" : "#000",
-          ".MuiButton-root:hover &": {
-            color:
-              isMobile && currentSlide === "#ffffff"
-                ? "#fff"
-                : currentSlide === "#000000"
-                ? "#000"
-                : "#fff",
-          },
-        }}
-      />
+      <span>{text}</span>
+      {showIcon && (
+        <TrendingFlat
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            marginLeft: 1,
+            transition: "color 0.2s ease-in-out",
+            color: currentSlide === "#000000" ? "#fff" : "#000",
+            ".MuiButton-root:hover &": {
+              color:
+                isMobile && currentSlide === "#ffffff"
+                  ? textColor
+                  : currentSlide === "#000000"
+                  ? "#000"
+                  : textColor,
+            },
+          }}
+        />
+      )}
     </Button>
   );
 };

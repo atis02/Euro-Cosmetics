@@ -5,7 +5,7 @@ type Props = {
   text?: string | number;
   fw?: number;
   fz?: number;
-  mainText?: string;
+  mainText?: string | number;
   discountPrice?: number;
   lineThrough?: boolean;
   discounted?: boolean;
@@ -17,6 +17,12 @@ type Props = {
     | "inherit"
     | "initial"
     | "unset";
+  border?: "1px solid #000";
+  width?: number | string;
+  height?: number | string;
+  ai?: "center" | "start" | "end";
+  sai?: "center" | "start" | "end";
+  color?: string;
 };
 
 const CustomProductText: FC<Props> = ({
@@ -28,18 +34,28 @@ const CustomProductText: FC<Props> = ({
   lineThrough = false,
   discounted = false,
   ta = "inherit",
+  ai,
+  border = "",
+  width,
+  height,
+  sai,
+  color = "#000",
 }) => {
   return (
-    <Stack>
+    <Stack alignItems={sai}>
       <Typography
         variant="caption"
         textAlign={ta}
         fontFamily="Graphic"
         fontWeight={fw}
         fontSize={fz}
+        width={width}
+        height={height}
+        alignContent={ai}
         sx={{
+          border: border,
           textDecoration: lineThrough ? "line-through" : "none",
-          color: discounted ? "#b3b3b3" : "#000",
+          color: discounted ? "#b3b3b3" : color,
         }}
       >
         {text !== ""

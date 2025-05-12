@@ -8,6 +8,7 @@ import CustomContainerMain from "../CustomContainerMain";
 import CustomProductTextConatiner from "../CustomProductTextConatiner";
 import { hoverStyle } from "../CustomStyles";
 import { East } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   text: string;
@@ -27,9 +28,15 @@ const ProductSwiper: FC<Props> = ({ text }) => {
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
   const extendedImages = [...images];
+  const navigate = useNavigate();
+
   if (images.length % VISIBLE_COUNT !== 0) {
     extendedImages.push({
       image: "",
+      stock: 1,
+      feedBackNumb: 1,
+      articule: "",
+      desc: "",
       productStatus: "",
       sellPrice: 0,
       discountPrice: 0,
@@ -56,7 +63,10 @@ const ProductSwiper: FC<Props> = ({ text }) => {
       setIndex((prev) => prev - VISIBLE_COUNT);
     }
   };
-
+  const handleNavigate = (item: images) => {
+    navigate(`/product/${item.category}`);
+    localStorage.setItem("productEuroCos", JSON.stringify(item));
+  };
   return (
     <CustomContainerMain>
       <Stack
@@ -111,6 +121,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
+                    cursor: "pointer",
                   }}
                 />
                 <Stack
@@ -152,7 +163,9 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                       height: 450,
                       overflow: "hidden",
                       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleNavigate(item)}
                   >
                     {item.image !== "" ? (
                       <img
