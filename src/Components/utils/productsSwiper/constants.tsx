@@ -1,6 +1,9 @@
 export const images = [
   {
     image: "/images/product.webp",
+    imageTwo: "/images/product2.webp",
+    imageThree: "/images/product3.webp",
+    video: "/videos/main2.mp4",
     stock: 3,
     feedBackNumb: 7,
     articule: "1900NR3425",

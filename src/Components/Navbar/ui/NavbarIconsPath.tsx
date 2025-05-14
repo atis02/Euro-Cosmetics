@@ -5,24 +5,30 @@ import {
   AccountCircleOutlined,
   LocalMallOutlined,
   Menu,
+  Close,
 } from "@mui/icons-material";
-import { Box, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { navIconStyles } from "../../utils/CustomStyles";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { useSelector } from "react-redux";
+import Search from "../../Search/";
 
 interface isMobileProps {
   isMobile?: boolean;
   toggleDrawer?: () => void;
   onClose?: () => void;
   drawerOpen?: boolean;
+  open: boolean;
+  setOpen: (value: boolean) => void;
 }
 const NavbarIconsPath: React.FC<isMobileProps> = ({
   isMobile,
   drawerOpen = false,
   toggleDrawer,
   onClose,
+  open,
+  setOpen,
 }) => {
   const iconsPath = [
     {
@@ -32,9 +38,14 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
       func: drawerOpen ? onClose : toggleDrawer,
     },
     {
-      icon: <SearchOutlined sx={navIconStyles} />,
-      link: "/search",
+      icon: open ? (
+        <Close sx={navIconStyles} />
+      ) : (
+        <SearchOutlined sx={navIconStyles} />
+      ),
+      link: "",
       isMobile: false,
+      func: open ? () => setOpen(false) : () => setOpen(true),
     },
 
     {
@@ -62,7 +73,6 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
   const currentTextColor = useSelector(
     (state: any) => state.swiper.colorNavbarText
   );
-  console.log(isMobile);
 
   return (
     <Stack
@@ -74,15 +84,30 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
       {!isMobile
         ? iconsPath
             .filter((item) => item.isMobile == false)
-            .map((icon, index) => (
-              <Link
-                key={index}
-                style={{ color: currentTextColor ? "#000" : currentSlide }}
-                to={icon.link}
-              >
-                {icon.icon}
-              </Link>
-            ))
+            .map((icon, index) =>
+              icon.func ? (
+                <IconButton
+                  key={index}
+                  sx={{
+                    color: currentTextColor ? "#000" : currentSlide,
+                    p: 0,
+                  }}
+                  onClick={() => {
+                    if (icon.func) icon.func();
+                  }}
+                >
+                  {icon.icon}
+                </IconButton>
+              ) : (
+                <Link
+                  key={index}
+                  style={{ color: currentTextColor ? "#000" : currentSlide }}
+                  to={icon.link !== "" ? icon.link : ""}
+                >
+                  {icon.icon}
+                </Link>
+              )
+            )
         : iconsPath
             .filter((item) => item.link !== "/account")
             .map((icon, index) => {
@@ -107,7 +132,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
               ) : (
                 <Link
                   key={index}
-                  to={icon.link}
+                  to={icon.link !== "" ? icon.link : ""}
                   style={{
                     color: isMobile
                       ? "#000"
@@ -120,6 +145,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                 </Link>
               );
             })}
+      <Search open={open} toggleDrawer={() => setOpen(false)} />
     </Stack>
   );
 };

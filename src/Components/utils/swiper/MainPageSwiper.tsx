@@ -166,7 +166,7 @@ export const MainPageSwiper: React.FC = () => {
           clickable: true,
           dynamicBullets: true,
         }}
-        // autoplay={{ delay: 6000, disableOnInteraction: false }}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
         loop={false}
         effect={"creative"}
         creativeEffect={{

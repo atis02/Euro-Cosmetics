@@ -7,12 +7,14 @@ interface CustomContainerProps {
   children: React.ReactNode;
   borderBottom?: boolean;
   isNav?: boolean;
+  open?: boolean;
 }
 
 const CustomContainer: React.FC<CustomContainerProps> = ({
   children,
   borderBottom,
   isNav,
+  open,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -58,7 +60,7 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
             }
           : {
               boxShadow: "0",
-              backgroundColor: isNav ? "transparent" : "#fff",
+              backgroundColor: open ? "#fff" : isNav ? "transparent" : "#fff",
             }),
         transition:
           "background-color 0.8s ease-in-out, transform 0.3s ease-in-out",

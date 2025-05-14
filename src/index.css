@@ -220,3 +220,23 @@ body {
 .ant-rate-star-half .ant-rate-star-second {
   color: black !important;
 }
+.swiper-slide-thumb img {
+  border: 1px solid gray;
+  opacity: 70%;
+  background-color: #fff;
+}
+.swiper-slide-thumb:hover img {
+  border: 1px solid #000;
+  opacity: 100%;
+  background-color: #fff;
+  transition: all ease 0.4s;
+}
+.swiper-slide-thumb-active img {
+  border: 1px solid #000;
+  opacity: 100%;
+  background-color: #fff;
+}
+::selection {
+  background-color: #eee7e2; /* Цвет фона выделения */
+  color: #000; /* Цвет текста при выделении */
+}

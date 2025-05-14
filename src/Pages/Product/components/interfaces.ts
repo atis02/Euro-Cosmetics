@@ -1,5 +1,8 @@
 interface images {
   image?: string;
+  imageTwo?: string;
+  imageThree?: string;
+  video?: string;
   productStatus?: string;
   title: string;
   sellPrice?: number;
