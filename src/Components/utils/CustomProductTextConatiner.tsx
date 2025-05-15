@@ -16,6 +16,8 @@ type Props = {
     | "inherit"
     | "initial"
     | "unset";
+  fz?: number;
+  jc?: "flex-end" | "center" | "start";
 };
 
 const CustomProductTextConatiner: FC<Props> = ({
@@ -24,15 +26,17 @@ const CustomProductTextConatiner: FC<Props> = ({
   discountPrice,
   sellPrice,
   ta,
+  fz = 20,
+  jc = "flex-end",
 }) => {
   return (
     <Stack sx={hoverStyle}>
       <CustomProductText text={textCategory} />
-      <CustomProductText fz={20} fw={500} mainText={mainText} ta={ta} />
-      <Stack direction="row" gap={2} justifyContent="flex-end">
-        <CustomProductText fz={20} fw={500} discountPrice={sellPrice} />
+      <CustomProductText fz={fz} fw={500} mainText={mainText} ta={ta} />
+      <Stack direction="row" gap={2} justifyContent={jc}>
+        <CustomProductText fz={fz} fw={500} discountPrice={sellPrice} />
         <CustomProductText
-          fz={20}
+          fz={fz}
           fw={500}
           lineThrough
           discounted

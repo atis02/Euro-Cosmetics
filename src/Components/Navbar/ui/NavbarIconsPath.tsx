@@ -11,25 +11,27 @@ import { Box, IconButton, Stack } from "@mui/material";
 import { navIconStyles } from "../../utils/CustomStyles";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { useSelector } from "react-redux";
-import Search from "../../Search/";
+import { useDispatch, useSelector } from "react-redux";
+import Search from "../../Search";
+import { setOpenSearch } from "../../redux/reducers/swiperSlice";
+import { CustomBadge } from "./BadgeComponent";
 
 interface isMobileProps {
   isMobile?: boolean;
   toggleDrawer?: () => void;
   onClose?: () => void;
   drawerOpen?: boolean;
-  open: boolean;
-  setOpen: (value: boolean) => void;
 }
 const NavbarIconsPath: React.FC<isMobileProps> = ({
   isMobile,
   drawerOpen = false,
   toggleDrawer,
   onClose,
-  open,
-  setOpen,
 }) => {
+  const dispatch = useDispatch();
+  const open = useSelector((state: any) => state.swiper.openSearch);
+  const favorites = useSelector((state: any) => state.favorites.items);
+
   const iconsPath = [
     {
       icon: <Menu sx={navIconStyles} />,
@@ -45,7 +47,9 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
       ),
       link: "",
       isMobile: false,
-      func: open ? () => setOpen(false) : () => setOpen(true),
+      func: open
+        ? () => dispatch(setOpenSearch(false))
+        : () => dispatch(setOpenSearch(true)),
     },
 
     {
@@ -54,8 +58,13 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
       isMobile: true,
     },
     {
-      icon: <FavoriteBorderOutlined sx={navIconStyles} />,
-      link: "/favorites",
+      icon: (
+        <CustomBadge
+          length={favorites.length}
+          button={<FavoriteBorderOutlined sx={navIconStyles} />}
+        />
+      ),
+      link: "/wishlist",
       isMobile: false,
     },
     {
@@ -64,7 +73,12 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
       isMobile: false,
     },
     {
-      icon: <LocalMallOutlined sx={navIconStyles} />,
+      icon: (
+        <CustomBadge
+          length={2}
+          button={<LocalMallOutlined sx={navIconStyles} />}
+        />
+      ),
       link: "/cart",
       isMobile: false,
     },
@@ -73,80 +87,113 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
   const currentTextColor = useSelector(
     (state: any) => state.swiper.colorNavbarText
   );
+  const scrolled = useSelector((state: any) => state.swiper.scrolled);
 
   return (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      flexGrow={isMobile ? 1 : 0}
-      gap={3}
-    >
-      {!isMobile
-        ? iconsPath
-            .filter((item) => item.isMobile == false)
-            .map((icon, index) =>
-              icon.func ? (
-                <IconButton
-                  key={index}
-                  sx={{
-                    color: currentTextColor ? "#000" : currentSlide,
-                    p: 0,
-                  }}
-                  onClick={() => {
-                    if (icon.func) icon.func();
-                  }}
-                >
-                  {icon.icon}
-                </IconButton>
-              ) : (
-                <Link
-                  key={index}
-                  style={{ color: currentTextColor ? "#000" : currentSlide }}
-                  to={icon.link !== "" ? icon.link : ""}
-                >
-                  {icon.icon}
-                </Link>
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        flexGrow={isMobile ? 1 : 0}
+        gap={3}
+      >
+        {!isMobile
+          ? iconsPath
+              .filter((item) => item.isMobile == false)
+              .map((icon, index) =>
+                icon.func ? (
+                  <IconButton
+                    key={index}
+                    sx={{
+                      color: scrolled
+                        ? "#000"
+                        : currentTextColor
+                        ? "#000"
+                        : currentSlide,
+                      p: 0,
+                    }}
+                    onClick={() => {
+                      if (icon.func) icon.func();
+                    }}
+                  >
+                    {icon.icon}
+                  </IconButton>
+                ) : (
+                  <Link
+                    key={index}
+                    style={{
+                      color: scrolled
+                        ? "#000"
+                        : currentTextColor
+                        ? "#000"
+                        : currentSlide,
+                    }}
+                    to={icon.link !== "" ? icon.link : ""}
+                  >
+                    {icon.icon}
+                  </Link>
+                )
               )
-            )
-        : iconsPath
-            .filter((item) => item.link !== "/account")
-            .map((icon, index) => {
-              const isMenu = icon.icon.type === Menu;
-              return isMenu ? (
-                <Box
-                  key={index}
-                  onClick={() => {
-                    if (icon.func) icon.func();
-                  }}
-                  sx={{
-                    cursor: "pointer",
-                    color: isMobile
-                      ? "#000"
-                      : currentTextColor
-                      ? "#000"
-                      : currentSlide,
-                  }}
-                >
-                  {icon.icon}
-                </Box>
-              ) : (
-                <Link
-                  key={index}
-                  to={icon.link !== "" ? icon.link : ""}
-                  style={{
-                    color: isMobile
-                      ? "#000"
-                      : currentTextColor
-                      ? "#000"
-                      : currentSlide,
-                  }}
-                >
-                  {icon.icon}
-                </Link>
-              );
-            })}
-      <Search open={open} toggleDrawer={() => setOpen(false)} />
-    </Stack>
+          : iconsPath
+              .filter((item) => item.link !== "/account")
+              .map((icon, index) => {
+                const isMenu = icon.icon.type === Menu;
+                return isMenu ? (
+                  <Box
+                    key={index}
+                    onClick={() => {
+                      if (icon.func) icon.func();
+                    }}
+                    sx={{
+                      cursor: "pointer",
+                      color: isMobile
+                        ? "#000"
+                        : scrolled
+                        ? "#000"
+                        : currentTextColor
+                        ? "#000"
+                        : currentSlide,
+                    }}
+                  >
+                    {icon.icon}
+                  </Box>
+                ) : icon.func ? (
+                  <IconButton
+                    key={index}
+                    sx={{
+                      color: scrolled
+                        ? "#000"
+                        : currentTextColor
+                        ? "#000"
+                        : currentSlide,
+                      p: 0,
+                      pb: 2,
+                    }}
+                    onClick={() => {
+                      if (icon.func) icon.func();
+                    }}
+                  >
+                    {icon.icon}
+                  </IconButton>
+                ) : (
+                  <Link
+                    key={index}
+                    style={{
+                      color: scrolled
+                        ? "#000"
+                        : currentTextColor
+                        ? "#000"
+                        : currentSlide,
+                    }}
+                    to={icon.link !== "" ? icon.link : ""}
+                  >
+                    {icon.icon}
+                  </Link>
+                );
+              })}
+      </Stack>
+      <Search isMobile={isMobile} />
+    </>
   );
 };
 

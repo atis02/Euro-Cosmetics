@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 
 interface StoryButtonProps {
@@ -9,7 +9,8 @@ interface StoryButtonProps {
 
 const StoryButton = ({ imageUrl, onClick, seen = false }: StoryButtonProps) => {
   const [isClicked, setIsClicked] = useState(false);
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const handleClick = () => {
     setIsClicked(true);
     setTimeout(() => {
@@ -22,8 +23,8 @@ const StoryButton = ({ imageUrl, onClick, seen = false }: StoryButtonProps) => {
     <Box
       onClick={handleClick}
       sx={{
-        width: 70,
-        height: 70,
+        width: isMobile ? 60 : 70,
+        height: isMobile ? 60 : 70,
         position: "relative",
         cursor: "pointer",
       }}
@@ -57,7 +58,10 @@ const StoryButton = ({ imageUrl, onClick, seen = false }: StoryButtonProps) => {
           zIndex: 2,
         }}
       >
-        <Avatar src={imageUrl} sx={{ width: 66, height: 66 }} />
+        <Avatar
+          src={imageUrl}
+          sx={{ width: isMobile ? 56 : 66, height: isMobile ? 57 : 66 }}
+        />
       </Box>
 
       <style>

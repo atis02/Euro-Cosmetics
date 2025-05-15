@@ -1,15 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { images, itemVariants, VISIBLE_COUNT } from "./constants";
+import {
+  images,
+  itemVariants,
+  VISIBLE_COUNT,
+} from "./productsSwiper/constants";
 import { FC, useState } from "react";
-import CustomSectionText from "../CustomSectionText";
-import Buttons from "./Buttons";
-import CustomContainerMain from "../CustomContainerMain";
-import CustomProductTextConatiner from "../CustomProductTextConatiner";
-import { hoverStyle } from "../CustomStyles";
 import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import FavoriteButton from "../FavoriteButtonComponent";
+import CustomSectionText from "./CustomSectionText";
+import Buttons from "./productsSwiper/Buttons";
+import CustomProductTextConatiner from "./CustomProductTextConatiner";
+import FavoriteButton from "./FavoriteButtonComponent";
+import { hoverStyle } from "./CustomStyles";
 
 interface Props {
   text: string;
@@ -24,7 +27,7 @@ interface images {
   category?: string;
 }
 
-const ProductSwiper: FC<Props> = ({ text }) => {
+export const PopularProductsMini: FC<Props> = ({ text }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
@@ -69,14 +72,13 @@ const ProductSwiper: FC<Props> = ({ text }) => {
     localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
   return (
-    <CustomContainerMain>
+    <>
       <Stack
         justifyContent="space-between"
         alignItems="center"
         direction="row"
-        sx={{ py: 2, px: 4, mb: 2, position: "relative", zIndex: 2 }}
+        sx={{ mt: 6, py: 1, position: "relative", zIndex: 2 }}
       >
-        <Stack minWidth={"5%"}></Stack>
         <CustomSectionText text={text} />
         <Buttons
           handlePrev={handlePrev}
@@ -85,7 +87,6 @@ const ProductSwiper: FC<Props> = ({ text }) => {
           maxIndex={maxIndex}
         />
       </Stack>
-
       <Box sx={{ width: "100%", overflow: "hidden", textAlign: "center" }}>
         <Box
           sx={{
@@ -254,8 +255,6 @@ const ProductSwiper: FC<Props> = ({ text }) => {
           </Box>
         </Box>
       </Box>
-    </CustomContainerMain>
+    </>
   );
 };
-
-export default ProductSwiper;

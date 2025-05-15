@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setHoveredNavbar, setScrolled } from "../redux/reducers/swiperSlice";
+import { useLocation } from "react-router-dom";
 
 interface CustomContainerProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
   const currentSlide = useSelector((state: any) => state.swiper.color);
   const scrolled = useSelector((state: any) => state.swiper.scrolled);
   const dispatch = useDispatch();
-
+  const { pathname } = useLocation();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -35,7 +36,8 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  // : !isMobile ? "absolute" : "relative"
+  const notMainPage = pathname === "/";
+
   return (
     <Box
       sx={{
@@ -46,11 +48,14 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
             ? "absolute"
             : "relative",
         top: 0,
+        left: 0,
+        right: 0,
         zIndex: 10,
         width: "100%",
         "&:hover": {
           bgcolor: "#fff",
         },
+        color: notMainPage ? "transparent" : currentSlide ? "#000" : "#fff",
         ...(scrolled
           ? {
               boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.3)",
@@ -60,7 +65,13 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
             }
           : {
               boxShadow: "0",
-              backgroundColor: open ? "#fff" : isNav ? "transparent" : "#fff",
+              backgroundColor: notMainPage
+                ? "transparent"
+                : open
+                ? "#fff"
+                : isNav
+                ? "transparent"
+                : "#fff",
             }),
         transition:
           "background-color 0.8s ease-in-out, transform 0.3s ease-in-out",

@@ -7,63 +7,90 @@ interface Props {
   shrink: boolean;
   searchValue: string;
   handleChange: (event: ChangeEvent) => void;
-  style?: React.CSSProperties;
+  isMobile: boolean | undefined;
 }
 
 export const SearchField: FC<Props> = ({
   shrink,
   searchValue,
   handleChange,
-  style,
+  isMobile,
 }) => {
+  const fontSizeMob = 28;
+  const fontSizeMobileShrink = 33;
+  const fontSizeDesktopShrink = 45;
   return (
     <Box
       sx={{
         px: 4,
-        py: 5,
+        py: 2,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-end",
+        justifyContent: isMobile ? "start" : "flex-end",
         gap: 2,
+        height: shrink ? 70 : 100,
+        transition: "height 0.3s ease",
       }}
     >
       <InputBase
         autoFocus
         placeholder="хочу купить"
-        fullWidth
         sx={{
-          width: "100%",
-          maxWidth: "50%",
-          fontSize: "1.1rem",
-          padding: shrink ? "6px 12px" : "14px 16px",
+          flex: 1,
+          maxWidth: isMobile ? "100%" : "50%",
+          padding: "0 12px",
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
           transition: "padding 0.3s ease",
-          height: 60,
+
           "& input": {
-            fontSize: "60px",
+            fontSize: shrink
+              ? fontSizeMob
+              : isMobile
+              ? fontSizeMobileShrink
+              : fontSizeDesktopShrink,
+            transition: "font-size 0.3s ease",
             color: "#000",
-            fontStyle: "Graphic",
+            fontFamily: "Graphic",
+            fontWeight: 500,
           },
           "& input::placeholder": {
-            color: "#d9d9d9",
-            fontStyle: "Graphic",
-            fontSize: "60px",
-            fontWeight: 600,
-          },
-          "& input:focus::placeholder": {
+            fontSize: shrink
+              ? fontSizeMob
+              : isMobile
+              ? fontSizeMobileShrink
+              : fontSizeDesktopShrink,
+            transition: "font-size 0.3s ease",
             color: "#999",
+            fontFamily: "Graphic",
+            fontWeight: 500,
           },
-          "& input:hover::placeholder": {
-            color: "#999",
+          "& input:focus::placeholder, & input:hover::placeholder": {
+            color: "#000",
           },
-          ...style,
         }}
         value={searchValue}
         onChange={handleChange}
       />
 
-      <IconButton>
-        <East sx={{ fontSize: 40, color: searchValue ? "#999" : "#d9d9d9" }} />
+      <IconButton
+        sx={{
+          ml: 2,
+          transition: "transform 0.3s ease",
+          transform: shrink ? "scale(0.8)" : "scale(1)",
+        }}
+      >
+        <East
+          sx={{
+            fontSize: shrink ? 30 : 40,
+            color: searchValue ? "#000" : "#999",
+            transition: "font-size 0.3s ease",
+          }}
+        />
       </IconButton>
     </Box>
   );

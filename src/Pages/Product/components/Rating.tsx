@@ -7,7 +7,7 @@ import CustomProductText from "../../../Components/utils/CustomProductText";
 export const Rating: FC<Product> = ({ product }) => {
   return (
     <Stack direction="row">
-      <Rate allowHalf defaultValue={2.5} />
+      <Rate allowHalf defaultValue={5} />
       <CustomProductText
         fw={500}
         mainText={`${product.feedBackNumb} отзывов`}

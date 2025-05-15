@@ -11,14 +11,14 @@ import CategoriesComponent from "./NavCategories/index";
 
 const Navbar: React.FC = () => {
   const [openNavCategory, setOpenNavCategory] = useState(false);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const open = useSelector((state: any) => state.swiper.openSearch);
 
   const currentSlide = useSelector((state: any) => state.swiper.color);
   const currentTextColor = useSelector(
     (state: any) => state.swiper.colorNavbarText
   );
   const scrolled = useSelector((state: any) => state.swiper.scrolled);
-
   const onOpen = () => setOpenNavCategory(true);
   const onClose = () => setOpenNavCategory(false);
 
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             )
           )}
         </Box>
-        <NavbarIconsPath open={open} setOpen={setOpen} />
+        <NavbarIconsPath />
       </Stack>
     </CustomContainer>
   );
