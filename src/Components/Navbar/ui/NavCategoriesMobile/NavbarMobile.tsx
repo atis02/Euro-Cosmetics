@@ -20,7 +20,6 @@ import { NavbarCategoryMobile } from "./NavbarCategoryMobile";
 const NavbarMobile: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -143,8 +142,6 @@ const NavbarMobile: React.FC = () => {
             setCategoryDrawerOpen(false);
           }}
           onClose={() => setDrawerOpen(false)}
-          open={open}
-          setOpen={setOpen}
         />
         <NavbarCategoryMobile
           open={categoryDrawerOpen}
