@@ -10,6 +10,7 @@ import { hoverStyle } from "../CustomStyles";
 import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import FavoriteButton from "../FavoriteButtonComponent";
+import { AddToCartButton } from "../AddToCartButton";
 
 interface Props {
   text: string;
@@ -28,6 +29,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
+  const [showCartButton, setShowCartButton] = useState<string | null>("");
   const extendedImages = [...images];
   const navigate = useNavigate();
 
@@ -168,10 +170,24 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                       position: "relative",
                     }}
                     onClick={() => handleNavigate(item)}
+                    onMouseEnter={() => setShowCartButton(item.articule)}
+                    onMouseLeave={() => setShowCartButton(null)}
                   >
                     <Stack position="absolute" right={0} zIndex={100}>
                       <FavoriteButton product={item} />
                     </Stack>
+                    {showCartButton == item.articule && (
+                      <Stack
+                        position="absolute"
+                        bottom={190}
+                        right={15}
+                        zIndex={100}
+                        bgcolor={"#000"}
+                        borderRadius="100%"
+                      >
+                        <AddToCartButton product={item} />
+                      </Stack>
+                    )}
                     {item.image !== "" ? (
                       <img
                         src={item.image}

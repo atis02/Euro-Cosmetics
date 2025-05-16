@@ -6,34 +6,27 @@ import { Product } from "../../Pages/Product/components/interfaces";
 import { toggleFavorite } from "../redux/reducers/favoriteSlice";
 import { mainColor } from "./CustomStyles";
 import React from "react";
-import { GoldAppleNotification } from "./CustomToastFavorite";
-import { toast } from "react-toastify";
+import { OpenNotification } from "./CustomToast";
 
-const FavoriteButton: FC<Product> = ({ product }) => {
+const FavoriteButton: FC<Product> = ({ product, color = "#000" }) => {
   const dispatch = useDispatch();
   const favorites = useSelector((state: any) => state.favorites.items);
 
   const isFavorite: boolean = favorites.some(
     (item: Product) => item.product?.articule === product.articule
   );
-  const openNotification = (image?: string) => {
-    toast(
-      <GoldAppleNotification image={image} message="добавлен в избранное!" />,
-      {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-      }
-    );
-  };
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
     dispatch(toggleFavorite({ product }));
-    !isFavorite ? openNotification(product.image) : "";
+    !isFavorite
+      ? OpenNotification({
+          image: product.image,
+          text: "добавлен в избранное!",
+          icon: <FavoriteBorderOutlined />,
+          title: product.title,
+        })
+      : "";
   };
 
   return (
@@ -42,11 +35,11 @@ const FavoriteButton: FC<Product> = ({ product }) => {
         <Favorite
           sx={{
             "&:hover": { color: mainColor },
-            color: "#000",
+            color: color,
           }}
         />
       ) : (
-        <FavoriteBorderOutlined />
+        <FavoriteBorderOutlined sx={{ color: color }} />
       )}
     </IconButton>
   );

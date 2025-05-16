@@ -7,9 +7,10 @@ type Props = {
   sx?: {
     transform: string;
   };
+  fz?: number;
 };
 
-const CustomSectionText: FC<Props> = ({ text, sx }) => {
+const CustomSectionText: FC<Props> = ({ fz, text, sx }) => {
   return (
     <Stack
       alignItems="center"
@@ -19,7 +20,7 @@ const CustomSectionText: FC<Props> = ({ text, sx }) => {
       <Stack></Stack>
       <Typography
         color="#000"
-        fontSize={{ lg: 35, md: 35, sm: 30, xs: 25 }}
+        fontSize={{ lg: fz, md: 35, sm: 30, xs: 25 }}
         sx={{
           "&:hover": { color: mainColor },
           cursor: "pointer",

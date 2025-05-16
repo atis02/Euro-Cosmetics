@@ -56,6 +56,7 @@ const index: FC<Props> = ({ isMobile }) => {
         ModalProps={{
           BackdropProps: {
             sx: {
+              top: "60px",
               backgroundColor: "rgba(0, 0, 0, 0)",
               boxShadow: "none",
             },
@@ -64,7 +65,7 @@ const index: FC<Props> = ({ isMobile }) => {
         PaperProps={{
           sx: {
             position: "fixed",
-            top: isMobile ? 67 : 74,
+            top: isMobile ? 67 : 65,
             height: "calc(100% - 65px)",
             boxShadow: "none",
             display: "flex",
@@ -74,6 +75,7 @@ const index: FC<Props> = ({ isMobile }) => {
         }}
         sx={{
           position: "fixed",
+          top: "60px",
         }}
       >
         <Box

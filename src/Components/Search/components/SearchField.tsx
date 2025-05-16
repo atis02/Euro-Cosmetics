@@ -2,6 +2,7 @@ import { East } from "@mui/icons-material";
 import { Box, IconButton, InputBase } from "@mui/material";
 import { FC } from "react";
 import { ChangeEvent } from "./interfaces";
+import { useTypewriter } from "react-simple-typewriter";
 
 interface Props {
   shrink: boolean;
@@ -19,6 +20,19 @@ export const SearchField: FC<Props> = ({
   const fontSizeMob = 28;
   const fontSizeMobileShrink = 33;
   const fontSizeDesktopShrink = 45;
+  const [text] = useTypewriter({
+    words: [
+      "хочу купить",
+      "наушники",
+      "сыворотка для кожи",
+      "массажер для глаз",
+      "часы",
+    ],
+    loop: true,
+    typeSpeed: 100,
+    deleteSpeed: 50,
+    delaySpeed: 1500,
+  });
   return (
     <Box
       sx={{
@@ -35,7 +49,7 @@ export const SearchField: FC<Props> = ({
     >
       <InputBase
         autoFocus
-        placeholder="хочу купить"
+        placeholder={searchValue ? "" : text}
         sx={{
           flex: 1,
           maxWidth: isMobile ? "100%" : "50%",

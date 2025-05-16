@@ -15,4 +15,5 @@ interface images {
 }
 export interface Product {
   product: images;
+  color?: string;
 }

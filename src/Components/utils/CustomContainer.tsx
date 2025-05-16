@@ -8,20 +8,21 @@ interface CustomContainerProps {
   children: React.ReactNode;
   borderBottom?: boolean;
   isNav?: boolean;
-  open?: boolean;
 }
 
 const CustomContainer: React.FC<CustomContainerProps> = ({
   children,
   borderBottom,
   isNav,
-  open,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const currentSlide = useSelector((state: any) => state.swiper.color);
   const scrolled = useSelector((state: any) => state.swiper.scrolled);
+  const open = useSelector((state: any) => state.swiper.openSearch);
+
   const dispatch = useDispatch();
+
   const { pathname } = useLocation();
   useEffect(() => {
     const handleScroll = () => {
@@ -55,7 +56,13 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
         "&:hover": {
           bgcolor: "#fff",
         },
-        color: notMainPage ? "transparent" : currentSlide ? "#000" : "#fff",
+        color: open
+          ? "#000"
+          : notMainPage
+          ? "transparent"
+          : currentSlide
+          ? "#000"
+          : "#fff",
         ...(scrolled
           ? {
               boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.3)",
@@ -65,10 +72,10 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
             }
           : {
               boxShadow: "0",
-              backgroundColor: notMainPage
-                ? "transparent"
-                : open
+              backgroundColor: open
                 ? "#fff"
+                : notMainPage
+                ? "transparent"
                 : isNav
                 ? "transparent"
                 : "#fff",

@@ -4,6 +4,7 @@ import CustomProductText from "../../../Components/utils/CustomProductText";
 import { Product } from "./interfaces";
 import { CustomButton } from "../../../Components/utils/CustomButton";
 import { FavoriteBorderOutlined } from "@mui/icons-material";
+import { mainColor } from "../../../Components/utils/CustomStyles";
 
 export const ProductDetails: FC<Product> = ({ product }) => {
   return (
@@ -25,12 +26,12 @@ export const ProductDetails: FC<Product> = ({ product }) => {
       <Stack direction="row" gap={1}>
         <CustomButton
           text="Добавить в корзину"
-          textColor="#C6B09F"
+          textColor={mainColor}
           width={300}
         />
         <CustomButton
           text={<FavoriteBorderOutlined sx={{ mt: 0.8 }} />}
-          textColor="#C6B09F"
+          textColor={mainColor}
           width={50}
           height={50}
           showIcon={false}

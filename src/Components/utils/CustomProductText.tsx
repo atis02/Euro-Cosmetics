@@ -6,7 +6,7 @@ type Props = {
   fw?: number;
   fz?: number;
   mainText?: string | number;
-  discountPrice?: number;
+  discountPrice?: number | string;
   lineThrough?: boolean;
   discounted?: boolean;
   ta?:
@@ -23,6 +23,7 @@ type Props = {
   ai?: "center" | "start" | "end";
   sai?: "center" | "start" | "end";
   color?: string;
+  lineHeight?: number | string;
 };
 
 const CustomProductText: FC<Props> = ({
@@ -40,6 +41,7 @@ const CustomProductText: FC<Props> = ({
   height,
   sai,
   color = "#000",
+  lineHeight = 1,
 }) => {
   return (
     <Stack alignItems={sai}>
@@ -52,6 +54,7 @@ const CustomProductText: FC<Props> = ({
         width={width}
         height={height}
         alignContent={ai}
+        lineHeight={lineHeight}
         sx={{
           border: border,
           textDecoration: lineThrough ? "line-through" : "none",

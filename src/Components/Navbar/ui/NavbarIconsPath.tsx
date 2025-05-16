@@ -13,8 +13,9 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { useDispatch, useSelector } from "react-redux";
 import Search from "../../Search";
-import { setOpenSearch } from "../../redux/reducers/swiperSlice";
+import { setOpenCart, setOpenSearch } from "../../redux/reducers/swiperSlice";
 import { CustomBadge } from "./BadgeComponent";
+import ShopCart from "../../../Pages/ShopCart";
 
 interface isMobileProps {
   isMobile?: boolean;
@@ -31,6 +32,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
   const dispatch = useDispatch();
   const open = useSelector((state: any) => state.swiper.openSearch);
   const favorites = useSelector((state: any) => state.favorites.items);
+  const cartItems = useSelector((state: any) => state.cart.items);
 
   const iconsPath = [
     {
@@ -75,12 +77,13 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
     {
       icon: (
         <CustomBadge
-          length={2}
+          length={cartItems.length}
           button={<LocalMallOutlined sx={navIconStyles} />}
         />
       ),
-      link: "/cart",
+      link: "",
       isMobile: false,
+      func: () => dispatch(setOpenCart(true)),
     },
   ];
   const currentSlide = useSelector((state: any) => state.swiper.color);
@@ -193,6 +196,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
               })}
       </Stack>
       <Search isMobile={isMobile} />
+      <ShopCart />
     </>
   );
 };

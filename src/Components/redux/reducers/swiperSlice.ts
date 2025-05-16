@@ -5,6 +5,7 @@ const initialState = {
   colorNavbarText: false,
   scrolled: false,
   openSearch: false,
+  openCart: false,
 };
 
 const textColorSlice = createSlice({
@@ -23,9 +24,17 @@ const textColorSlice = createSlice({
     setOpenSearch: (state, action) => {
       state.openSearch = action.payload;
     },
+    setOpenCart: (state, action) => {
+      state.openCart = action.payload;
+    },
   },
 });
 
-export const { setTextColor, setHoveredNavbar, setScrolled, setOpenSearch } =
-  textColorSlice.actions;
+export const {
+  setTextColor,
+  setHoveredNavbar,
+  setScrolled,
+  setOpenSearch,
+  setOpenCart,
+} = textColorSlice.actions;
 export default textColorSlice.reducer;

@@ -5,10 +5,11 @@ import { TrendingFlat } from "@mui/icons-material";
 interface Props {
   isMobile?: boolean;
   text: string | ReactNode;
-  textColor: string;
-  width?: number;
+  textColor?: string;
+  width?: number | string;
   showIcon?: boolean;
   height?: number;
+  func?: () => void;
 }
 export const CustomButton: FC<Props> = ({
   isMobile,
@@ -17,6 +18,7 @@ export const CustomButton: FC<Props> = ({
   width = 205,
   height,
   showIcon = true,
+  func,
 }) => {
   const currentSlide = useSelector((state: any) => state.swiper.color);
 
@@ -74,6 +76,7 @@ export const CustomButton: FC<Props> = ({
               : "#000",
         },
       }}
+      onClick={func}
     >
       <span>{text}</span>
       {showIcon && (

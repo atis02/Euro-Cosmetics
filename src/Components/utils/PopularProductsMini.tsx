@@ -1,10 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import {
-  images,
-  itemVariants,
-  VISIBLE_COUNT,
-} from "./productsSwiper/constants";
+import { images, itemVariants } from "./productsSwiper/constants";
 import { FC, useState } from "react";
 import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +9,11 @@ import Buttons from "./productsSwiper/Buttons";
 import CustomProductTextConatiner from "./CustomProductTextConatiner";
 import FavoriteButton from "./FavoriteButtonComponent";
 import { hoverStyle } from "./CustomStyles";
+import { AddToCartButton } from "./AddToCartButton";
 
 interface Props {
   text: string;
+  visibleCount?: number;
 }
 
 interface images {
@@ -27,14 +25,15 @@ interface images {
   category?: string;
 }
 
-export const PopularProductsMini: FC<Props> = ({ text }) => {
+export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
   const extendedImages = [...images];
   const navigate = useNavigate();
+  const [showCartButton, setShowCartButton] = useState<string | null>("");
 
-  if (images.length % VISIBLE_COUNT !== 0) {
+  if (images.length % visibleCount !== 0) {
     extendedImages.push({
       image: "",
       stock: 1,
@@ -49,22 +48,22 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
     });
   }
 
-  const maxIndex = Math.max(0, extendedImages.length - VISIBLE_COUNT);
-  const visibleImages = extendedImages.slice(index, index + VISIBLE_COUNT);
+  const maxIndex = Math.max(0, extendedImages.length - visibleCount);
+  const visibleImages = extendedImages.slice(index, index + visibleCount);
 
   const handleNext = () => {
     if (index < maxIndex) {
       setDirection(1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
-      setIndex((prev) => prev + VISIBLE_COUNT);
+      setPrevImages(images.slice(index, index + visibleCount));
+      setIndex((prev) => prev + visibleCount);
     }
   };
 
   const handlePrev = () => {
     if (index > 0) {
       setDirection(-1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
-      setIndex((prev) => prev - VISIBLE_COUNT);
+      setPrevImages(images.slice(index, index + visibleCount));
+      setIndex((prev) => prev - visibleCount);
     }
   };
   const handleNavigate = (item: images) => {
@@ -79,7 +78,7 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
         direction="row"
         sx={{ mt: 6, py: 1, position: "relative", zIndex: 2 }}
       >
-        <CustomSectionText text={text} />
+        <CustomSectionText fz={25} text={text} />
         <Buttons
           handlePrev={handlePrev}
           handleNext={handleNext}
@@ -87,11 +86,12 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
           maxIndex={maxIndex}
         />
       </Stack>
+
       <Box sx={{ width: "100%", overflow: "hidden", textAlign: "center" }}>
         <Box
           sx={{
             width: "100%",
-            height: 450,
+            height: 320,
             margin: "0 auto",
             position: "relative",
           }}
@@ -111,8 +111,8 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
               <Box
                 key={`bg-${i}`}
                 sx={{
-                  width: 280,
-                  height: 280,
+                  width: 180,
+                  height: 180,
                   overflow: "hidden",
                 }}
               >
@@ -161,7 +161,7 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
                     exit="exit"
                     variants={itemVariants}
                     style={{
-                      width: 280,
+                      width: 180,
                       height: 450,
                       overflow: "hidden",
                       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
@@ -169,17 +169,31 @@ export const PopularProductsMini: FC<Props> = ({ text }) => {
                       position: "relative",
                     }}
                     onClick={() => handleNavigate(item)}
+                    onMouseEnter={() => setShowCartButton(item.articule)}
+                    onMouseLeave={() => setShowCartButton(null)}
                   >
                     <Stack position="absolute" right={0} zIndex={100}>
                       <FavoriteButton product={item} />
                     </Stack>
+                    {showCartButton == item.articule && (
+                      <Stack
+                        position="absolute"
+                        bottom={280}
+                        right={10}
+                        zIndex={100}
+                        bgcolor={"#000"}
+                        borderRadius="100%"
+                      >
+                        <AddToCartButton product={item} />
+                      </Stack>
+                    )}
                     {item.image !== "" ? (
                       <img
                         src={item.image}
                         alt={`product-${i}`}
                         style={{
                           width: "100%",
-                          height: 280,
+                          height: 180,
                           objectFit: "cover",
                         }}
                       />

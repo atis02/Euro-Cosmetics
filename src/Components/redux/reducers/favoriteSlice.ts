@@ -14,6 +14,8 @@ const favoritesSlice = createSlice({
   initialState,
   reducers: {
     toggleFavorite: (state, action: PayloadAction<Product>) => {
+      console.log(action.payload);
+
       const exists = state.items.find(
         (item) => item.product?.articule === action.payload.product.articule
       );

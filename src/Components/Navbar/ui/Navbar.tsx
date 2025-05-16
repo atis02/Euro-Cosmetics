@@ -11,8 +11,6 @@ import CategoriesComponent from "./NavCategories/index";
 
 const Navbar: React.FC = () => {
   const [openNavCategory, setOpenNavCategory] = useState(false);
-  // const [open, setOpen] = useState(false);
-  const open = useSelector((state: any) => state.swiper.openSearch);
 
   const currentSlide = useSelector((state: any) => state.swiper.color);
   const currentTextColor = useSelector(
@@ -23,7 +21,7 @@ const Navbar: React.FC = () => {
   const onClose = () => setOpenNavCategory(false);
 
   return (
-    <CustomContainer open={open} borderBottom isNav>
+    <CustomContainer borderBottom isNav>
       <Stack
         sx={{
           ...rowSpaceStyle,
