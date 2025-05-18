@@ -19,9 +19,9 @@ import {
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { PopularProductsMini } from "../../../Components/utils/PopularProductsMini";
-import { CustomButton } from "../../../Components/utils/CustomButton";
 import { MobileSwipeProducts } from "../../../Components/utils/MobileSwipeProducts";
 import { images } from "../../../Components/utils/productsSwiper/constants";
+import { CustomButtonSecond } from "../../../Components/utils/CustomButtonSecond";
 
 export const EmptyCart = () => {
   const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export const EmptyCart = () => {
       {isMobile ? (
         <>
           <MobileSwipeProducts text="популярные товары" products={images} />
-          <CustomButton
+          <CustomButtonSecond
             width="100%"
             textColor={mainColor}
             text="перейти к поиску продуктов"
@@ -104,7 +104,7 @@ export const EmptyCart = () => {
       ) : (
         <>
           <PopularProductsMini visibleCount={3} text="популярные товары" />
-          <CustomButton
+          <CustomButtonSecond
             width="100%"
             textColor={mainColor}
             text="перейти к поиску продуктов"

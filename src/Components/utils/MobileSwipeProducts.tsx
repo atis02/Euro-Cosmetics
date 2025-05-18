@@ -7,15 +7,27 @@ import { AddToCartButton } from "./AddToCartButton";
 interface Props {
   products: any;
   text: string;
+  width?: string | number;
+  p?: number;
+  mt?: number;
+  isMobile?: boolean;
 }
-export const MobileSwipeProducts: FC<Props> = ({ products, text }) => {
+export const MobileSwipeProducts: FC<Props> = ({
+  products,
+  text,
+  width = "92vw",
+  p,
+  mt,
+  isMobile,
+}) => {
   const swiperRef = useRef<SwiperClass | null>(null);
 
   return (
-    <Stack>
+    <Stack mt={mt}>
       <Typography
         mb={1}
-        fontSize={20}
+        ml={2}
+        fontSize={25}
         textAlign="start"
         fontFamily="Graphic"
         fontWeight={500}
@@ -26,16 +38,16 @@ export const MobileSwipeProducts: FC<Props> = ({ products, text }) => {
       <Swiper
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         spaceBetween={20}
-        slidesPerView={2.4}
+        slidesPerView={isMobile ? 1.75 : 2.4}
         pagination={{ clickable: true }}
-        style={{ width: "92vw" }}
+        style={{ width: width }}
       >
         {products.map((product: any, index: number) => (
           <SwiperSlide key={index}>
             <Stack
               sx={{
                 minWidth: 140,
-                minHeight: 305,
+                minHeight: isMobile ? 400 : 305,
                 display: "flex",
                 position: "relative",
               }}
@@ -58,37 +70,43 @@ export const MobileSwipeProducts: FC<Props> = ({ products, text }) => {
                 alt={product.title}
                 style={{
                   width: "100%",
-                  height: 140,
+                  height: isMobile ? 225 : 140,
                   objectFit: "cover",
                   backgroundColor: "#fff",
                 }}
               />
-              <Typography
-                mt={3}
-                fontSize={10}
-                textAlign="start"
-                fontFamily="Graphic"
-                fontWeight={500}
-                letterSpacing={2}
-              >
-                {product.category}
-              </Typography>
-              <Typography fontSize={16} fontFamily="Graphic" fontWeight={500}>
-                {product.title}
-              </Typography>
-              <Stack direction="row" gap={1}>
-                <Typography fontWeight={500} fontFamily="Graphic" fontSize={14}>
-                  {product.sellPrice} ₸
-                </Typography>
+              <Stack p={p}>
                 <Typography
-                  fontSize={14}
-                  color="gray"
-                  fontWeight={500}
+                  mt={3}
+                  fontSize={10}
+                  textAlign="start"
                   fontFamily="Graphic"
-                  sx={{ textDecoration: "line-through" }}
+                  fontWeight={500}
+                  letterSpacing={2}
                 >
-                  {product.sellPrice + product.discountPrice} ₸
+                  {product.category}
                 </Typography>
+                <Typography fontSize={16} fontFamily="Graphic" fontWeight={500}>
+                  {product.title}
+                </Typography>
+                <Stack direction="row" gap={1}>
+                  <Typography
+                    fontWeight={500}
+                    fontFamily="Graphic"
+                    fontSize={14}
+                  >
+                    {product.sellPrice} ₸
+                  </Typography>
+                  <Typography
+                    fontSize={14}
+                    color="gray"
+                    fontWeight={500}
+                    fontFamily="Graphic"
+                    sx={{ textDecoration: "line-through" }}
+                  >
+                    {product.sellPrice + product.discountPrice} ₸
+                  </Typography>
+                </Stack>
               </Stack>
             </Stack>
           </SwiperSlide>

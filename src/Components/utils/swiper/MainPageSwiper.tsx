@@ -152,7 +152,7 @@ export const MainPageSwiper: React.FC = () => {
           <East sx={{ width: 40, height: 40, color: "#464646" }} />
         </div>
       )}
-      {isMobile && <div className="swiper-pagination-mobile" />}
+      {isMobile ? <div className="swiper-pagination-mobile" /> : ""}
       <Swiper
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         modules={[

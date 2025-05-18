@@ -1,9 +1,10 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../Product/components/interfaces";
 import FavoriteButton from "../../../Components/utils/FavoriteButtonComponent";
 import CustomProductTextConatiner from "../../../Components/utils/CustomProductTextConatiner";
+import { useSelector } from "react-redux";
 
 export const CustomProductCart: FC<Product> = ({ product }) => {
   const [showFavorite, setShowFavorite] = useState(false);
@@ -13,6 +14,11 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
     navigate(`/product/${item.title}`);
     localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
+  const cartItems = useSelector((state: any) => state.cart.items);
+
+  const filtered = cartItems.filter(
+    (item: Product) => item.product?.articule == product.articule
+  );
 
   return (
     <Box
@@ -53,6 +59,17 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           onMouseEnter={() => setShowFavorite(true)}
           onMouseLeave={() => setShowFavorite(false)}
         />
+        {filtered[0]?.quantity > 1 && (
+          <Typography
+            position="absolute"
+            fontWeight={500}
+            fontFamily="Graphic"
+            bottom={0}
+            right={10}
+          >
+            x{filtered[0]?.quantity}
+          </Typography>
+        )}
       </Stack>
       <Stack
         sx={{
@@ -70,8 +87,10 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           discountPrice={product.discountPrice || 0}
           sellPrice={product.sellPrice || 0}
           jc="flex-end"
+          justifyContCart
           showAddMinus={showAddMinus}
           article={product.articule}
+          quantity={filtered[0]?.quantity}
         />
       </Stack>
     </Box>

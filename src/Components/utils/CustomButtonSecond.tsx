@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import { FC, ReactNode } from "react";
-import { useSelector } from "react-redux";
 import { TrendingFlat } from "@mui/icons-material";
 interface Props {
   isMobile?: boolean;
@@ -11,8 +10,9 @@ interface Props {
   height?: number;
   func?: () => void;
   dontChange?: boolean;
+  mt?: number;
 }
-export const CustomButton: FC<Props> = ({
+export const CustomButtonSecond: FC<Props> = ({
   isMobile,
   text,
   textColor = "#fff",
@@ -20,10 +20,9 @@ export const CustomButton: FC<Props> = ({
   height,
   showIcon = true,
   func,
-  dontChange = false,
+  mt,
 }) => {
-  const currentSlideColor = useSelector((state: any) => state.swiper.color);
-  const currentSlide = dontChange ? textColor : currentSlideColor;
+  const currentSlide = textColor;
   return (
     <Button
       sx={{
@@ -34,6 +33,7 @@ export const CustomButton: FC<Props> = ({
         fontSize: "12px",
         maxWidth: width,
         minWidth: width,
+        mt: mt,
         height: height,
         fontFamily: "Graphic",
         fontWeight: 400,
@@ -88,14 +88,21 @@ export const CustomButton: FC<Props> = ({
             zIndex: 2,
             marginLeft: 1,
             transition: "color 0.2s ease-in-out",
-            color: currentSlide === "#000000" ? "#fff" : "#000",
+            color:
+              textColor !== "#fff"
+                ? textColor
+                : currentSlide === "#000000"
+                ? "#fff"
+                : "#fff",
             ".MuiButton-root:hover &": {
               color:
-                isMobile && currentSlide === "#ffffff"
+                textColor !== "#fff"
+                  ? "#000"
+                  : isMobile && currentSlide === "#ffffff"
                   ? textColor
                   : currentSlide === "#000000"
                   ? "#000"
-                  : textColor,
+                  : "#000",
             },
           }}
         />

@@ -150,7 +150,7 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
               zIndex: 1,
             }}
           >
-            <AnimatePresence initial={false} custom={direction} mode="wait">
+            <AnimatePresence initial={false} custom={direction}>
               {visibleImages.map((item, i) => {
                 return (
                   <motion.div
@@ -257,6 +257,7 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                           mainText={item.title}
                           discountPrice={item.discountPrice}
                           sellPrice={item.sellPrice}
+                          fz={14}
                         />
                       </Stack>
                     ) : (

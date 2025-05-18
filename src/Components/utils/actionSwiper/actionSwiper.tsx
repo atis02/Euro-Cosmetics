@@ -1,6 +1,6 @@
 import { Navigation, Parallax } from "swiper/modules";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import CustomSectionText from "../CustomSectionText";
 import { FC, useRef, useState } from "react";
 import Buttons from "../productsSwiper/Buttons";
@@ -21,7 +21,8 @@ interface Props {
 export const ActionSwiper: FC<Props> = ({ text, data }) => {
   const swiperRef = useRef<SwiperClass | null>(null);
   const [isHovered, setIsHovered] = useState<number>(0);
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const handleNext = () => {
     swiperRef.current?.slideNext();
   };
@@ -34,27 +35,40 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
     <>
       <CustomContainerMain>
         <Stack
-          justifyContent="space-between"
+          justifyContent={{
+            lg: "space-between",
+            md: "space-between",
+            sm: "space-between",
+            xs: "flex-start",
+          }}
           alignItems="center"
           direction="row"
-          sx={{ px: 4, mb: 2, position: "relative", zIndex: 2 }}
+          sx={{
+            ml: -7,
+            px: 4,
+            mb: { lg: 2, md: 2, sm: 2, xs: 0 },
+            position: "relative",
+            zIndex: 2,
+          }}
         >
           <Stack minWidth={"5%"}></Stack>
           <CustomSectionText text={text} />
-          <Buttons
-            handlePrev={handlePrev}
-            handleNext={handleNext}
-            maxIndex={data.length - 1}
-          />
+          {!isMobile && (
+            <Buttons
+              handlePrev={handlePrev}
+              handleNext={handleNext}
+              maxIndex={data.length - 1}
+            />
+          )}
         </Stack>
       </CustomContainerMain>
 
       <Swiper
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         modules={[Navigation, Parallax]}
-        spaceBetween={70}
-        slidesPerView={1.7}
-        centeredSlides={true}
+        spaceBetween={isMobile ? 10 : 70}
+        slidesPerView={isMobile ? 1.2 : 1.7}
+        centeredSlides={isMobile ? false : true}
         loop={true}
         speed={1000}
         parallax={true}
@@ -62,8 +76,8 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         pagination={{ clickable: true }}
         watchSlidesProgress
         style={{
-          paddingLeft: "5%",
-          paddingRight: "5%",
+          paddingLeft: isMobile ? 0 : "5%",
+          paddingRight: isMobile ? 0 : "5%",
           ...hoverStyle,
         }}
       >
@@ -95,9 +109,10 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                   <Typography
                     fontWeight={500}
                     fontFamily="Graphic"
-                    fontSize={60}
+                    fontSize={isMobile ? 30 : 60}
                     sx={{
-                      mt: -2,
+                      mt: isMobile ? 1 : -2,
+                      ml: isMobile ? 2 : 0,
                       transition: "all 0.3s",
                       color: isHovered == index ? mainColor : "black",
                       transform:
@@ -107,11 +122,24 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                     {slide.title}
                   </Typography>
 
-                  <Box fontSize={16} fontWeight={400}>
+                  <Box
+                    fontSize={16}
+                    sx={{
+                      ml: isMobile ? 2 : 0,
+                    }}
+                    fontWeight={400}
+                  >
                     {slide.desc}
                   </Box>
                 </Box>
-                <Box data-swiper-parallax="-40%" fontSize={20} fontWeight={500}>
+                <Box
+                  data-swiper-parallax="-40%"
+                  sx={{
+                    mt: isMobile ? 1 : -2,
+                  }}
+                  fontSize={isMobile ? 15 : 20}
+                  fontWeight={500}
+                >
                   {slide.date}
                 </Box>
               </Stack>

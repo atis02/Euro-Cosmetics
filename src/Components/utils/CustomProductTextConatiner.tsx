@@ -14,12 +14,13 @@ import {
 import { Sheet } from "react-modal-sheet";
 import CustomProductText from "./CustomProductText";
 import { AddMinusBtns } from "./AddMinusBtns";
-import { mainColor } from "./CustomStyles";
+import { hoverStyle, mainColor } from "./CustomStyles";
 import { removeProduct } from "../redux/reducers/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Product } from "../../Pages/Product/components/interfaces";
 import { toggleFavorite } from "../redux/reducers/favoriteSlice";
 import { OpenNotification } from "./CustomToast";
+import CountUp from "react-countup";
 type Props = {
   textCategory: string;
   mainText: string;
@@ -35,10 +36,12 @@ type Props = {
     | "unset";
   fz?: number;
   jc?: "flex-end" | "center" | "start" | "space-between";
+  justifyContCart?: boolean;
   dr?: "row";
   isCart?: boolean;
   showAddMinus?: boolean;
   article?: string;
+  quantity?: number;
 };
 const CustomProductTextConatiner: FC<Props> = ({
   textCategory,
@@ -48,10 +51,12 @@ const CustomProductTextConatiner: FC<Props> = ({
   ta,
   fz = 20,
   jc = "flex-end",
+  justifyContCart = false,
   dr,
   isCart,
   showAddMinus,
   article,
+  quantity,
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -97,12 +102,18 @@ const CustomProductTextConatiner: FC<Props> = ({
   };
 
   return (
-    <Stack direction={dr} height="100%" justifyContent="space-between" gap={1}>
+    <Stack
+      direction={dr}
+      height="100%"
+      sx={{ ...(justifyContCart ? "" : hoverStyle) }}
+      justifyContent="space-between"
+      gap={1}
+    >
       {!isMobile ? (
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent={justifyContCart ? "space-between" : jc}
         >
           <CustomProductText text={textCategory} />
           {showAddMinus && (
@@ -131,22 +142,42 @@ const CustomProductTextConatiner: FC<Props> = ({
       <Stack direction="column">
         {isCart && (
           <Stack direction="row" gap={2} mb={0.5} justifyContent={jc}>
-            <CustomProductText
-              fz={12}
-              fw={500}
-              color={mainColor}
-              discountPrice={`скидка ${sellPrice - discountPrice}`}
+            <CountUp
+              end={discountPrice * (quantity ?? 1)}
+              duration={0.6}
+              prefix="скидка $ "
+              separator=" "
+              style={{
+                color: mainColor,
+                fontWeight: 500,
+                fontFamily: "Graphic",
+              }}
             />
           </Stack>
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
-          <CustomProductText fz={fz} fw={500} discountPrice={sellPrice} />
-          <CustomProductText
-            fz={fz}
-            fw={500}
-            lineThrough
-            discounted
-            discountPrice={sellPrice + discountPrice}
+          <CountUp
+            end={(sellPrice - discountPrice) * (quantity ?? 1)}
+            duration={0.6}
+            separator=" "
+            prefix="$ "
+            style={{
+              fontWeight: 500,
+              fontFamily: "Graphic",
+            }}
+          />
+
+          <CountUp
+            end={sellPrice * (quantity ?? 1)}
+            duration={0.6}
+            separator=" "
+            prefix="$ "
+            style={{
+              color: "#b3b3b3",
+              fontWeight: 500,
+              fontFamily: "Graphic",
+              textDecoration: "line-through",
+            }}
           />
         </Stack>
       </Stack>
