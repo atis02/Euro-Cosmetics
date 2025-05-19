@@ -3,10 +3,12 @@ import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 interface CustomContainerProps {
   children: React.ReactNode;
+  mt?: string | number;
 }
 
 export const CustomContainerAll: React.FC<CustomContainerProps> = ({
   children,
+  mt = "75px",
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -15,7 +17,7 @@ export const CustomContainerAll: React.FC<CustomContainerProps> = ({
     <Box
       sx={{
         width: "100%",
-        mt: "75px",
+        mt: mt,
         padding: isMobile ? "10px 20px" : "15px 40px 0 40px",
         display: "flex",
         flexDirection: "column",

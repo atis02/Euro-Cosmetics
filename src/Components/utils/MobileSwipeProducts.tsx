@@ -57,7 +57,7 @@ export const MobileSwipeProducts: FC<Props> = ({
               </Stack>
               <Stack
                 position="absolute"
-                bottom={150}
+                bottom={160}
                 right={5}
                 zIndex={100}
                 bgcolor={"#464646"}
@@ -77,7 +77,7 @@ export const MobileSwipeProducts: FC<Props> = ({
               />
               <Stack p={p}>
                 <Typography
-                  mt={3}
+                  mt={1}
                   fontSize={10}
                   textAlign="start"
                   fontFamily="Graphic"

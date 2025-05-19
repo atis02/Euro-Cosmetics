@@ -15,6 +15,10 @@ const index: FC<Close> = ({ onClose }) => {
   >(null);
   const [hoverSegment, setHoverSegment] = useState<number | null>(null);
   const [existSegments, setExistSegments] = useState<number | null>(null);
+  const categoryLink = data.filter((item) => item.id === hoveredLink);
+  // const subCategoryLink =data.find((item) => item.subcategories?.filter((sub)=>sub.));
+  // console.log(categoryLink);
+
   return (
     <Container sx={{ display: "flex", position: "relative" }}>
       <NavCategories
@@ -26,6 +30,7 @@ const index: FC<Close> = ({ onClose }) => {
 
       <NavSubCategories
         data={data}
+        categoryTitle={categoryLink[0]?.title}
         hoveredLink={hoveredLink}
         existSegments={existSegments}
         hoveredLinkSubCategory={hoveredLinkSubCategory}
@@ -36,6 +41,7 @@ const index: FC<Close> = ({ onClose }) => {
       <NavSegments
         data={data}
         existSegments={existSegments}
+        // subCategoryTitle={subCategoryLink[0]?.title}
         hoveredLink={hoveredLink}
         hoverSegment={hoverSegment}
         setHoverSegment={setHoverSegment}

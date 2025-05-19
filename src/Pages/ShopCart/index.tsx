@@ -222,7 +222,7 @@ const CartDrawer: FC = () => {
         </Stack>
       )}
 
-      <Stack direction="column" width="100%" gap={2}>
+      <Stack direction="column" width="100%" gap={6}>
         {cartItems.length ? (
           <>
             {cartItems.map((item: Product, idx: number) => (

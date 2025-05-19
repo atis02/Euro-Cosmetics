@@ -1,4 +1,4 @@
-interface images {
+export interface images {
   image?: string;
   imageTwo?: string;
   imageThree?: string;

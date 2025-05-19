@@ -129,7 +129,7 @@ const CustomProductTextConatiner: FC<Props> = ({
           justifyContent="space-between"
         >
           <CustomProductText text={textCategory} />
-          {isMobile && (
+          {isMobile && isCart && (
             <IconButton onClick={handleOpenSheet}>
               <MoreVert />
             </IconButton>
@@ -156,29 +156,32 @@ const CustomProductTextConatiner: FC<Props> = ({
           </Stack>
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
-          <CountUp
-            end={(sellPrice - discountPrice) * (quantity ?? 1)}
-            duration={0.6}
-            separator=" "
-            prefix="$ "
-            style={{
-              fontWeight: 500,
-              fontFamily: "Graphic",
-            }}
-          />
-
-          <CountUp
-            end={sellPrice * (quantity ?? 1)}
-            duration={0.6}
-            separator=" "
-            prefix="$ "
-            style={{
-              color: "#b3b3b3",
-              fontWeight: 500,
-              fontFamily: "Graphic",
-              textDecoration: "line-through",
-            }}
-          />
+          {discountPrice !== 0 && (
+            <CountUp
+              end={(sellPrice - discountPrice) * (quantity ?? 1)}
+              duration={0.6}
+              separator=" "
+              prefix="$ "
+              style={{
+                fontWeight: 500,
+                fontFamily: "Graphic",
+              }}
+            />
+          )}
+          {sellPrice !== 0 && (
+            <CountUp
+              end={sellPrice * (quantity ?? 1)}
+              duration={0.6}
+              separator=" "
+              prefix="$ "
+              style={{
+                color: "#b3b3b3",
+                fontWeight: 500,
+                fontFamily: "Graphic",
+                textDecoration: "line-through",
+              }}
+            />
+          )}
         </Stack>
       </Stack>
 

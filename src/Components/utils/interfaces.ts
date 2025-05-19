@@ -5,3 +5,11 @@ export interface CartItem {
   };
   quantity: number;
 }
+export interface imagesProps {
+  image?: string;
+  productStatus?: string;
+  title: string;
+  sellPrice?: number;
+  discountPrice?: number;
+  category?: string;
+}

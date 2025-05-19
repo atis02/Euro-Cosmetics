@@ -35,7 +35,7 @@ export const NavCategories: FC<Props> = ({
           }}
         >
           <NavLink
-            to={"/"}
+            to={elem.title}
             style={{
               textDecoration: "none",
               color: hoveredLink === elem.id ? "#000" : "gray",
@@ -44,13 +44,20 @@ export const NavCategories: FC<Props> = ({
               justifyContent: "space-between",
               width: "100%",
             }}
-            onClick={onClose}
+            onClick={() => {
+              localStorage.setItem(
+                "categoryImageEuroCos",
+                JSON.stringify(elem)
+              );
+              onClose();
+            }}
           >
             <Typography
               sx={{
                 fontFamily: "Graphic",
                 fontSize: 14,
                 fontWeight: 500,
+                textTransform: "lowercase",
               }}
             >
               {elem.title}

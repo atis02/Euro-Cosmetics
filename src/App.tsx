@@ -9,52 +9,64 @@ import Product from "./Pages/Product";
 import FavoriteProducts from "./Pages/Favourites";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SWRConfig } from "swr";
+import { fetcher } from "./Fetcher/swrConfig";
+import CategoryProducts from "./Pages/CategoryProducts";
 
 function App() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   return (
-    <Box
-      sx={{
-        backgroundColor: "#FFFFFF",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
+    <SWRConfig
+      value={{
+        fetcher,
+        refreshInterval: 5000,
+        shouldRetryOnError: true,
       }}
     >
-      <BrowserRouter>
-        <Navbar />
-        <Toaster />
-        {isMobile ? (
-          <ToastContainer
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar
-            closeOnClick
-            pauseOnHover
-            theme="dark"
-          />
-        ) : (
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar
-            closeOnClick
-            pauseOnHover
-            theme="dark"
-            style={{ top: "70px" }}
-          />
-        )}
+      <Box
+        sx={{
+          backgroundColor: "#FFFFFF",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <BrowserRouter>
+          <Navbar />
+          <Toaster />
+          {isMobile ? (
+            <ToastContainer
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar
+              closeOnClick
+              pauseOnHover
+              theme="dark"
+            />
+          ) : (
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar
+              closeOnClick
+              pauseOnHover
+              theme="dark"
+              style={{ top: "70px" }}
+            />
+          )}
 
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/wishlist" element={<FavoriteProducts />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </Box>
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/wishlist" element={<FavoriteProducts />} />
+            <Route path="/:category" element={<CategoryProducts />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </Box>
+    </SWRConfig>
   );
 }
 

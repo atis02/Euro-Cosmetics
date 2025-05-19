@@ -11,6 +11,7 @@ interface HoverStateProps {
   existSegments: number | null;
   hoveredLinkSubCategory: number | null;
   data: Category[];
+  categoryTitle: string;
 }
 
 interface SetStateProps {
@@ -29,6 +30,7 @@ export const NavSubCategories: FC<Props> = ({
   setHoveredLinkSubCategory,
   setExistSegments,
   onClose,
+  categoryTitle,
 }) => {
   return (
     hoveredLink !== null && (
@@ -58,48 +60,49 @@ export const NavSubCategories: FC<Props> = ({
             justifyContent: "space-between",
           }}
         >
-          {data
-            .find((item) => item.id === hoveredLink)
-            ?.subcategories?.map((sub, index) => (
-              <Grid2 key={sub.title} sx={{ height: 32 }}>
-                <NavLink
-                  to={`/${hoveredLink}/${sub.title}`}
-                  style={{
-                    textDecoration: "none",
-                    color:
-                      existSegments === index
-                        ? "#000"
-                        : hoveredLinkSubCategory === index
-                        ? "#000"
-                        : "gray",
-                    fontSize: "13px",
-                    fontWeight: "normal",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    display: "flex",
-                    width: "205px",
-                  }}
-                  onClick={onClose}
-                  onMouseEnter={() => {
-                    setHoveredLinkSubCategory(index);
-                    setExistSegments(sub.segments?.length ? index : null);
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontFamily: "Graphic",
-                      fontSize: 14,
-                      fontWeight: 500,
+          {data.length &&
+            data
+              .find((item) => item.id === hoveredLink)
+              ?.subcategories?.map((sub, index) => (
+                <Grid2 key={sub.title} sx={{ height: 32 }}>
+                  <NavLink
+                    to={`/${categoryTitle}/${sub.title}`}
+                    style={{
+                      textDecoration: "none",
+                      color:
+                        existSegments === index
+                          ? "#000"
+                          : hoveredLinkSubCategory === index
+                          ? "#000"
+                          : "gray",
+                      fontSize: "13px",
+                      fontWeight: "normal",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      display: "flex",
+                      width: "205px",
+                    }}
+                    onClick={onClose}
+                    onMouseEnter={() => {
+                      setHoveredLinkSubCategory(index);
+                      setExistSegments(sub.segments?.length ? index : null);
                     }}
                   >
-                    {sub.title}
-                  </Typography>
-                  {sub.segments?.length && (
-                    <KeyboardArrowRight sx={{ width: 17, height: 17 }} />
-                  )}
-                </NavLink>
-              </Grid2>
-            ))}
+                    <Typography
+                      sx={{
+                        fontFamily: "Graphic",
+                        fontSize: 14,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {sub.title}
+                    </Typography>
+                    {sub.segments?.length && (
+                      <KeyboardArrowRight sx={{ width: 17, height: 17 }} />
+                    )}
+                  </NavLink>
+                </Grid2>
+              ))}
         </Grid2>
       </motion.div>
     )

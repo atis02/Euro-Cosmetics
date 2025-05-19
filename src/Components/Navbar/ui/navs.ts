@@ -22,23 +22,49 @@ export const data = [
   {
     id: 1,
     title: "наша коллекция",
+    image: "/categoryImages/categoryImage.webp",
     subcategories: [
-      { title: "все товары категории" },
-      { title: "макияж" },
+      {
+        title: "макияж",
+        image: "/categoryImages/subcategoryImage.webp",
+      },
+      { title: "макияж", image: "/categoryImages/subcategoryImage2.webp" },
       {
         title: "уход",
+        image: "/categoryImages/subcategoryImage3.webp",
+
         segments: [
           { title: "все товары категории" },
           { title: "новинки" },
           { title: "лицо" },
         ],
       },
-      { title: "волосы" },
+      { title: "волосы", image: "/categoryImages/subcategoryImage4.webp" },
+      { title: "парфюмерия", image: "/categoryImages/subcategoryImage5.webp" },
+      { title: "для детей", image: "/categoryImages/subcategoryImage6.webp" },
+      {
+        title: "макияж",
+        image: "/categoryImages/subcategoryImage.webp",
+      },
+      { title: "макияж", image: "/categoryImages/subcategoryImage2.webp" },
+      {
+        title: "уход",
+        image: "/categoryImages/subcategoryImage3.webp",
+
+        segments: [
+          { title: "все товары категории" },
+          { title: "новинки" },
+          { title: "лицо" },
+        ],
+      },
+      { title: "волосы", image: "/categoryImages/subcategoryImage4.webp" },
+      { title: "парфюмерия", image: "/categoryImages/subcategoryImage5.webp" },
+      { title: "для детей", image: "/categoryImages/subcategoryImage6.webp" },
     ],
   },
   {
     id: 2,
-
+    image: "/categoryImages/categoryImage2.webp",
     title: "новые бренды",
     subcategories: [
       { title: "все товары категории" },
@@ -56,7 +82,7 @@ export const data = [
   },
   {
     id: 3,
-
+    image: "/categoryImages/categoryImage3.webp",
     title: "наша коллекция",
     subcategories: [
       { title: "все товары категории" },
@@ -74,6 +100,7 @@ export const data = [
   },
   {
     id: 4,
+    image: "/categoryImages/categoryImage4.webp",
 
     title: "готовимся к лету",
     subcategories: [
@@ -92,6 +119,7 @@ export const data = [
   },
   {
     id: 5,
+    image: "/categoryImages/categoryImage5.webp",
 
     title: "макияж",
     subcategories: [

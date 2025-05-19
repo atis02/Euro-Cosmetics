@@ -11,29 +11,41 @@ import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import FavoriteButton from "../FavoriteButtonComponent";
 import { AddToCartButton } from "../AddToCartButton";
+import { imagesProps } from "../interfaces";
+// import useSWR from "swr";
 
 interface Props {
   text: string;
 }
 
-interface images {
-  image?: string;
-  productStatus?: string;
-  title: string;
-  sellPrice?: number;
-  discountPrice?: number;
-  category?: string;
-}
-
 const ProductSwiper: FC<Props> = ({ text }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [prevImages, setPrevImages] = useState<images[]>([]);
+  const [prevImages, setPrevImages] = useState<imagesProps[]>([]);
   const [showCartButton, setShowCartButton] = useState<string | null>("");
-  const extendedImages = [...images];
-  const navigate = useNavigate();
 
-  if (images.length % VISIBLE_COUNT !== 0) {
+  const navigate = useNavigate();
+  // const {
+  //   data,
+
+  //   // error, isLoading
+  // } = useSWR({
+  //   url: "/products/client",
+  //   body: {
+  //     page: 1,
+  //     limit: 10,
+  //   },
+  //   method: "POST",
+  // });
+
+  // console.log(data);
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error </p>;
+  // const extendedImages = !isLoading ? [...data.products] : [];
+  const extendedImages = [...images];
+
+  if (images.length > 5 && images.length % VISIBLE_COUNT !== 0) {
     extendedImages.push({
       image: "",
       stock: 1,
@@ -66,7 +78,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
       setIndex((prev) => prev - VISIBLE_COUNT);
     }
   };
-  const handleNavigate = (item: images) => {
+  const handleNavigate = (item: imagesProps) => {
     navigate(`/product/${item.category}`);
     localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
@@ -133,7 +145,11 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                   <CustomProductTextConatiner
                     textCategory={item.category || ""}
                     mainText={item.title}
-                    discountPrice={item.discountPrice || 0}
+                    discountPrice={
+                      item?.discountPrice && item.discountPrice > 0
+                        ? item.discountPrice
+                        : 0
+                    }
                     sellPrice={item.sellPrice || 0}
                   />
                 </Stack>
@@ -173,10 +189,12 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                     onMouseEnter={() => setShowCartButton(item.articule)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
-                    <Stack position="absolute" right={0} zIndex={100}>
-                      <FavoriteButton product={item} />
-                    </Stack>
-                    {showCartButton == item.articule && (
+                    {item.image && (
+                      <Stack position="absolute" right={0} zIndex={100}>
+                        <FavoriteButton product={item} />
+                      </Stack>
+                    )}
+                    {showCartButton == item.articule && item.image && (
                       <Stack
                         position="absolute"
                         bottom={190}

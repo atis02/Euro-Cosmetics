@@ -96,9 +96,12 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
     <>
       <Stack
         direction="row"
+        alignItems="center"
         justifyContent="space-between"
         flexGrow={isMobile ? 1 : 0}
         gap={3}
+        pb={0.5}
+        pt={0.5}
       >
         {!isMobile
           ? iconsPath
@@ -170,7 +173,6 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                         ? "#000"
                         : currentSlide,
                       p: 0,
-                      pb: 2,
                     }}
                     onClick={() => {
                       if (icon.func) icon.func();
