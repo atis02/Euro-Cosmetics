@@ -74,8 +74,8 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
       ref={containerRef}
       style={{
         overflow: "hidden",
-        width: "985px",
-        height: 670,
+        width: "100%",
+        height: isMobile ? "10%" : 670,
         position: "relative",
       }}
     >
@@ -168,7 +168,7 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
             <Stack
               sx={{
                 minWidth: 280,
-                minHeight: 375,
+                minHeight: isMobile ? 200 : 375,
                 display: "flex",
                 alignItems: "center",
               }}
@@ -231,48 +231,52 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
           ))}
         </Swiper>
       )}
-      <div
-        style={{
-          position: "absolute",
-          top: "calc(20% - 40px)",
-          left: 30,
-          zIndex: 101,
-          cursor: "pointer",
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
-          width: 40,
-          height: 40,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: "70%",
-          borderRadius: 100,
-          backdropFilter: "blur(38px)",
-        }}
-        className="swiper-button-prev-thumbs"
-      >
-        <ExpandLess style={{ color: "#000" }} />
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          top: "calc(20% + 310px)",
-          left: 40,
-          zIndex: 101,
-          cursor: "pointer",
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
-          width: 40,
-          height: 40,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: "70%",
-          borderRadius: 100,
-          backdropFilter: "blur(38px)",
-        }}
-        className="swiper-button-next-thumbs"
-      >
-        <ExpandMore style={{ color: "#000" }} />
-      </div>
+      {!isMobile && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(20% - 40px)",
+            left: 30,
+            zIndex: 101,
+            cursor: "pointer",
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            width: 40,
+            height: 40,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            opacity: "70%",
+            borderRadius: 100,
+            backdropFilter: "blur(38px)",
+          }}
+          className="swiper-button-prev-thumbs"
+        >
+          <ExpandLess style={{ color: "#000" }} />
+        </div>
+      )}
+      {!isMobile && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(20% + 310px)",
+            left: 40,
+            zIndex: 101,
+            cursor: "pointer",
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            width: 40,
+            height: 40,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            opacity: "70%",
+            borderRadius: 100,
+            backdropFilter: "blur(38px)",
+          }}
+          className="swiper-button-next-thumbs"
+        >
+          <ExpandMore style={{ color: "#000" }} />
+        </div>
+      )}
     </Stack>
   );
 };

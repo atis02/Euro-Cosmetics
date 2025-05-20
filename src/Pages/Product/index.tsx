@@ -1,45 +1,140 @@
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { CustomContainerAll } from "../../Components/utils/CustomContainerAll";
 import { ProductImagesComponent } from "./components/ProductImagesComponent";
 import { ProductDetails } from "./components/ProductDetails";
 import { ProductTitleFeedBack } from "./components/ProductTitleFeedBack";
 import { ProductBreadCrumbs } from "./components/ProductBreadCrumbs";
 import CustomProductText from "../../Components/utils/CustomProductText";
+import { CustomButton } from "../../Components/utils/CustomButton";
+import { mainColor } from "../../Components/utils/CustomStyles";
+import FavoriteButton from "../../Components/utils/FavoriteButtonComponent";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../Components/redux/reducers/cartSlice";
+import { OpenNotification } from "../../Components/utils/CustomToast";
+import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
+import { images } from "../../Components/utils/productsSwiper/constants";
+import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper";
 
 const index = () => {
   const product = JSON.parse(localStorage.getItem("productEuroCos") || "{}");
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const dispatch = useDispatch();
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    dispatch(addProduct({ product }));
+    OpenNotification({
+      image: product.image,
+      text: "добавлен в корзину!",
+      icon: (
+        <svg viewBox="0 0 21 21" style={{ width: 20, height: 20 }} fill="#fff">
+          <path
+            fillRule="evenodd"
+            stroke="none"
+            d="M7 6v-.5a3.5 3.5 0 1 1 7 0V6h3v13H4V6h3Zm1-.5a2.5 2.5 0 0 1 5 0V6H8v-.5ZM7 7v1.5h1V7h5v1.5h1V7h2v11H5V7h2Z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      ),
+      title: product.title,
+    });
+  };
   return (
-    <CustomContainerAll>
-      <Stack direction="row" alignItems="center">
-        <ProductBreadCrumbs product={product} />
-        <ProductTitleFeedBack product={product} />
-      </Stack>
-      <Stack direction={"row"} gap={10} justifyContent="space-between">
-        <Stack maxWidth="65%">
-          <ProductImagesComponent product={product} />
+    <>
+      <CustomContainerAll>
+        <Stack
+          direction={{ lg: "row", md: "column", sm: "column", xs: "column" }}
+          alignItems={{
+            lg: "center",
+            md: "center",
+            sm: "center",
+            xs: "column",
+          }}
+          gap={isMobile ? 2 : 0}
+        >
+          <ProductBreadCrumbs product={product} />
+          <ProductTitleFeedBack product={product} />
         </Stack>
-        <Stack width="35%" mt={10}>
-          <ProductDetails product={product} />
+        <Stack
+          direction={{ lg: "row", md: "column", sm: "column", xs: "column" }}
+          gap={isMobile ? 2 : 10}
+          justifyContent="space-between"
+        >
+          <Stack maxWidth={{ lg: "65%", md: "65%", sm: "100%", xs: "100%" }}>
+            <ProductImagesComponent product={product} />
+          </Stack>
+          <Stack width="35%" mt={isMobile ? 0 : 10}>
+            <ProductDetails product={product} />
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack direction="column" m={2} gap={2} width="100%">
-        <CustomProductText
-          width="60%"
-          sai="end"
-          fw={500}
-          mainText={product.title}
-        />
-        <CustomProductText
-          width="60%"
-          color="gray"
-          sai="end"
-          mainText={product.articule}
-        />
 
-        <CustomProductText sai="end" width="60%" mainText={product.desc} />
-      </Stack>
-    </CustomContainerAll>
+        <Stack direction="column" m={isMobile ? 0 : 2} gap={2} width="100%">
+          <CustomProductText
+            width={isMobile ? "100%" : "60%"}
+            sai="end"
+            fw={500}
+            mainText={product.title}
+          />
+          <CustomProductText
+            width={isMobile ? "100%" : "60%"}
+            color="gray"
+            sai="end"
+            mainText={product.articule}
+          />
+
+          <CustomProductText
+            sai="end"
+            width={isMobile ? "100%" : "60%"}
+            mainText={product.desc}
+          />
+        </Stack>
+
+        {isMobile && (
+          <Stack
+            direction="row"
+            bgcolor="#fff"
+            height={60}
+            position="sticky"
+            bottom={0}
+            pb={1}
+            mt={2}
+            gap={1}
+            border="none"
+            boxShadow="none"
+          >
+            <CustomButton
+              height="100%"
+              text="Добавить в корзину"
+              textColor={mainColor}
+              width={300}
+              func={handleToggle}
+            />
+            <FavoriteButton
+              bgcolor="#000"
+              height={50}
+              width={50}
+              product={product}
+              br={0}
+              color="#fff"
+            />
+          </Stack>
+        )}
+      </CustomContainerAll>
+      {isMobile ? (
+        <Stack>
+          <MobileSwipeProducts
+            products={images}
+            text="похожие товары"
+            isMobile
+            p={1}
+            width="100vw"
+          />
+          {/* <MobileSwipeProducts products={images} text="похожие товары" /> */}
+        </Stack>
+      ) : (
+        <ProductSwiper text="похожие товары" />
+      )}
+    </>
   );
 };
 export default index;

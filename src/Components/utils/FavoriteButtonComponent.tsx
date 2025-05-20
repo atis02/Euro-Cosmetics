@@ -8,7 +8,14 @@ import { mainColor } from "./CustomStyles";
 import React from "react";
 import { OpenNotification } from "./CustomToast";
 
-const FavoriteButton: FC<Product> = ({ product, color = "#000" }) => {
+const FavoriteButton: FC<Product> = ({
+  width,
+  height,
+  bgcolor = "transparent",
+  product,
+  color = "#000",
+  br = "100%",
+}) => {
   const dispatch = useDispatch();
   const favorites = useSelector((state: any) => state.favorites.items);
 
@@ -30,7 +37,15 @@ const FavoriteButton: FC<Product> = ({ product, color = "#000" }) => {
   };
 
   return (
-    <IconButton onClick={handleToggle}>
+    <IconButton
+      onClick={handleToggle}
+      sx={{
+        width: width,
+        height: height,
+        bgcolor: bgcolor,
+        borderRadius: br,
+      }}
+    >
       {isFavorite ? (
         <Favorite
           sx={{

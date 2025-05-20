@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
   const onClose = () => setOpenNavCategory(false);
 
   return (
-    <CustomContainer borderBottom isNav>
+    <CustomContainer borderBottom>
       <Stack
         sx={{
           ...rowSpaceStyle,

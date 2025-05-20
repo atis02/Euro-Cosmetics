@@ -27,12 +27,14 @@ const index = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+
   return (
     <>
       <CustomContainerAll>
+        {/* {scrolled && <Box sx={{ height: isMobile ? "68.8px" : "80px" }} />} */}
         <Stack
           sx={{
-            paddingTop: isMobile ? 15 : "50vh",
+            height: isMobile ? "32vh" : "50vh",
           }}
         >
           <BannerImage image={category.image} isMobile={isMobile} />

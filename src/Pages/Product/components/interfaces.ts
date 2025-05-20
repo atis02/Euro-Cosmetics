@@ -16,4 +16,8 @@ export interface images {
 export interface Product {
   product: images;
   color?: string;
+  bgcolor?: string;
+  width?: string | number;
+  height?: string | number;
+  br?: number | string;
 }

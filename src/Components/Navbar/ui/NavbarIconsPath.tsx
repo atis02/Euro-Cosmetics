@@ -167,7 +167,9 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                   <IconButton
                     key={index}
                     sx={{
-                      color: scrolled
+                      color: isMobile
+                        ? "#000"
+                        : scrolled
                         ? "#000"
                         : currentTextColor
                         ? "#000"
@@ -184,7 +186,9 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                   <Link
                     key={index}
                     style={{
-                      color: scrolled
+                      color: isMobile
+                        ? "#000"
+                        : scrolled
                         ? "#000"
                         : currentTextColor
                         ? "#000"

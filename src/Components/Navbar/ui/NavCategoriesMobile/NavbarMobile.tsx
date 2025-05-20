@@ -8,7 +8,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useState } from "react";
-import CustomContainer from "../../../utils/CustomContainer";
 import { rowSpaceStyle } from "../../../utils/CustomStyles";
 import { navs } from "../navs";
 import NavbarIconsPath from "../NavbarIconsPath";
@@ -16,6 +15,7 @@ import { Link } from "react-router-dom";
 import { NavigateNextOutlined } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavbarCategoryMobile } from "./NavbarCategoryMobile";
+import ContainerMobile from "../../../utils/ContainerMobile";
 
 const NavbarMobile: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -28,7 +28,7 @@ const NavbarMobile: React.FC = () => {
   };
 
   return (
-    <CustomContainer borderBottom isNav>
+    <ContainerMobile borderBottom>
       <Stack
         sx={{
           ...rowSpaceStyle,
@@ -151,7 +151,7 @@ const NavbarMobile: React.FC = () => {
           }}
         />
       </Stack>
-    </CustomContainer>
+    </ContainerMobile>
   );
 };
 

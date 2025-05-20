@@ -5,19 +5,15 @@ import { Link } from "react-router-dom";
 import CustomProductText from "../../../Components/utils/CustomProductText";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
-import { useSelector } from "react-redux";
 
 type Props = {
   subCategories: Subcategory[];
 };
 
 const SubCategories: FC<Props> = ({ subCategories }) => {
-  const scrolled = useSelector((state: any) => state.swiper.scrolled);
-
   return (
     <Box
       sx={{
-        mt: scrolled ? 8.6 : 0,
         width: "100%",
         display: "flex",
         justifyContent: "center",

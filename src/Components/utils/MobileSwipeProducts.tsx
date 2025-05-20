@@ -47,7 +47,7 @@ export const MobileSwipeProducts: FC<Props> = ({
             <Stack
               sx={{
                 minWidth: 140,
-                minHeight: isMobile ? 400 : 305,
+                minHeight: isMobile ? 300 : 305,
                 display: "flex",
                 position: "relative",
               }}
@@ -57,8 +57,8 @@ export const MobileSwipeProducts: FC<Props> = ({
               </Stack>
               <Stack
                 position="absolute"
-                bottom={160}
-                right={5}
+                bottom={90}
+                right={10}
                 zIndex={100}
                 bgcolor={"#464646"}
                 borderRadius="100%"

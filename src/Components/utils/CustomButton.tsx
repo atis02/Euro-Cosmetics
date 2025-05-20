@@ -8,8 +8,8 @@ interface Props {
   textColor?: string;
   width?: number | string;
   showIcon?: boolean;
-  height?: number;
-  func?: () => void;
+  height?: number | string;
+  func?: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
   dontChange?: boolean;
 }
 export const CustomButton: FC<Props> = ({
