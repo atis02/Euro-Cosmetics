@@ -1,9 +1,10 @@
 import { Container } from "@mui/material";
-import { data } from "../navs";
 import { FC, useState } from "react";
 import { NavSubCategories } from "./NavSubCategories";
 import { NavSegments } from "./NavSegments";
 import { NavCategories } from "./NavCategories";
+import useSWR from "swr";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 interface Close {
   onClose: () => void;
@@ -13,24 +14,44 @@ const index: FC<Close> = ({ onClose }) => {
   const [hoveredLinkSubCategory, setHoveredLinkSubCategory] = useState<
     number | null
   >(null);
-  const [hoverSegment, setHoverSegment] = useState<number | null>(null);
-  const [existSegments, setExistSegments] = useState<number | null>(null);
-  const categoryLink = data.filter((item) => item.id === hoveredLink);
-  // const subCategoryLink =data.find((item) => item.subcategories?.filter((sub)=>sub.));
-  // console.log(categoryLink);
+  // const [hoverSegment, setHoverSegment] = useState<number | null>(null);
+  const [existSegments, setExistSegments] = useState<string | null>(null);
+  const { data, error, isLoading } = useSWR({
+    url: "/categories/fetch/client",
+  });
+  const categoryLink =
+    data && data.categories.filter((item: any) => item.id === hoveredLink);
+  console.log(categoryLink);
 
+  const activeSubCategory = data?.categories
+    .find((item: any) =>
+      item.SubCategories?.some((sub: any) => sub.id === existSegments)
+    )
+    ?.SubCategories?.find((sub: any) => sub.id === existSegments);
+
+  const subCategoryTitle = activeSubCategory?.nameRu || "";
+
+  if (error) {
+    return;
+  }
+  if (isLoading) {
+    return (
+      <Container sx={{ display: "flex", position: "relative" }}>
+        <LoadingSkeleton />
+      </Container>
+    );
+  }
   return (
     <Container sx={{ display: "flex", position: "relative" }}>
       <NavCategories
-        data={data}
+        data={data?.categories}
         hoveredLink={hoveredLink}
         setHoveredLink={setHoveredLink}
         onClose={onClose}
       />
 
       <NavSubCategories
-        data={data}
-        categoryTitle={categoryLink[0]?.title}
+        data={data?.categories}
         hoveredLink={hoveredLink}
         existSegments={existSegments}
         hoveredLinkSubCategory={hoveredLinkSubCategory}
@@ -39,13 +60,10 @@ const index: FC<Close> = ({ onClose }) => {
         onClose={onClose}
       />
       <NavSegments
-        data={data}
+        data={data?.categories}
         existSegments={existSegments}
-        // subCategoryTitle={subCategoryLink[0]?.title}
-        hoveredLink={hoveredLink}
-        hoverSegment={hoverSegment}
-        setHoverSegment={setHoverSegment}
-        setExistSegments={setExistSegments}
+        categoryTitle={categoryLink && categoryLink[0]?.nameRu}
+        subCategoryTitle={subCategoryTitle}
         onClose={onClose}
       />
     </Container>

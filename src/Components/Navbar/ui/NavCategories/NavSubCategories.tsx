@@ -1,22 +1,21 @@
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Grid";
 import { FC } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KeyboardArrowRight } from "@mui/icons-material";
-import { Category } from "./interfaces";
+import { Category, Subcategory } from "./interfaces";
 import { motion } from "framer-motion";
 
 interface HoverStateProps {
   hoveredLink: number | null;
-  existSegments: number | null;
+  existSegments: string | null;
   hoveredLinkSubCategory: number | null;
   data: Category[];
-  categoryTitle: string;
 }
 
 interface SetStateProps {
   setHoveredLinkSubCategory: (index: number | null) => void;
-  setExistSegments: (index: number | null) => void;
+  setExistSegments: (index: string | null) => void;
   onClose: () => void;
 }
 
@@ -30,15 +29,34 @@ export const NavSubCategories: FC<Props> = ({
   setHoveredLinkSubCategory,
   setExistSegments,
   onClose,
-  categoryTitle,
 }) => {
+  const navigate = useNavigate();
+  const handleSubcategoryClick = (
+    category: Category,
+    subCategory: Subcategory
+  ) => {
+    // const data = {
+    //   categoryId: category.id,
+    //   subCategoryId: subcategoryId,
+    // };
+    // handleSelectCategory?.(data);
+    // onCategorySelect(data);
+    onClose();
+    navigate(`/category/${category.nameRu}/${subCategory.nameRu}`);
+  };
   return (
     hoveredLink !== null && (
       <motion.div
         key={`subcategories-${hoveredLink}`}
-        initial={{ opacity: 0, x: hoveredLink > 0 ? -50 : 90 }}
+        initial={{
+          opacity: 0,
+          x: data.find((item) => item.id === hoveredLink) ? -50 : 90,
+        }}
         animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: hoveredLink > 0 ? -50 : 90 }}
+        exit={{
+          opacity: 0,
+          x: data.find((item) => item.id === hoveredLink) ? -50 : 90,
+        }}
         transition={{ duration: 0.5 }}
         style={{
           position: "absolute",
@@ -63,14 +81,12 @@ export const NavSubCategories: FC<Props> = ({
           {data.length &&
             data
               .find((item) => item.id === hoveredLink)
-              ?.subcategories?.map((sub, index) => (
-                <Grid2 key={sub.title} sx={{ height: 32 }}>
-                  <NavLink
-                    to={`/${categoryTitle}/${sub.title}`}
+              ?.SubCategories?.map((sub, index) => (
+                <Grid2 key={sub.nameRu} sx={{ height: 32 }}>
+                  <Stack
                     style={{
-                      textDecoration: "none",
                       color:
-                        existSegments === index
+                        existSegments === sub.id
                           ? "#000"
                           : hoveredLinkSubCategory === index
                           ? "#000"
@@ -79,13 +95,19 @@ export const NavSubCategories: FC<Props> = ({
                       fontWeight: "normal",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      display: "flex",
                       width: "205px",
+                      cursor: "pointer",
                     }}
-                    onClick={onClose}
+                    direction="row"
+                    onClick={() =>
+                      handleSubcategoryClick(
+                        data.find((item) => item.id === hoveredLink)!,
+                        sub
+                      )
+                    }
                     onMouseEnter={() => {
                       setHoveredLinkSubCategory(index);
-                      setExistSegments(sub.segments?.length ? index : null);
+                      setExistSegments(sub.Segments?.length ? sub.id : "");
                     }}
                   >
                     <Typography
@@ -93,14 +115,17 @@ export const NavSubCategories: FC<Props> = ({
                         fontFamily: "Graphic",
                         fontSize: 14,
                         fontWeight: 500,
+                        textTransform: "lowercase",
                       }}
                     >
-                      {sub.title}
+                      {sub.nameRu}
                     </Typography>
-                    {sub.segments?.length && (
+                    {sub.Segments?.length ? (
                       <KeyboardArrowRight sx={{ width: 17, height: 17 }} />
+                    ) : (
+                      ""
                     )}
-                  </NavLink>
+                  </Stack>
                 </Grid2>
               ))}
         </Grid2>

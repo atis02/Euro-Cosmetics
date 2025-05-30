@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { Category } from "./interfaces";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { KeyboardArrowRight } from "@mui/icons-material";
 
 interface HoverStateProps {
@@ -20,9 +20,18 @@ export const NavCategories: FC<Props> = ({
   setHoveredLink,
   onClose,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: Category) => {
+    // const data = { categoryId: category.id };
+    // handleSelectCategory?.(data);
+    // onCategorySelect(data);
+    navigate(`/category/${category.nameRu}`);
+    onClose();
+  };
   return (
     <Stack sx={{ width: "205px" }}>
-      {data.map((elem) => (
+      {data?.map((elem) => (
         <Box
           key={elem.id}
           onMouseEnter={() => setHoveredLink(elem.id)}
@@ -34,23 +43,17 @@ export const NavCategories: FC<Props> = ({
             cursor: "pointer",
           }}
         >
-          <NavLink
-            to={elem.title}
-            style={{
-              textDecoration: "none",
+          <Stack
+            sx={{
               color: hoveredLink === elem.id ? "#000" : "gray",
-              display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
             }}
             onClick={() => {
-              localStorage.setItem(
-                "categoryImageEuroCos",
-                JSON.stringify(elem)
-              );
-              onClose();
+              handleCategoryClick(elem);
             }}
+            direction="row"
           >
             <Typography
               sx={{
@@ -60,10 +63,10 @@ export const NavCategories: FC<Props> = ({
                 textTransform: "lowercase",
               }}
             >
-              {elem.title}
+              {elem.nameRu}
             </Typography>
             <KeyboardArrowRight sx={{ width: 17, height: 17 }} />
-          </NavLink>
+          </Stack>
         </Box>
       ))}
     </Stack>

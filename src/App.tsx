@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { SWRConfig } from "swr";
 import { fetcher } from "./Fetcher/swrConfig";
 import CategoryProducts from "./Pages/CategoryProducts";
+import NotFoundPage from "./Components/Loyout/NotFoundPage";
 
 function App() {
   const theme = useTheme();
@@ -61,7 +62,19 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/product/:id" element={<Product />} />
             <Route path="/wishlist" element={<FavoriteProducts />} />
-            <Route path="/:category" element={<CategoryProducts />} />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route
+              path="/category/:categoryName"
+              element={<CategoryProducts />}
+            />
+            <Route
+              path="/category/:categoryName/:subCategoryName"
+              element={<CategoryProducts />}
+            />
+            <Route
+              path="/category/:categoryName/:subCategoryName/:segmentName"
+              element={<CategoryProducts />}
+            />
           </Routes>
           <Footer />
         </BrowserRouter>

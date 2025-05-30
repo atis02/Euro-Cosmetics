@@ -10,13 +10,15 @@ interface Props {
   showtext?: boolean;
 }
 export const Rating: FC<Props> = ({ product, gap = 0, showtext = true }) => {
-  return (
+  return product?.feedBackNumb ? (
     <Stack direction="row" alignItems="center" gap={gap}>
       <Rate allowHalf defaultValue={5} />
       <CustomProductText
         fw={500}
-        mainText={`${product.feedBackNumb} ${showtext ? "отзывов" : ""}`}
+        mainText={`${product?.feedBackNumb || 0} ${showtext ? "отзывов" : ""}`}
       />
     </Stack>
+  ) : (
+    ""
   );
 };

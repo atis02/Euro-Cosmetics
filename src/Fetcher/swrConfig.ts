@@ -1,4 +1,4 @@
-const BASE_URL = "https://eurocos.alemtilsimat.com/api";
+export const BASE_URL = "https://eurocos.alemtilsimat.com/api";
 
 type FetcherArgs = {
   url: string;

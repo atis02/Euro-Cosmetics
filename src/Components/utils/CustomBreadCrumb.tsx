@@ -22,7 +22,7 @@ export const CustomBreadcrumb: FC<Props> = ({
   segment,
   color = "#000",
 }) => {
-  console.log(category);
+  console.log(subCategory);
 
   const StyledLink = ({
     to,
@@ -41,6 +41,7 @@ export const CustomBreadcrumb: FC<Props> = ({
           textDecoration: "none",
           fontFamily: "Graphic",
           transition: "color 0.3s",
+          textTransform: "lowercase",
         }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -60,7 +61,7 @@ export const CustomBreadcrumb: FC<Props> = ({
           category
             ? {
                 title: (
-                  <StyledLink to={`/${category.title}`}>
+                  <StyledLink to={`/category/${category.title}`}>
                     {category.title}
                   </StyledLink>
                 ),
@@ -69,7 +70,9 @@ export const CustomBreadcrumb: FC<Props> = ({
           subCategory
             ? {
                 title: (
-                  <StyledLink to={`/${category.title}/${subCategory.title}`}>
+                  <StyledLink
+                    to={`/category/${category.title}/${subCategory.title}`}
+                  >
                     {subCategory.title}
                   </StyledLink>
                 ),
@@ -79,7 +82,7 @@ export const CustomBreadcrumb: FC<Props> = ({
             ? {
                 title: (
                   <StyledLink
-                    to={`/${category.title}/${subCategory?.title}/${segment.title}`}
+                    to={`/category/${category.title}/${subCategory?.title}/${segment.title}`}
                   >
                     {segment.title}
                   </StyledLink>

@@ -1,18 +1,26 @@
 export interface Segment {
-  title: string;
+  nameRu: string;
+  nameTm: string;
+  id: string;
+  subCategoryId?:string
+  SubCategory:Subcategory
 }
 
 export interface Subcategory {
-  title: string;
+  id: string;
+  nameRu: string;
+  nameTm: string;
   image?: string;
-  segments?: Segment[];
+  Segments?: Segment[];
+  categoryId?:string
 }
 
 export interface Category {
   id: number;
-  title: string;
+  nameRu: string;
+  nameTm: string;
   image: string;
-  subcategories: Subcategory[];
+  SubCategories: Subcategory[];
 }
 // export interface Category {
 //   id: number;

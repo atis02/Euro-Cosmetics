@@ -1,5 +1,6 @@
 import { Stack } from "@mui/material";
 import { FC } from "react";
+import { BASE_URL } from "../../../Fetcher/swrConfig";
 interface Props {
   image: string;
   isMobile: boolean;
@@ -22,14 +23,15 @@ const BannerImage: FC<Props> = ({ isMobile, image }) => {
         }}
       >
         <img
-          src={image}
+          src={`${BASE_URL}/${image}`}
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
             display: "block",
           }}
-          alt=""
+          crossOrigin="anonymous"
+          alt={`${BASE_URL}/${image}`}
         />
 
         <Stack

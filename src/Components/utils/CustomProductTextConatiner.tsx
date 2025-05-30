@@ -22,10 +22,10 @@ import { toggleFavorite } from "../redux/reducers/favoriteSlice";
 import { OpenNotification } from "./CustomToast";
 import CountUp from "react-countup";
 type Props = {
-  textCategory: string;
+  textCategory: string | undefined;
   mainText: string;
-  discountPrice: number;
-  sellPrice: number;
+  discountPrice: number | undefined;
+  sellPrice: number | undefined;
   ta?:
     | "left"
     | "right"
@@ -65,6 +65,7 @@ const CustomProductTextConatiner: FC<Props> = ({
   const favorites = useSelector((state: any) => state.favorites.items);
 
   const cartItems = useSelector((state: any) => state.cart.items);
+  console.log(sellPrice);
 
   const isFavorite: boolean = favorites.some(
     (item: Product) => item.product?.articule === article
@@ -143,7 +144,7 @@ const CustomProductTextConatiner: FC<Props> = ({
         {isCart && (
           <Stack direction="row" gap={2} mb={0.5} justifyContent={jc}>
             <CountUp
-              end={discountPrice * (quantity ?? 1)}
+              end={discountPrice ? discountPrice * (quantity ?? 1) : 0}
               duration={0.6}
               prefix="скидка $ "
               separator=" "
@@ -156,9 +157,9 @@ const CustomProductTextConatiner: FC<Props> = ({
           </Stack>
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
-          {discountPrice !== 0 && (
+          {sellPrice && (
             <CountUp
-              end={(sellPrice - discountPrice) * (quantity ?? 1)}
+              end={sellPrice ? sellPrice * (quantity ?? 1) : 0}
               duration={0.6}
               separator=" "
               prefix="$ "
@@ -168,9 +169,9 @@ const CustomProductTextConatiner: FC<Props> = ({
               }}
             />
           )}
-          {sellPrice !== 0 && (
+          {discountPrice != sellPrice && discountPrice && (
             <CountUp
-              end={sellPrice * (quantity ?? 1)}
+              end={discountPrice * (quantity ?? 1)}
               duration={0.6}
               separator=" "
               prefix="$ "

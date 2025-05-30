@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CustomProductText from "../../../Components/utils/CustomProductText";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper/modules";
+import { BASE_URL } from "../../../Fetcher/swrConfig";
 
 type Props = {
   subCategories: Subcategory[];
@@ -33,7 +34,7 @@ const SubCategories: FC<Props> = ({ subCategories }) => {
           <SwiperSlide key={index} style={{ width: "auto" }}>
             <Box
               component={Link}
-              to={subcategory.title}
+              to={subcategory.nameRu}
               sx={{
                 textDecoration: "none",
                 display: "flex",
@@ -48,11 +49,19 @@ const SubCategories: FC<Props> = ({ subCategories }) => {
               }}
             >
               <img
-                src={subcategory.image}
-                alt={subcategory.title}
-                style={{ width: 60, height: 60, borderRadius: "100%" }}
+                crossOrigin="anonymous"
+                alt={`${BASE_URL}/${subcategory.image}`}
+                src={
+                  `${BASE_URL}/${subcategory.image}` || "/logos/LogoMain.png"
+                }
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: "100%",
+                  objectFit: "contain",
+                }}
               />
-              <CustomProductText text={subcategory.title} />
+              <CustomProductText text={subcategory.nameRu} />
             </Box>
           </SwiperSlide>
         ))}
