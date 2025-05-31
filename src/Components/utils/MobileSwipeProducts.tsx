@@ -12,7 +12,7 @@ interface Props {
   p?: number;
   mt?: number;
   isMobile?: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 export const MobileSwipeProducts: FC<Props> = ({
   products,

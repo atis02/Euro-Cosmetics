@@ -15,9 +15,9 @@ import { AddToCartButton } from "./AddToCartButton";
 import { hoverStyle } from "./CustomStyles";
 
 interface Props {
-  isLoading: boolean;
-  error: boolean | undefined | unknown;
-  data: Product;
+  isLoading?: boolean;
+  error?: boolean | undefined | unknown;
+  data?: Product;
   text: string;
   visibleCount?: number;
 }
@@ -108,7 +108,7 @@ export const PopularProductsMini: FC<Props> = ({
     if (index < maxIndex) {
       setDirection(1);
       setPrevImages(
-        data.products
+        data?.products
           ? data.products.slice(
               index,
               index + (visibleCount ? visibleCount : 0)
@@ -122,7 +122,7 @@ export const PopularProductsMini: FC<Props> = ({
     if (index > 0) {
       setDirection(-1);
       setPrevImages(
-        data.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
+        data?.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
       );
       setIndex((prev) => prev - VISIBLE_COUNT);
     }

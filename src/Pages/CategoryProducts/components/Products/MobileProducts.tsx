@@ -7,16 +7,15 @@ import FavoriteButton from "../../../../Components/utils/FavoriteButtonComponent
 import { images } from "../../../../Components/utils/productsSwiper/constants";
 import { useNavigate } from "react-router-dom";
 import { AddToCartButton } from "../../../../Components/utils/AddToCartButton";
-import { imagesProps } from "../../../../Components/utils/interfaces";
 import { Rating } from "../../../Product/components/Rating";
+import { testData } from "../../../Product/components/interfaces";
 
 const MobileProducts: FC = () => {
   const [showCartButton, setShowCartButton] = useState<string | null>("");
 
   const navigate = useNavigate();
-  const handleNavigate = (item: imagesProps) => {
-    navigate(`/product/${item.category}`);
-    localStorage.setItem("productEuroCos", JSON.stringify(item));
+  const handleNavigate = (item: any) => {
+    navigate(`/product/${item.barcode}`);
   };
 
   return (
@@ -44,10 +43,10 @@ const MobileProducts: FC = () => {
           >
             {item.image && (
               <Stack position="absolute" right={0} zIndex={100}>
-                <FavoriteButton product={item} />
+                <FavoriteButton product={item as testData} />
               </Stack>
             )}
-            {showCartButton == item.articule && item.image && (
+            {showCartButton === item.articule && item.image && (
               <Stack
                 position="absolute"
                 bottom={190}
@@ -56,7 +55,7 @@ const MobileProducts: FC = () => {
                 bgcolor={"#000"}
                 borderRadius="100%"
               >
-                <AddToCartButton product={item} />
+                <AddToCartButton product={item as testData} />
               </Stack>
             )}
             {item.image !== "" ? (
@@ -125,7 +124,7 @@ const MobileProducts: FC = () => {
                   alignItems: "end",
                 }}
               >
-                <Rating showtext={false} gap={1} product={item} />
+                <Rating showtext={false} gap={1} product={item as testData} />
                 <CustomProductTextConatiner
                   isCart={false}
                   textCategory={item.category}
