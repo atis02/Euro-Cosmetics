@@ -1,4 +1,17 @@
+export interface Category {
+  cover: string;
+  deliveryPrice: string;
+  discountType: string;
+  discountValue: string;
+  id: string;
+  image: string;
+  isActive: boolean;
+  nameRu: string;
+  nameTm: string;
+  order: number;
+}
 export interface images {
+  Category?: Category;
   image?: string;
   video?: string;
   productStatus?: string;
@@ -36,8 +49,8 @@ export interface images {
   order: number;
   productStatusId: number;
   segmentId: string;
-  sellPrice: string;
-  stock: string;
+  sellPrice: string | number;
+  stock: string | number;
   subCategoryId: string;
   unit: string;
   updatedAt: string;
@@ -47,9 +60,11 @@ export interface images {
 }
 export interface Product {
   product: images;
+  products?: images[];
   color?: string;
   bgcolor?: string;
   width?: string | number;
   height?: string | number;
   br?: number | string;
+  isLoading?: boolean;
 }

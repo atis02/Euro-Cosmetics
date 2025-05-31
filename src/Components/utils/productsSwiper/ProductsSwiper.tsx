@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { images, itemVariants, VISIBLE_COUNT } from "./constants";
+import { itemVariants, VISIBLE_COUNT } from "./constants";
 import { FC, useState } from "react";
 import CustomSectionText from "../CustomSectionText";
 import Buttons from "./Buttons";
@@ -12,40 +12,38 @@ import { useNavigate } from "react-router-dom";
 import FavoriteButton from "../FavoriteButtonComponent";
 import { AddToCartButton } from "../AddToCartButton";
 import { imagesProps } from "../interfaces";
-// import useSWR from "swr";
+import { images, Product } from "../../../Pages/Product/components/interfaces";
+import { CustomImageComponent } from "../CustomImageComponent";
 
 interface Props {
+  isLoading: boolean;
+  error: boolean | undefined | unknown;
+  data: Product;
   text: string;
+  center?: boolean;
 }
 
-const ProductSwiper: FC<Props> = ({ text }) => {
+const ProductSwiper: FC<Props> = ({
+  isLoading,
+  error,
+  data,
+  text,
+  center = true,
+}) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [prevImages, setPrevImages] = useState<imagesProps[]>([]);
+  const [prevImages, setPrevImages] = useState<images[]>([]);
   const [showCartButton, setShowCartButton] = useState<string | null>("");
 
   const navigate = useNavigate();
-  // const {
-  //   data,
 
-  //   // error, isLoading
-  // } = useSWR({
-  //   url: "/products/client",
-  //   body: {
-  //     page: 1,
-  //     limit: 10,
-  //   },
-  //   method: "POST",
-  // });
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error </p>;
 
-  // console.log(data);
+  const products = Array.isArray(data?.products) ? data.products : [];
+  const extendedImages = [...products];
 
-  // if (isLoading) return <p>Loading...</p>;
-  // if (error) return <p>Error </p>;
-  // const extendedImages = !isLoading ? [...data.products] : [];
-  const extendedImages = [...images];
-
-  if (images.length > 5 && images.length % VISIBLE_COUNT !== 0) {
+  if (products.length > 5 && products.length % VISIBLE_COUNT !== 0) {
     extendedImages.push({
       image: "",
       stock: 1,
@@ -57,6 +55,40 @@ const ProductSwiper: FC<Props> = ({ text }) => {
       discountPrice: 0,
       category: "",
       title: "Ваша персональная подборка новинок",
+      additionalInfoRu: "",
+      additionalInfoTm: "",
+      barcode: "",
+      brandId: "",
+      categoryId: "",
+      compositionRu: "",
+      compositionTm: "",
+      currentSellPrice: "",
+      descriptionRu: "",
+      descriptionTm: "",
+      discountType: "",
+      discountValue: "",
+      hashtags: [],
+      id: "",
+      imageFive: "",
+      imageFour: "",
+      imageOne: "",
+      imageThree: "",
+      imageTwo: "",
+      incomePrice: "",
+      isActive: false,
+      isDisabled: false,
+      limit: "",
+      nameRu: "",
+      nameTm: "",
+      order: 0,
+      productStatusId: 0,
+      segmentId: "",
+      subCategoryId: "",
+      unit: "",
+      updatedAt: "",
+      usageRu: "",
+      usageTm: "",
+      waitListCount: "",
     });
   }
 
@@ -66,21 +98,23 @@ const ProductSwiper: FC<Props> = ({ text }) => {
   const handleNext = () => {
     if (index < maxIndex) {
       setDirection(1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
+      setPrevImages(
+        data.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
+      );
       setIndex((prev) => prev + VISIBLE_COUNT);
     }
   };
-
   const handlePrev = () => {
     if (index > 0) {
       setDirection(-1);
-      setPrevImages(images.slice(index, index + VISIBLE_COUNT));
+      setPrevImages(
+        data.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
+      );
       setIndex((prev) => prev - VISIBLE_COUNT);
     }
   };
   const handleNavigate = (item: imagesProps) => {
-    navigate(`/product/${item.category}`);
-    localStorage.setItem("productEuroCos", JSON.stringify(item));
+    navigate(`/product/${item.barcode}`);
   };
   return (
     <CustomContainerMain>
@@ -90,7 +124,7 @@ const ProductSwiper: FC<Props> = ({ text }) => {
         direction="row"
         sx={{ py: 2, px: 4, mb: 2, position: "relative", zIndex: 2 }}
       >
-        <Stack minWidth={"5%"}></Stack>
+        {center ? <Stack minWidth={"5%"}></Stack> : ""}
         <CustomSectionText text={text} />
         <Buttons
           handlePrev={handlePrev}
@@ -129,28 +163,18 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                   overflow: "hidden",
                 }}
               >
-                <img
-                  src={item?.image}
-                  alt={`background-${i}`}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
-                />
+                <CustomImageComponent product={item} notIsMobileHeight="100%" />
+
                 <Stack
                   sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
                 >
                   <CustomProductTextConatiner
-                    textCategory={item.category || ""}
-                    mainText={item.title}
-                    discountPrice={
-                      item?.discountPrice && item.discountPrice > 0
-                        ? item.discountPrice
-                        : 0
-                    }
-                    sellPrice={item.sellPrice || 0}
+                    textCategory={item?.category}
+                    mainText={item.nameRu || "Нет названия"}
+                    discountPrice={Number(item.discountValue) || 0}
+                    sellPrice={Number(item.currentSellPrice) || 0}
+                    discounted={Number(item.sellPrice) || 0}
+                    decimals={0}
                   />
                 </Stack>
               </Box>
@@ -162,9 +186,11 @@ const ProductSwiper: FC<Props> = ({ text }) => {
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent:
+                visibleImages.length > 3 ? "space-between" : "start",
               width: "100%",
               zIndex: 1,
+              gap: visibleImages.length > 3 ? 0 : 10,
             }}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -185,16 +211,16 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                       cursor: "pointer",
                       position: "relative",
                     }}
-                    onClick={() => handleNavigate(item)}
-                    onMouseEnter={() => setShowCartButton(item.articule)}
+                    onClick={() => handleNavigate(item as imagesProps)}
+                    onMouseEnter={() => setShowCartButton(item.barcode)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
-                    {item.image && (
+                    {item && (
                       <Stack position="absolute" right={0} zIndex={100}>
-                        <FavoriteButton product={item} />
+                        <FavoriteButton product={item as any} />
                       </Stack>
                     )}
-                    {showCartButton == item.articule && item.image && (
+                    {showCartButton == item.barcode && item && (
                       <Stack
                         position="absolute"
                         bottom={190}
@@ -206,15 +232,10 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                         <AddToCartButton product={item} />
                       </Stack>
                     )}
-                    {item.image !== "" ? (
-                      <img
-                        src={item.image}
-                        alt={`product-${i}`}
-                        style={{
-                          width: "100%",
-                          height: 280,
-                          objectFit: "cover",
-                        }}
+                    {item.imageOne !== "" ? (
+                      <CustomImageComponent
+                        product={item}
+                        notIsMobileHeight={280}
                       />
                     ) : (
                       <Box
@@ -231,10 +252,12 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                         }}
                       >
                         <CustomProductTextConatiner
-                          textCategory={item.category}
-                          mainText={item.title}
-                          discountPrice={item.discountPrice}
-                          sellPrice={item.sellPrice}
+                          textCategory={item?.category}
+                          mainText={item.nameRu || "Нет названия"}
+                          discountPrice={Number(item.discountValue) || 0}
+                          sellPrice={Number(item.currentSellPrice) || 0}
+                          discounted={Number(item.sellPrice) || 0}
+                          decimals={0}
                           ta="left"
                         />
                         <Button
@@ -272,10 +295,12 @@ const ProductSwiper: FC<Props> = ({ text }) => {
                         }}
                       >
                         <CustomProductTextConatiner
-                          textCategory={item.category}
-                          mainText={item.title}
-                          discountPrice={item.discountPrice}
-                          sellPrice={item.sellPrice}
+                          textCategory={item?.category}
+                          mainText={item.nameRu || "Нет названия"}
+                          discountPrice={Number(item.discountValue) || 0}
+                          sellPrice={Number(item.currentSellPrice) || 0}
+                          discounted={Number(item.sellPrice) || 0}
+                          decimals={0}
                         />
                       </Stack>
                     ) : (

@@ -22,8 +22,6 @@ export const CustomBreadcrumb: FC<Props> = ({
   segment,
   color = "#000",
 }) => {
-  console.log(subCategory);
-
   const StyledLink = ({
     to,
     children,

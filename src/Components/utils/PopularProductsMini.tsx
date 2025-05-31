@@ -1,39 +1,52 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { images, itemVariants } from "./productsSwiper/constants";
 import { FC, useState } from "react";
 import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { images, Product } from "../../Pages/Product/components/interfaces";
+import { itemVariants, VISIBLE_COUNT } from "./productsSwiper/constants";
+import { imagesProps } from "./interfaces";
 import CustomSectionText from "./CustomSectionText";
 import Buttons from "./productsSwiper/Buttons";
+import { CustomImageComponent } from "./CustomImageComponent";
 import CustomProductTextConatiner from "./CustomProductTextConatiner";
 import FavoriteButton from "./FavoriteButtonComponent";
-import { hoverStyle } from "./CustomStyles";
 import { AddToCartButton } from "./AddToCartButton";
+import { hoverStyle } from "./CustomStyles";
 
 interface Props {
+  isLoading: boolean;
+  error: boolean | undefined | unknown;
+  data: Product;
   text: string;
   visibleCount?: number;
 }
 
-interface images {
-  image?: string;
-  productStatus?: string;
-  title: string;
-  sellPrice?: number;
-  discountPrice?: number;
-  category?: string;
-}
-
-export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
+export const PopularProductsMini: FC<Props> = ({
+  isLoading,
+  error,
+  data,
+  text,
+  visibleCount,
+}) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
-  const extendedImages = [...images];
-  const navigate = useNavigate();
   const [showCartButton, setShowCartButton] = useState<string | null>("");
 
-  if (images.length % visibleCount !== 0) {
+  const navigate = useNavigate();
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error </p>;
+
+  const products = Array.isArray(data?.products) ? data.products : [];
+  const extendedImages = [...products];
+
+  if (
+    visibleCount &&
+    products.length > 5 &&
+    products.length % visibleCount !== 0
+  ) {
     extendedImages.push({
       image: "",
       stock: 1,
@@ -45,30 +58,78 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
       discountPrice: 0,
       category: "",
       title: "Ваша персональная подборка новинок",
+      additionalInfoRu: "",
+      additionalInfoTm: "",
+      barcode: "",
+      brandId: "",
+      categoryId: "",
+      compositionRu: "",
+      compositionTm: "",
+      currentSellPrice: "",
+      descriptionRu: "",
+      descriptionTm: "",
+      discountType: "",
+      discountValue: "",
+      hashtags: [],
+      id: "",
+      imageFive: "",
+      imageFour: "",
+      imageOne: "",
+      imageThree: "",
+      imageTwo: "",
+      incomePrice: "",
+      isActive: false,
+      isDisabled: false,
+      limit: "",
+      nameRu: "",
+      nameTm: "",
+      order: 0,
+      productStatusId: 0,
+      segmentId: "",
+      subCategoryId: "",
+      unit: "",
+      updatedAt: "",
+      usageRu: "",
+      usageTm: "",
+      waitListCount: "",
     });
   }
 
-  const maxIndex = Math.max(0, extendedImages.length - visibleCount);
-  const visibleImages = extendedImages.slice(index, index + visibleCount);
+  const maxIndex = Math.max(
+    0,
+    extendedImages.length - (visibleCount ? visibleCount : 0)
+  );
+  const visibleImages = extendedImages.slice(
+    index,
+    index + (visibleCount ? visibleCount : 0)
+  );
 
   const handleNext = () => {
     if (index < maxIndex) {
       setDirection(1);
-      setPrevImages(images.slice(index, index + visibleCount));
-      setIndex((prev) => prev + visibleCount);
+      setPrevImages(
+        data.products
+          ? data.products.slice(
+              index,
+              index + (visibleCount ? visibleCount : 0)
+            )
+          : []
+      );
+      setIndex((prev) => prev + (visibleCount ? visibleCount : 0));
     }
   };
-
   const handlePrev = () => {
     if (index > 0) {
       setDirection(-1);
-      setPrevImages(images.slice(index, index + visibleCount));
-      setIndex((prev) => prev - visibleCount);
+      setPrevImages(
+        data.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
+      );
+      setIndex((prev) => prev - VISIBLE_COUNT);
     }
   };
-  const handleNavigate = (item: images) => {
+  const handleNavigate = (item: imagesProps) => {
     navigate(`/product/${item.category}`);
-    localStorage.setItem("productEuroCos", JSON.stringify(item));
+    // localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
   return (
     <>
@@ -116,24 +177,18 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                   overflow: "hidden",
                 }}
               >
-                <img
-                  src={item?.image}
-                  alt={`background-${i}`}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
-                />
+                <CustomImageComponent product={item} notIsMobileHeight="100%" />
+
                 <Stack
                   sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
                 >
                   <CustomProductTextConatiner
-                    textCategory={item.category || ""}
-                    mainText={item.title}
-                    discountPrice={item.discountPrice || 0}
-                    sellPrice={item.sellPrice || 0}
+                    textCategory={item?.category}
+                    mainText={item.nameRu || "Нет названия"}
+                    discountPrice={Number(item.discountValue) || 0}
+                    sellPrice={Number(item.currentSellPrice) || 0}
+                    discounted={Number(item.sellPrice) || 0}
+                    decimals={0}
                   />
                 </Stack>
               </Box>
@@ -148,9 +203,10 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
               justifyContent: "space-between",
               width: "100%",
               zIndex: 1,
+              // gap: visibleImages.length > 3 ? 0 : 10,
             }}
           >
-            <AnimatePresence initial={false} custom={direction}>
+            <AnimatePresence initial={false} custom={direction} mode="wait">
               {visibleImages.map((item, i) => {
                 return (
                   <motion.div
@@ -168,14 +224,16 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                       cursor: "pointer",
                       position: "relative",
                     }}
-                    onClick={() => handleNavigate(item)}
-                    onMouseEnter={() => setShowCartButton(item.articule)}
+                    onClick={() => handleNavigate(item as imagesProps)}
+                    onMouseEnter={() => setShowCartButton(item.id)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
-                    <Stack position="absolute" right={0} zIndex={100}>
-                      <FavoriteButton product={item} />
-                    </Stack>
-                    {showCartButton == item.articule && (
+                    {item && (
+                      <Stack position="absolute" right={0} zIndex={100}>
+                        <FavoriteButton product={item as any} />
+                      </Stack>
+                    )}
+                    {showCartButton == item.id && item && (
                       <Stack
                         position="absolute"
                         bottom={280}
@@ -187,15 +245,10 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                         <AddToCartButton product={item} />
                       </Stack>
                     )}
-                    {item.image !== "" ? (
-                      <img
-                        src={item.image}
-                        alt={`product-${i}`}
-                        style={{
-                          width: "100%",
-                          height: 180,
-                          objectFit: "cover",
-                        }}
+                    {item.imageOne !== "" ? (
+                      <CustomImageComponent
+                        product={item}
+                        notIsMobileHeight={180}
                       />
                     ) : (
                       <Box
@@ -212,10 +265,12 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                         }}
                       >
                         <CustomProductTextConatiner
-                          textCategory={item.category}
-                          mainText={item.title}
-                          discountPrice={item.discountPrice}
-                          sellPrice={item.sellPrice}
+                          textCategory={item?.category}
+                          mainText={item.nameRu || "Нет названия"}
+                          discountPrice={Number(item.discountValue) || 0}
+                          sellPrice={Number(item.currentSellPrice) || 0}
+                          discounted={Number(item.sellPrice) || 0}
+                          decimals={0}
                           ta="left"
                         />
                         <Button
@@ -253,11 +308,12 @@ export const PopularProductsMini: FC<Props> = ({ text, visibleCount = 4 }) => {
                         }}
                       >
                         <CustomProductTextConatiner
-                          textCategory={item.category}
-                          mainText={item.title}
-                          discountPrice={item.discountPrice}
-                          sellPrice={item.sellPrice}
-                          fz={14}
+                          textCategory={item?.category}
+                          mainText={item.nameRu || "Нет названия"}
+                          discountPrice={Number(item.discountValue) || 0}
+                          sellPrice={Number(item.currentSellPrice) || 0}
+                          discounted={Number(item.sellPrice) || 0}
+                          decimals={0}
                         />
                       </Stack>
                     ) : (

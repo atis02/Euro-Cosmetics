@@ -1,6 +1,7 @@
 export interface CartItem {
   product: {
-    discountPrice: number;
+    discountValue: number;
+    currentSellPrice: number;
     sellPrice: number;
   };
   quantity: number;
@@ -12,4 +13,5 @@ export interface imagesProps {
   sellPrice?: number;
   discountPrice?: number;
   category?: string;
+  barcode: string;
 }

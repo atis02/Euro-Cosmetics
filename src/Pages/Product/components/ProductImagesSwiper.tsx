@@ -10,8 +10,9 @@ import {
   ExpandMore,
 } from "@mui/icons-material";
 import { Product } from "./interfaces";
+import { BASE_URL } from "../../../Fetcher/swrConfig";
 
-export const ProductImagesSwiper: FC<Product> = ({ product }) => {
+export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
   const swiperRef = useRef<SwiperClass | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -53,7 +54,9 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
       container?.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
-
+  if (isLoading) {
+    return;
+  }
   const handleNext = () => {
     swiperRef.current?.slideNext();
   };
@@ -61,14 +64,15 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
   };
+
   const swiperData = [
-    { image: product.image },
-    { image: product.image },
-    { image: product.image },
-    { image: product.image },
-    { image: product.image },
-    { image: product.image },
+    { image: product.imageOne },
+    { image: product.imageTwo || null },
+    { image: product.imageThree || null },
+    { image: product.imageFour || null },
+    { image: product.imageFive || null },
   ];
+
   return (
     <Stack
       ref={containerRef}
@@ -163,30 +167,33 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
         slidesPerView={1}
         style={{ width: "100%" }}
       >
-        {swiperData.map((slide, index) => (
-          <SwiperSlide key={`${slide}-${index}`}>
-            <Stack
-              sx={{
-                minWidth: 280,
-                minHeight: isMobile ? 200 : 375,
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={slide.image}
-                alt="Slide"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  backgroundColor: "#fff",
+        {swiperData
+          .filter((elem) => elem.image !== null)
+          .map((slide, index) => (
+            <SwiperSlide key={`${slide}-${index}`}>
+              <Stack
+                sx={{
+                  minWidth: 280,
+                  minHeight: isMobile ? 200 : 375,
+                  display: "flex",
+                  alignItems: "center",
                 }}
-                className="swiper-img"
-              />
-            </Stack>
-          </SwiperSlide>
-        ))}
+              >
+                <img
+                  src={`${BASE_URL}/${slide.image}`}
+                  alt="Slide"
+                  crossOrigin="anonymous"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    backgroundColor: "#fff",
+                  }}
+                  className="swiper-img"
+                />
+              </Stack>
+            </SwiperSlide>
+          ))}
         {isMobile ? (
           <div className="swiper-pagination-mobile" />
         ) : (
@@ -215,20 +222,26 @@ export const ProductImagesSwiper: FC<Product> = ({ product }) => {
             prevEl: ".swiper-button-prev-thumbs",
           }}
         >
-          {swiperData.map((slide, index) => (
-            <SwiperSlide key={`thumb-${index}`} className="swiper-slide-thumb">
-              <img
-                src={slide.image}
-                alt={`thumb-${index}`}
-                style={{
-                  width: 68,
-                  height: 68,
-                  objectFit: "cover",
-                  cursor: "pointer",
-                }}
-              />
-            </SwiperSlide>
-          ))}
+          {swiperData
+            .filter((elem) => elem.image !== null)
+            .map((slide, index) => (
+              <SwiperSlide
+                key={`thumb-${index}`}
+                className="swiper-slide-thumb"
+              >
+                <img
+                  src={`${BASE_URL}/${slide.image}`}
+                  alt={`thumb-${index}`}
+                  style={{
+                    width: 68,
+                    height: 68,
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
+                  crossOrigin="anonymous"
+                />
+              </SwiperSlide>
+            ))}
         </Swiper>
       )}
       {!isMobile && (

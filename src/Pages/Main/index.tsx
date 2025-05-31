@@ -5,14 +5,48 @@ import Story from "../../Components/Story/index";
 import StoryButton from "./components/StoryButton";
 import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper";
 import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
-import { data } from "../../Components/utils/actionSwiper/constants";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
-import { images } from "../../Components/utils/productsSwiper/constants";
+import useSWR from "swr";
+import { actionData } from "../../Components/utils/actionSwiper/constants";
+import { BASE_URL } from "../../Fetcher/swrConfig";
 
 const Main: React.FC = () => {
   const [openStory, setOpenStory] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const url = BASE_URL + "/products/client";
+
+  const fetchNewKey = JSON.stringify({
+    url: url,
+    body: { page: 1, limit: 10, productStatusId: 1 },
+    method: "POST",
+  });
+  const fetchHitKey = JSON.stringify({
+    url: url,
+    body: { page: 1, limit: 10, productStatusId: 2 },
+    method: "POST",
+  });
+
+  const fetcher = (key: string) => {
+    const { url, body, method } = JSON.parse(key);
+    return fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((res) => res.json());
+  };
+
+  const {
+    data: newData,
+    error: newError,
+    isLoading: loadingNew,
+  } = useSWR(fetchNewKey, fetcher);
+  const {
+    data: hitData,
+    error: hitError,
+    isLoading: loadingHit,
+  } = useSWR(fetchHitKey, fetcher);
+
   return (
     <Box>
       <Stack>
@@ -29,32 +63,51 @@ const Main: React.FC = () => {
       </Stack>
 
       <Story open={openStory} onClose={() => setOpenStory(false)} />
-      {isMobile ? (
+      {isMobile && !loadingNew ? (
         <MobileSwipeProducts
-          products={images}
+          products={newData}
           text="новинки"
           isMobile
           p={1}
           mt={3}
           width="100vw"
+          isLoading={loadingNew}
         />
       ) : (
-        <ProductSwiper text="новинки" />
+        !loadingNew &&
+        newData.products?.length && (
+          <ProductSwiper
+            text="новинки"
+            data={newData}
+            error={newError}
+            isLoading={loadingNew}
+          />
+        )
       )}
-      <ActionSwiper text="aкции" data={data} />
-      {isMobile ? (
+      <ActionSwiper text="aкции" data={actionData} />
+      {isMobile && !loadingHit ? (
         <MobileSwipeProducts
-          products={images}
+          products={hitData}
           isMobile
           text="хиты"
           p={1}
           width="100vw"
+          isLoading={loadingHit}
         />
       ) : (
-        <ProductSwiper text="хиты" />
+        !loadingHit &&
+        hitData.products?.length && (
+          <ProductSwiper
+            text="хиты"
+            data={hitData}
+            error={hitError}
+            isLoading={loadingHit}
+            center={false}
+          />
+        )
       )}
 
-      <ActionSwiper text="клиентские дни" data={data} />
+      <ActionSwiper text="клиентские дни" data={actionData} />
     </Box>
   );
 };

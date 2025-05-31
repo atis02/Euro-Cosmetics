@@ -20,9 +20,7 @@ const Products: FC<Props> = ({ product }) => {
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
     navigate(`/product/${item.category}`);
-    localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
-  console.log(product);
 
   return (
     <CustomContainerAll mt={2}>

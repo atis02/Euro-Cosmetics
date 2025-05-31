@@ -3,6 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import { FC, useRef } from "react";
 import FavoriteButton from "./FavoriteButtonComponent";
 import { AddToCartButton } from "./AddToCartButton";
+import { CustomImageComponent } from "./CustomImageComponent";
 
 interface Props {
   products: any;
@@ -11,6 +12,7 @@ interface Props {
   p?: number;
   mt?: number;
   isMobile?: boolean;
+  isLoading: boolean;
 }
 export const MobileSwipeProducts: FC<Props> = ({
   products,
@@ -19,8 +21,11 @@ export const MobileSwipeProducts: FC<Props> = ({
   p,
   mt,
   isMobile,
+  isLoading,
 }) => {
   const swiperRef = useRef<SwiperClass | null>(null);
+  if (isLoading) return <p>Loading...</p>;
+  console.log(products);
 
   return (
     <Stack mt={mt}>
@@ -42,7 +47,7 @@ export const MobileSwipeProducts: FC<Props> = ({
         pagination={{ clickable: true }}
         style={{ width: width }}
       >
-        {products.map((product: any, index: number) => (
+        {products?.products.map((product: any, index: number) => (
           <SwiperSlide key={index}>
             <Stack
               sx={{
@@ -65,16 +70,8 @@ export const MobileSwipeProducts: FC<Props> = ({
               >
                 <AddToCartButton product={product} />
               </Stack>
-              <img
-                src={product.image}
-                alt={product.title}
-                style={{
-                  width: "100%",
-                  height: isMobile ? 225 : 140,
-                  objectFit: "cover",
-                  backgroundColor: "#fff",
-                }}
-              />
+
+              <CustomImageComponent product={product} isMobile={isMobile} />
               <Stack p={p}>
                 <Typography
                   mt={1}
@@ -84,10 +81,10 @@ export const MobileSwipeProducts: FC<Props> = ({
                   fontWeight={500}
                   letterSpacing={2}
                 >
-                  {product.category}
+                  {product.Category?.nameRu}
                 </Typography>
                 <Typography fontSize={16} fontFamily="Graphic" fontWeight={500}>
-                  {product.title}
+                  {product.nameRu}
                 </Typography>
                 <Stack direction="row" gap={1}>
                   <Typography
@@ -95,17 +92,19 @@ export const MobileSwipeProducts: FC<Props> = ({
                     fontFamily="Graphic"
                     fontSize={14}
                   >
-                    {product.sellPrice} ₸
+                    {product.currentSellPrice} TMT
                   </Typography>
-                  <Typography
-                    fontSize={14}
-                    color="gray"
-                    fontWeight={500}
-                    fontFamily="Graphic"
-                    sx={{ textDecoration: "line-through" }}
-                  >
-                    {product.sellPrice + product.discountPrice} ₸
-                  </Typography>
+                  {product.discountValue > 0 && (
+                    <Typography
+                      fontSize={14}
+                      color="gray"
+                      fontWeight={500}
+                      fontFamily="Graphic"
+                      sx={{ textDecoration: "line-through" }}
+                    >
+                      {product.sellPrice} TMT
+                    </Typography>
+                  )}
                 </Stack>
               </Stack>
             </Stack>

@@ -40,14 +40,17 @@ type Props = {
   dr?: "row";
   isCart?: boolean;
   showAddMinus?: boolean;
-  article?: string;
+  id?: string;
   quantity?: number;
+  discounted?: number | undefined;
+  decimals?: number;
 };
 const CustomProductTextConatiner: FC<Props> = ({
   textCategory,
   mainText,
   discountPrice,
   sellPrice,
+  discounted,
   ta,
   fz = 20,
   jc = "flex-end",
@@ -55,8 +58,9 @@ const CustomProductTextConatiner: FC<Props> = ({
   dr,
   isCart,
   showAddMinus,
-  article,
+  id,
   quantity,
+  decimals = 2,
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -65,25 +69,24 @@ const CustomProductTextConatiner: FC<Props> = ({
   const favorites = useSelector((state: any) => state.favorites.items);
 
   const cartItems = useSelector((state: any) => state.cart.items);
-  console.log(sellPrice);
 
   const isFavorite: boolean = favorites.some(
-    (item: Product) => item.product?.articule === article
+    (item: Product) => item.product?.articule === id
   );
 
   const handleToggle = (
     e: React.MouseEvent<HTMLButtonElement>,
-    article: string
+    id: string
   ): void => {
     const filteredItems = cartItems.filter(
-      (item: Product) => item.product.articule == article
+      (item: Product) => item.product.articule == id
     );
 
     e.stopPropagation();
     dispatch(toggleFavorite(filteredItems[0]));
     !isFavorite
       ? OpenNotification({
-          image: filteredItems[0]?.product.image,
+          image: filteredItems[0]?.product.imageOne,
           text: "добавлен в избранное!",
           icon: <FavoriteBorderOutlined />,
           title: filteredItems[0]?.product.title,
@@ -96,10 +99,10 @@ const CustomProductTextConatiner: FC<Props> = ({
   };
   const handleDelete = (
     e: React.MouseEvent<HTMLButtonElement>,
-    article: string
+    id: string
   ): void => {
     e.stopPropagation();
-    dispatch(removeProduct(article));
+    dispatch(removeProduct(id));
   };
 
   return (
@@ -119,7 +122,7 @@ const CustomProductTextConatiner: FC<Props> = ({
           <CustomProductText text={textCategory} />
           {showAddMinus && (
             <Stack mt={-3} height={15}>
-              <AddMinusBtns article={article} />
+              <AddMinusBtns id={id} />
             </Stack>
           )}
         </Stack>
@@ -141,12 +144,18 @@ const CustomProductTextConatiner: FC<Props> = ({
       {/* PRICE BLOCK */}
       <CustomProductText fz={fz} fw={500} mainText={mainText} ta={ta} />
       <Stack direction="column">
-        {isCart && (
+        {isCart &&
+        discountPrice &&
+        sellPrice &&
+        discounted &&
+        discountPrice > 0 ? (
           <Stack direction="row" gap={2} mb={0.5} justifyContent={jc}>
             <CountUp
-              end={discountPrice ? discountPrice * (quantity ?? 1) : 0}
+              end={(discounted - sellPrice) * (quantity ?? 1)}
+              decimals={decimals}
               duration={0.6}
-              prefix="скидка $ "
+              suffix=" TMT"
+              prefix="скидка "
               separator=" "
               style={{
                 color: mainColor,
@@ -155,26 +164,33 @@ const CustomProductTextConatiner: FC<Props> = ({
               }}
             />
           </Stack>
+        ) : (
+          ""
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
           {sellPrice && (
             <CountUp
               end={sellPrice ? sellPrice * (quantity ?? 1) : 0}
               duration={0.6}
+              decimals={decimals}
               separator=" "
-              prefix="$ "
+              suffix=" TMT"
               style={{
                 fontWeight: 500,
                 fontFamily: "Graphic",
               }}
             />
           )}
-          {discountPrice != sellPrice && discountPrice && (
+          {discountPrice != sellPrice &&
+          discountPrice &&
+          discounted &&
+          discountPrice > 0 ? (
             <CountUp
-              end={discountPrice * (quantity ?? 1)}
+              end={discounted * (quantity ?? 1)}
               duration={0.6}
+              decimals={decimals}
               separator=" "
-              prefix="$ "
+              suffix=" TMT"
               style={{
                 color: "#b3b3b3",
                 fontWeight: 500,
@@ -182,6 +198,8 @@ const CustomProductTextConatiner: FC<Props> = ({
                 textDecoration: "line-through",
               }}
             />
+          ) : (
+            ""
           )}
         </Stack>
       </Stack>
@@ -205,7 +223,7 @@ const CustomProductTextConatiner: FC<Props> = ({
                 fw={500}
                 fz={20}
               />
-              {article && <AddMinusBtns showDeleteIcon article={article} />}
+              {id && <AddMinusBtns showDeleteIcon id={id} />}
             </Stack>
             <Divider />
             <Stack
@@ -216,7 +234,7 @@ const CustomProductTextConatiner: FC<Props> = ({
             >
               <IconButton
                 sx={{ color: "#000", fontFamily: "Graphic", fontSize: 20 }}
-                onClick={(e) => handleDelete(e, article ?? "")}
+                onClick={(e) => handleDelete(e, id ?? "")}
               >
                 Удалить
               </IconButton>
@@ -227,7 +245,7 @@ const CustomProductTextConatiner: FC<Props> = ({
                   gap: 1,
                   fontFamily: "Graphic",
                 }}
-                onClick={(e) => handleToggle(e, article ?? "")}
+                onClick={(e) => handleToggle(e, id ?? "")}
               >
                 {isFavorite ? (
                   <Favorite

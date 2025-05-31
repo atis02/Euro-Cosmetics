@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { ReactNode } from "react";
+import { BASE_URL } from "../../Fetcher/swrConfig";
 
 export const GoldAppleNotification = ({
   image,
@@ -12,12 +13,15 @@ export const GoldAppleNotification = ({
   icon?: ReactNode;
   title: string;
 }) => {
+  console.log(image);
+
   return (
     <Box display="flex" p={0} alignItems="center" gap={1}>
       <img
-        src={image}
+        src={`${BASE_URL}/${image}`}
         style={{ width: 70, height: 70, objectFit: "cover" }}
-        alt=""
+        alt={image}
+        crossOrigin="anonymous"
       />
       {icon}
       <Stack direction="column" gap={1}>

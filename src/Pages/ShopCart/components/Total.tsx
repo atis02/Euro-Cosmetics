@@ -27,13 +27,15 @@ export const Total = () => {
 
   const totalSum = cartItems.reduce(
     (sum: number, item: CartItem) =>
-      sum + item.product?.sellPrice * item.quantity,
+      sum + item.product?.currentSellPrice * item.quantity,
 
     0
   );
   const totalDiscount = cartItems.reduce(
     (discount: number, item: CartItem) =>
-      discount + item.product?.discountPrice * item.quantity,
+      discount +
+      (item.product?.sellPrice - item.product?.currentSellPrice) *
+        item.quantity,
     0
   );
 
@@ -46,8 +48,9 @@ export const Total = () => {
         <CountUp
           end={totalSum}
           duration={0.6}
+          decimals={2}
           separator=" "
-          prefix="скидка $ "
+          prefix=" TMT "
           style={{
             color: mainColor,
             fontWeight: 500,
@@ -61,9 +64,10 @@ export const Total = () => {
         <CountUp
           end={totalDiscount}
           duration={0.6}
+          decimals={2}
           separator=" "
           prefix="–  "
-          suffix=" ₽"
+          suffix=" TMT"
           style={{
             color: mainColor,
             fontWeight: 500,
@@ -79,10 +83,11 @@ export const Total = () => {
       >
         <CustomProductText text="итого" fw={500} fz={20} />
         <CountUp
-          end={totalSum - totalDiscount}
+          end={totalSum}
           duration={0.6}
           separator=" "
-          suffix=" ₽"
+          decimals={2}
+          suffix=" TMT"
           style={{
             fontWeight: 500,
             fontFamily: "Graphic",

@@ -10,11 +10,11 @@ export const ProductTitleFeedBack: FC<Product> = ({ product }) => {
   return (
     <Stack mb={isMobile ? 0 : -5} gap={2} zIndex={10}>
       {isMobile ? "" : <Rating product={product} />}
-      <CustomProductText fz={14} fw={500} mainText={product.category} />
+      <CustomProductText fz={14} fw={500} mainText={product.Category?.nameRu} />
       <CustomProductText
         fz={isMobile ? 30 : 45}
         fw={500}
-        mainText={product.title}
+        mainText={product.nameRu}
       />
     </Stack>
   );

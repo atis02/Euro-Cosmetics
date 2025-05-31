@@ -12,19 +12,49 @@ import { useDispatch } from "react-redux";
 import { addProduct } from "../../Components/redux/reducers/cartSlice";
 import { OpenNotification } from "../../Components/utils/CustomToast";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
-import { images } from "../../Components/utils/productsSwiper/constants";
 import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper";
+import useSWR from "swr";
+import { useParams } from "react-router-dom";
+import { ProductDetailSkeleton } from "./components/ProductDetailSkeleton";
+import { BASE_URL } from "../../Fetcher/swrConfig";
 
 const index = () => {
   const product = JSON.parse(localStorage.getItem("productEuroCos") || "{}");
+  const { id } = useParams();
+
+  const { data, isLoading } = useSWR({
+    url: `/products/barcode/${id}`,
+  });
+
+  const url = BASE_URL + "/products/client";
+
+  const fetchNewKey = JSON.stringify({
+    url: url,
+    body: { page: 1, limit: 10, categoryId: data?.Category.id },
+    method: "POST",
+  });
+
+  const fetcher = (key: string) => {
+    const { url, body, method } = JSON.parse(key);
+    return fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((res) => res.json());
+  };
+  const {
+    data: categoryProduct,
+    error: categoryProductError,
+    isLoading: loadingCategoryProduct,
+  } = useSWR(fetchNewKey, fetcher);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const dispatch = useDispatch();
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
-    dispatch(addProduct({ product }));
+    dispatch(addProduct(data));
     OpenNotification({
-      image: product.image,
+      image: data.imageOne,
       text: "добавлен в корзину!",
       icon: (
         <svg viewBox="0 0 21 21" style={{ width: 20, height: 20 }} fill="#fff">
@@ -36,9 +66,13 @@ const index = () => {
           ></path>
         </svg>
       ),
-      title: product.title,
+      title: data.nameRu,
     });
   };
+  if (isLoading) {
+    return <ProductDetailSkeleton />;
+  }
+
   return (
     <>
       <CustomContainerAll>
@@ -52,8 +86,14 @@ const index = () => {
           }}
           gap={isMobile ? 2 : 0}
         >
-          <ProductBreadCrumbs product={product} />
-          <ProductTitleFeedBack product={product} />
+          <Stack width={{ lg: "50%" }}>
+            <ProductBreadCrumbs
+              category={data?.Category}
+              subCategory={data?.SubCategory}
+              segment={data?.Segment}
+            />
+          </Stack>
+          <ProductTitleFeedBack product={data} />
         </Stack>
         <Stack
           direction={{ lg: "row", md: "column", sm: "column", xs: "column" }}
@@ -61,10 +101,10 @@ const index = () => {
           justifyContent="space-between"
         >
           <Stack maxWidth={{ lg: "65%", md: "65%", sm: "100%", xs: "100%" }}>
-            <ProductImagesComponent product={product} />
+            <ProductImagesComponent product={data} isLoading={isLoading} />
           </Stack>
           <Stack width="35%" mt={isMobile ? 0 : 10}>
-            <ProductDetails product={product} />
+            <ProductDetails product={data} />
           </Stack>
         </Stack>
 
@@ -73,19 +113,18 @@ const index = () => {
             width={isMobile ? "100%" : "60%"}
             sai="end"
             fw={500}
-            mainText={product.title}
+            mainText={data?.nameRu}
           />
           <CustomProductText
             width={isMobile ? "100%" : "60%"}
             color="gray"
             sai="end"
-            mainText={product.articule}
+            mainText={data?.barcode}
           />
-
           <CustomProductText
             sai="end"
             width={isMobile ? "100%" : "60%"}
-            mainText={product.desc}
+            mainText={data?.desc}
           />
         </Stack>
 
@@ -123,16 +162,21 @@ const index = () => {
       {isMobile ? (
         <Stack>
           <MobileSwipeProducts
-            products={images}
+            products={categoryProduct}
+            isLoading={loadingCategoryProduct}
             text="похожие товары"
             isMobile
             p={1}
             width="100vw"
           />
-          {/* <MobileSwipeProducts products={images} text="похожие товары" /> */}
         </Stack>
       ) : (
-        <ProductSwiper text="похожие товары" />
+        <ProductSwiper
+          data={categoryProduct}
+          error={categoryProductError}
+          isLoading={loadingCategoryProduct}
+          text="похожие товары"
+        />
       )}
     </>
   );

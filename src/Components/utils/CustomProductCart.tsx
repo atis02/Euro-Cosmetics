@@ -6,6 +6,7 @@ import FavoriteButton from "./FavoriteButtonComponent";
 import { useNavigate } from "react-router-dom";
 import { Rate } from "antd";
 import CustomProductText from "./CustomProductText";
+import { CustomImageComponent } from "./CustomImageComponent";
 
 export const CustomProductCart: FC<Product> = ({ product }) => {
   const navigate = useNavigate();
@@ -26,7 +27,9 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
       <Stack position="absolute" right={0} zIndex={100}>
         <FavoriteButton product={product} />
       </Stack>
-      <img
+      <CustomImageComponent product={product} notIsMobileHeight="100%" />
+
+      {/* <img
         src={product.image}
         alt={`background-${product.title}`}
         style={{
@@ -35,7 +38,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           objectFit: "cover",
           cursor: "pointer",
         }}
-      />
+      /> */}
       <Stack sx={{ p: 1, textAlign: "left", flexDirection: "column" }}>
         <Stack direction="row" alignItems="center" gap={1}>
           <CustomProductText fw={500} mainText={product.feedBackNumb} />
@@ -46,7 +49,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           textCategory={product.category || ""}
           mainText={product.title}
           discountPrice={product.discountPrice || 0}
-          sellPrice={product.sellPrice || 0}
+          sellPrice={Number(product.sellPrice) || 0}
           jc="start"
         />
       </Stack>

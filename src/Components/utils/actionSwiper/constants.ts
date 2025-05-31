@@ -1,4 +1,4 @@
-export const data = [
+export const actionData = [
   {
     title: "Elemis & Thim",
     desc: "матовая помада и гидрофильный бальзам в подарок",

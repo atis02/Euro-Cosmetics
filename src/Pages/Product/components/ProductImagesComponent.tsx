@@ -2,6 +2,6 @@ import { FC } from "react";
 import { Product } from "./interfaces";
 import { ProductImagesSwiper } from "./ProductImagesSwiper";
 
-export const ProductImagesComponent: FC<Product> = ({ product }) => {
-  return <ProductImagesSwiper product={product} />;
+export const ProductImagesComponent: FC<Product> = ({ product, isLoading }) => {
+  return <ProductImagesSwiper product={product} isLoading={isLoading} />;
 };

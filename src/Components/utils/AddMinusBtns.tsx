@@ -10,14 +10,14 @@ import {
 } from "../redux/reducers/cartSlice";
 import { mainColor } from "./CustomStyles";
 interface Props {
-  article: string | undefined;
+  id: string | undefined;
   showDeleteIcon?: boolean;
 }
-export const AddMinusBtns: FC<Props> = ({ article, showDeleteIcon }) => {
+export const AddMinusBtns: FC<Props> = ({ id, showDeleteIcon }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
   const filteredItems = cartItems.filter(
-    (item: Product) => item.product.articule == article
+    (item: Product) => item.product.id == id
   );
   const handleMinus = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -49,8 +49,8 @@ export const AddMinusBtns: FC<Props> = ({ article, showDeleteIcon }) => {
   return (
     <Stack gap={1} direction="row" alignItems="center">
       <IconButton
-        onClick={(e) => handleMinus(e, article ?? "")}
-        disabled={filteredItems[0].quantity == 1}
+        onClick={(e) => handleMinus(e, id ?? "")}
+        disabled={filteredItems[0].stock == 1}
         sx={styles}
       >
         <Remove />
@@ -63,7 +63,7 @@ export const AddMinusBtns: FC<Props> = ({ article, showDeleteIcon }) => {
       >
         {filteredItems[0].quantity}
       </Typography>
-      <IconButton sx={styles} onClick={(e) => handleAdd(e, article ?? "")}>
+      <IconButton sx={styles} onClick={(e) => handleAdd(e, id ?? "")}>
         <Add />
       </IconButton>
       {showDeleteIcon ? (
@@ -71,7 +71,7 @@ export const AddMinusBtns: FC<Props> = ({ article, showDeleteIcon }) => {
       ) : (
         <IconButton
           sx={{ styles, width: 10, height: 10 }}
-          onClick={(e) => handleDelete(e, article ?? "")}
+          onClick={(e) => handleDelete(e, id ?? "")}
         >
           <Close
             sx={{

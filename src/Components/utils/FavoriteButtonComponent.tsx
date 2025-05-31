@@ -28,7 +28,7 @@ const FavoriteButton: FC<Product> = ({
     dispatch(toggleFavorite({ product }));
     !isFavorite
       ? OpenNotification({
-          image: product.image,
+          image: product.imageOne,
           text: "добавлен в избранное!",
           icon: <FavoriteBorderOutlined />,
           title: product.title,

@@ -11,7 +11,7 @@ export const AddToCartButton: FC<Product> = ({ product }) => {
     e.stopPropagation();
     dispatch(addProduct({ product }));
     OpenNotification({
-      image: product.image,
+      image: product.imageOne,
       text: "добавлен в корзину!",
       icon: (
         <svg viewBox="0 0 21 21" style={{ width: 20, height: 20 }} fill="#fff">
