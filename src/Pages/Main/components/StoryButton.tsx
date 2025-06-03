@@ -1,4 +1,4 @@
-import { Avatar, Box, useMediaQuery, useTheme } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 
 interface StoryButtonProps {
@@ -58,9 +58,16 @@ const StoryButton = ({ imageUrl, onClick, seen = false }: StoryButtonProps) => {
           zIndex: 2,
         }}
       >
-        <Avatar
+        <img
           src={imageUrl}
-          sx={{ width: isMobile ? 56 : 66, height: isMobile ? 57 : 66 }}
+          crossOrigin="anonymous"
+          style={{
+            width: isMobile ? 56 : 66,
+            height: isMobile ? 57 : 66,
+            borderRadius: "100%",
+            objectFit: "cover",
+            background: "gray",
+          }}
         />
       </Box>
 

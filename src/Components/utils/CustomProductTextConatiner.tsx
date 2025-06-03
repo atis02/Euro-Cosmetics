@@ -39,7 +39,6 @@ type Props = {
   justifyContCart?: boolean;
   dr?: "row";
   isCart?: boolean;
-  showAddMinus?: boolean;
   id?: string;
   quantity?: number;
   discounted?: number | undefined;
@@ -57,7 +56,6 @@ const CustomProductTextConatiner: FC<Props> = ({
   justifyContCart = false,
   dr,
   isCart,
-  showAddMinus,
   id,
   quantity,
   decimals = 2,
@@ -120,7 +118,7 @@ const CustomProductTextConatiner: FC<Props> = ({
           justifyContent={justifyContCart ? "space-between" : jc}
         >
           <CustomProductText text={textCategory} />
-          {showAddMinus && (
+          {isCart && (
             <Stack mt={-3} height={15}>
               <AddMinusBtns id={id} />
             </Stack>
@@ -168,7 +166,7 @@ const CustomProductTextConatiner: FC<Props> = ({
           ""
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
-          {sellPrice && (
+          {sellPrice !== 0 && sellPrice && (
             <CountUp
               end={sellPrice ? sellPrice * (quantity ?? 1) : 0}
               duration={0.6}

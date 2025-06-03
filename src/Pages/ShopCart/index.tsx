@@ -24,6 +24,7 @@ import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts"
 import { CustomButtonSecond } from "../../Components/utils/CustomButtonSecond";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import useSWR from "swr";
+import { DeliveryDetails } from "./components/DeliveryDetails/DeliveryDetails";
 
 const CartDrawer: FC = () => {
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -115,13 +116,14 @@ const CartDrawer: FC = () => {
               </Stack>
             ))}
             <PromoCode />
-            <Total />
+            <DeliveryDetails />
+            {/* <Total />
             <CustomButtonSecond
               dontChange
               width="100%"
               text="ОФОРМИТЬ ЗАКАЗ"
               mt={3}
-            />
+            /> */}
           </>
         ) : (
           <EmptyCart />

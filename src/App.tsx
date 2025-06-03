@@ -13,6 +13,7 @@ import { SWRConfig } from "swr";
 import { fetcher } from "./Fetcher/swrConfig";
 import CategoryProducts from "./Pages/CategoryProducts";
 import NotFoundPage from "./Components/Loyout/NotFoundPage";
+import { ScrollToTop } from "./Components/utils/ScrollToTop";
 
 function App() {
   const theme = useTheme();
@@ -21,7 +22,6 @@ function App() {
     <SWRConfig
       value={{
         fetcher,
-        // refreshInterval: 5000,
         shouldRetryOnError: true,
       }}
     >
@@ -36,6 +36,7 @@ function App() {
         <BrowserRouter>
           <Navbar />
           <Toaster />
+          <ScrollToTop />
           {isMobile ? (
             <ToastContainer
               position="top-center"

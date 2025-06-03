@@ -4,6 +4,7 @@ import { FC, useRef } from "react";
 import FavoriteButton from "./FavoriteButtonComponent";
 import { AddToCartButton } from "./AddToCartButton";
 import { CustomImageComponent } from "./CustomImageComponent";
+import { useParams } from "react-router-dom";
 
 interface Props {
   products: any;
@@ -23,9 +24,9 @@ export const MobileSwipeProducts: FC<Props> = ({
   isMobile,
   isLoading,
 }) => {
+  const { id } = useParams();
   const swiperRef = useRef<SwiperClass | null>(null);
   if (isLoading) return <p>Loading...</p>;
-  console.log(products);
 
   return (
     <Stack mt={mt}>
@@ -47,69 +48,75 @@ export const MobileSwipeProducts: FC<Props> = ({
         pagination={{ clickable: true }}
         style={{ width: width }}
       >
-        {products?.products.map((product: any, index: number) => (
-          <SwiperSlide key={index}>
-            <Stack
-              sx={{
-                minWidth: 140,
-                minHeight: isMobile ? 300 : 305,
-                display: "flex",
-                position: "relative",
-              }}
-            >
-              <Stack position="absolute" right={-4} top={-4} zIndex={100}>
-                <FavoriteButton product={product} />
-              </Stack>
+        {products?.products
+          .filter((e: any) => e.barcode !== id)
+          .map((product: any, index: number) => (
+            <SwiperSlide key={index}>
               <Stack
-                position="absolute"
-                bottom={90}
-                right={10}
-                zIndex={100}
-                bgcolor={"#464646"}
-                borderRadius="100%"
+                sx={{
+                  minWidth: 140,
+                  minHeight: isMobile ? 300 : 305,
+                  display: "flex",
+                  position: "relative",
+                }}
               >
-                <AddToCartButton product={product} />
-              </Stack>
-
-              <CustomImageComponent product={product} isMobile={isMobile} />
-              <Stack p={p}>
-                <Typography
-                  mt={1}
-                  fontSize={10}
-                  textAlign="start"
-                  fontFamily="Graphic"
-                  fontWeight={500}
-                  letterSpacing={2}
+                <Stack position="absolute" right={-4} top={-4} zIndex={100}>
+                  <FavoriteButton product={product} />
+                </Stack>
+                <Stack
+                  position="absolute"
+                  bottom={90}
+                  right={10}
+                  zIndex={100}
+                  bgcolor={"#464646"}
+                  borderRadius="100%"
                 >
-                  {product.Category?.nameRu}
-                </Typography>
-                <Typography fontSize={16} fontFamily="Graphic" fontWeight={500}>
-                  {product.nameRu}
-                </Typography>
-                <Stack direction="row" gap={1}>
+                  <AddToCartButton product={product} />
+                </Stack>
+
+                <CustomImageComponent product={product} isMobile={isMobile} />
+                <Stack p={p}>
                   <Typography
-                    fontWeight={500}
+                    mt={1}
+                    fontSize={10}
+                    textAlign="start"
                     fontFamily="Graphic"
-                    fontSize={14}
+                    fontWeight={500}
+                    letterSpacing={2}
                   >
-                    {product.currentSellPrice} TMT
+                    {product.Category?.nameRu}
                   </Typography>
-                  {product.discountValue > 0 && (
+                  <Typography
+                    fontSize={16}
+                    fontFamily="Graphic"
+                    fontWeight={500}
+                  >
+                    {product.nameRu}
+                  </Typography>
+                  <Stack direction="row" gap={1}>
                     <Typography
-                      fontSize={14}
-                      color="gray"
                       fontWeight={500}
                       fontFamily="Graphic"
-                      sx={{ textDecoration: "line-through" }}
+                      fontSize={14}
                     >
-                      {product.sellPrice} TMT
+                      {product.currentSellPrice} TMT
                     </Typography>
-                  )}
+                    {product.discountValue > 0 && (
+                      <Typography
+                        fontSize={14}
+                        color="gray"
+                        fontWeight={500}
+                        fontFamily="Graphic"
+                        sx={{ textDecoration: "line-through" }}
+                      >
+                        {product.sellPrice} TMT
+                      </Typography>
+                    )}
+                  </Stack>
                 </Stack>
               </Stack>
-            </Stack>
-          </SwiperSlide>
-        ))}
+            </SwiperSlide>
+          ))}
       </Swiper>
     </Stack>
   );

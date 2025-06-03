@@ -15,3 +15,29 @@ export interface imagesProps {
   category?: string;
   barcode: string;
 }
+export interface StoryInterface {
+  id: number;
+  name: string;
+  link: string;
+  image: string;
+  video: string;
+  order: number;
+  titleTm: string;
+  titleRu: string;
+  contentTm: string;
+  contentRu: string;
+  isActive: boolean;
+  productBarcode: string;
+  ProductsArray: string[];
+  categoryId: string;
+  subCategoryId: string;
+  segmentId: string;
+  brandId: string;
+  createdAt: string;
+  updatedAt: string;
+  Product: string;
+  Category: string;
+  SubCategory: string;
+  Segment: string;
+  Brand: string;
+}

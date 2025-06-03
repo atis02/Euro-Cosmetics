@@ -8,7 +8,7 @@ import CustomContainerMain from "../CustomContainerMain";
 import CustomProductTextConatiner from "../CustomProductTextConatiner";
 import { hoverStyle } from "../CustomStyles";
 import { East } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FavoriteButton from "../FavoriteButtonComponent";
 import { AddToCartButton } from "../AddToCartButton";
 import { imagesProps } from "../interfaces";
@@ -34,16 +34,19 @@ const ProductSwiper: FC<Props> = ({
   const [direction, setDirection] = useState(1);
   const [prevImages, setPrevImages] = useState<images[]>([]);
   const [showCartButton, setShowCartButton] = useState<string | null>("");
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error </p>;
 
-  const products = Array.isArray(data?.products) ? data.products : [];
+  const products = Array.isArray(data?.products)
+    ? data.products.filter((e: any) => e.barcode !== id)
+    : [];
   const extendedImages = [...products];
 
-  if (products.length > 5 && products.length % VISIBLE_COUNT !== 0) {
+  if (products.length % VISIBLE_COUNT !== 0) {
     extendedImages.push({
       image: "",
       stock: 1,
@@ -54,7 +57,7 @@ const ProductSwiper: FC<Props> = ({
       sellPrice: 0,
       discountPrice: 0,
       category: "",
-      title: "Ваша персональная подборка новинок",
+      nameRu: "Ваша персональная подборка новинок",
       additionalInfoRu: "",
       additionalInfoTm: "",
       barcode: "",
@@ -78,7 +81,7 @@ const ProductSwiper: FC<Props> = ({
       isActive: false,
       isDisabled: false,
       limit: "",
-      nameRu: "",
+      title: "",
       nameTm: "",
       order: 0,
       productStatusId: 0,
@@ -116,6 +119,9 @@ const ProductSwiper: FC<Props> = ({
   const handleNavigate = (item: imagesProps) => {
     navigate(`/product/${item.barcode}`);
   };
+  console.log(prevImages);
+  console.log(visibleImages);
+
   return (
     <CustomContainerMain>
       <Stack
@@ -149,9 +155,10 @@ const ProductSwiper: FC<Props> = ({
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: prevImages.length > 3 ? "space-between" : "start",
               width: "100%",
               zIndex: 0,
+              gap: prevImages.length > 3 ? 0 : 10,
             }}
           >
             {prevImages.map((item, i) => (
@@ -161,6 +168,7 @@ const ProductSwiper: FC<Props> = ({
                   width: 280,
                   height: 280,
                   overflow: "hidden",
+                  display: i < visibleImages.length - 2 ? "block" : "none",
                 }}
               >
                 <CustomImageComponent product={item} notIsMobileHeight="100%" />
@@ -215,23 +223,25 @@ const ProductSwiper: FC<Props> = ({
                     onMouseEnter={() => setShowCartButton(item.barcode)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
-                    {item && (
+                    {item && item.imageOne !== "" && (
                       <Stack position="absolute" right={0} zIndex={100}>
                         <FavoriteButton product={item as any} />
                       </Stack>
                     )}
-                    {showCartButton == item.barcode && item && (
-                      <Stack
-                        position="absolute"
-                        bottom={190}
-                        right={15}
-                        zIndex={100}
-                        bgcolor={"#000"}
-                        borderRadius="100%"
-                      >
-                        <AddToCartButton product={item} />
-                      </Stack>
-                    )}
+                    {item.imageOne !== "" &&
+                      showCartButton == item.barcode &&
+                      item && (
+                        <Stack
+                          position="absolute"
+                          bottom={190}
+                          right={15}
+                          zIndex={100}
+                          bgcolor={"#000"}
+                          borderRadius="100%"
+                        >
+                          <AddToCartButton product={item} />
+                        </Stack>
+                      )}
                     {item.imageOne !== "" ? (
                       <CustomImageComponent
                         product={item}
@@ -286,7 +296,7 @@ const ProductSwiper: FC<Props> = ({
                         </Button>
                       </Box>
                     )}
-                    {item.image !== "" ? (
+                    {item.imageOne !== "" ? (
                       <Stack
                         sx={{
                           p: 1,

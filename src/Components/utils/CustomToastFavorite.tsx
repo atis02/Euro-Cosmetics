@@ -11,18 +11,20 @@ export const GoldAppleNotification = ({
   image?: string;
   message: string;
   icon?: ReactNode;
-  title: string;
+  title?: string;
 }) => {
   console.log(image);
 
   return (
     <Box display="flex" p={0} alignItems="center" gap={1}>
-      <img
-        src={`${BASE_URL}/${image}`}
-        style={{ width: 70, height: 70, objectFit: "cover" }}
-        alt={image}
-        crossOrigin="anonymous"
-      />
+      {image && (
+        <img
+          src={`${BASE_URL}/${image}`}
+          style={{ width: 70, height: 70, objectFit: "cover" }}
+          alt={image}
+          crossOrigin="anonymous"
+        />
+      )}
       {icon}
       <Stack direction="column" gap={1}>
         <Typography

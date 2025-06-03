@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 interface Props {
   image?: string;
   text: string;
-  title: string;
+  title?: string;
   icon?: ReactNode;
 }
 export const OpenNotification = ({ image, text, icon, title }: Props): void => {

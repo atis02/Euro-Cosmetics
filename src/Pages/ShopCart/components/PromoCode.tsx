@@ -1,7 +1,6 @@
 import { TextField, InputAdornment, IconButton } from "@mui/material";
 import { ArrowForward } from "@mui/icons-material";
 import { ChangeEvent, useState } from "react";
-import { mainColor } from "../../../Components/utils/CustomStyles";
 
 export const PromoCode = () => {
   const [promocode, setPromocode] = useState("");
@@ -18,7 +17,7 @@ export const PromoCode = () => {
           <InputAdornment position="end">
             <IconButton
               sx={{
-                bgcolor: promocode !== "" ? mainColor : "lightgray",
+                bgcolor: promocode !== "" ? "#000" : "lightgray",
                 opacity: promocode !== "" ? "none" : "50%",
                 "&:hover": { bgcolor: "lightgray" },
               }}

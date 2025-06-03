@@ -26,7 +26,10 @@ const Main: React.FC = () => {
     body: { page: 1, limit: 10, productStatusId: 2 },
     method: "POST",
   });
-
+  const fetchStoryKey = JSON.stringify({
+    url: BASE_URL + "/stories/active",
+    method: "GET",
+  });
   const fetcher = (key: string) => {
     const { url, body, method } = JSON.parse(key);
     return fetch(url, {
@@ -46,23 +49,35 @@ const Main: React.FC = () => {
     error: hitError,
     isLoading: loadingHit,
   } = useSWR(fetchHitKey, fetcher);
-
+  const {
+    data: storyData,
+    error: storyError,
+    isLoading: loadingStory,
+  } = useSWR(fetchStoryKey, fetcher);
   return (
     <Box>
       <Stack>
         <MainPageSwiper />
       </Stack>
       <Stack direction="row" spacing={2} mt={2} justifyContent="center">
-        {[1, 2, 4, 5, 6].map((elem) => (
-          <StoryButton
-            key={elem}
-            imageUrl="/story/story.webp"
-            onClick={() => setOpenStory(true)}
-          />
-        ))}
+        {!loadingStory &&
+          !storyError &&
+          storyData.stories?.length &&
+          storyData.stories?.map((elem: any) => (
+            <StoryButton
+              key={elem}
+              imageUrl={`${BASE_URL}/${elem.image}`}
+              onClick={() => setOpenStory(true)}
+            />
+          ))}
       </Stack>
-
-      <Story open={openStory} onClose={() => setOpenStory(false)} />
+      {!loadingStory && !storyError && storyData.stories?.length && (
+        <Story
+          open={openStory}
+          stories={storyData?.stories}
+          onClose={() => setOpenStory(false)}
+        />
+      )}
       {isMobile && !loadingNew ? (
         <MobileSwipeProducts
           products={newData}
@@ -75,6 +90,7 @@ const Main: React.FC = () => {
         />
       ) : (
         !loadingNew &&
+        !newError &&
         newData.products?.length && (
           <ProductSwiper
             text="новинки"
@@ -96,6 +112,7 @@ const Main: React.FC = () => {
         />
       ) : (
         !loadingHit &&
+        !hitError &&
         hitData.products?.length && (
           <ProductSwiper
             text="хиты"

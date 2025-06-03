@@ -50,7 +50,7 @@ export const AddMinusBtns: FC<Props> = ({ id, showDeleteIcon }) => {
     <Stack gap={1} direction="row" alignItems="center">
       <IconButton
         onClick={(e) => handleMinus(e, id ?? "")}
-        disabled={filteredItems[0].stock == 1}
+        disabled={filteredItems[0]?.stock == 1}
         sx={styles}
       >
         <Remove />
@@ -61,7 +61,7 @@ export const AddMinusBtns: FC<Props> = ({ id, showDeleteIcon }) => {
         fontSize={20}
         minWidth={20}
       >
-        {filteredItems[0].quantity}
+        {filteredItems[0]?.quantity}
       </Typography>
       <IconButton sx={styles} onClick={(e) => handleAdd(e, id ?? "")}>
         <Add />

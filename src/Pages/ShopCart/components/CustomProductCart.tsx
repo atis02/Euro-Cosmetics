@@ -9,7 +9,6 @@ import { CustomImageComponent } from "../../../Components/utils/CustomImageCompo
 
 export const CustomProductCart: FC<Product> = ({ product }) => {
   const [showFavorite, setShowFavorite] = useState(false);
-  const [showAddMinus, setShowAddMinus] = useState(false);
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
     navigate(`/product/${item.barcode}`);
@@ -28,8 +27,8 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
         display: "flex",
       }}
       onClick={() => handleNavigate(product)}
-      onMouseEnter={() => setShowAddMinus(true)}
-      onMouseLeave={() => setShowAddMinus(false)}
+      // onMouseEnter={() => setShowAddMinus(true)}
+      // onMouseLeave={() => setShowAddMinus(false)}
     >
       <Stack width={130} height={100} position="relative">
         {showFavorite ? (
@@ -83,7 +82,6 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           discounted={Number(product.sellPrice) || 0}
           jc="flex-end"
           justifyContCart
-          showAddMinus={showAddMinus}
           id={product.id}
           quantity={filtered[0]?.quantity}
         />
