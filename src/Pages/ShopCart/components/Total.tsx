@@ -40,7 +40,7 @@ export const Total = () => {
   );
 
   return (
-    <Stack gap={3}>
+    <Stack gap={{ lg: 3, md: 3, sm: 2, xs: 2 }} mt={2}>
       <CustomProductText text="сумма заказа" fw={500} fz={25} />
       <Stack direction="row" justifyContent="space-between">
         <CustomProductText text="стоимость продуктов" fw={500} fz={16} />

@@ -84,7 +84,7 @@ export const MainPageSwiper: React.FC = () => {
   useEffect(() => {
     const handleSlideChange = () => {
       const activeSlideIndex = swiperRef.current?.realIndex ?? 0;
-      detectBackgroundColor(activeSlideIndex); // Detect color when slide changes
+      detectBackgroundColor(activeSlideIndex);
     };
     swiperRef.current?.on("slideChange", handleSlideChange);
     return () => {

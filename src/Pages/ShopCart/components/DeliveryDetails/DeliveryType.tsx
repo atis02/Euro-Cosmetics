@@ -37,7 +37,7 @@ export const DeliveryType: FC<Props> = ({
         onChange={(e) => setDeliveryMethod(e.target.value)}
         name="delivery-method"
       >
-        <Stack direction="row" spacing={4}>
+        <Stack direction="row" spacing={{ lg: 4, md: 4, sm: 3, xs: 2 }}>
           {!isLoading &&
             !error &&
             data?.deliveryTypes?.length &&
@@ -67,7 +67,11 @@ export const DeliveryType: FC<Props> = ({
                 }
                 label={
                   <span
-                    style={{ fontFamily: "Graphic, sans-serif", fontSize: 16 }}
+                    style={{
+                      fontFamily: "Graphic, sans-serif",
+                      color: errorFields.deliveryMethod ? "tomato" : "#000",
+                      fontSize: 16,
+                    }}
                   >
                     {type.nameRu}
                   </span>
@@ -77,8 +81,8 @@ export const DeliveryType: FC<Props> = ({
         </Stack>
       </RadioGroup>
       {errorFields.deliveryMethod && (
-        <FormHelperText sx={{ color: "error.main", mt: 1 }}>
-          Please select a delivery method.
+        <FormHelperText sx={{ color: "error.main", mt: -0.5 }}>
+          Выберите тип доставки
         </FormHelperText>
       )}
     </FormControl>

@@ -17,11 +17,11 @@ const favoritesSlice = createSlice({
       console.log(action.payload);
 
       const exists = state.items.find(
-        (item) => item.product?.articule === action.payload.product.articule
+        (item) => item.product?.barcode === action.payload.product.barcode
       );
       if (exists) {
         state.items = state.items.filter(
-          (item) => item.product?.articule !== action.payload.product.articule
+          (item) => item.product?.barcode !== action.payload.product.barcode
         );
       } else {
         state.items.push(action.payload);

@@ -20,8 +20,8 @@ import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { PopularProductsMini } from "../../../Components/utils/PopularProductsMini";
 import { MobileSwipeProducts } from "../../../Components/utils/MobileSwipeProducts";
-import { images } from "../../../Components/utils/productsSwiper/constants";
 import { CustomButtonSecond } from "../../../Components/utils/CustomButtonSecond";
+import useSWR from "swr";
 
 export const EmptyCart = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,11 @@ export const EmptyCart = () => {
   };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+
+  const { data, error, isLoading } = useSWR({
+    url: "/products/client",
+    method: "POST",
+  });
   return (
     <Stack width="100%" spacing={2}>
       <Stack sx={rowSpaceStyle} pt={isMobile ? 5 : 0}>
@@ -93,7 +98,11 @@ export const EmptyCart = () => {
       </Typography>
       {isMobile ? (
         <>
-          <MobileSwipeProducts text="популярные товары" products={images} />
+          <MobileSwipeProducts
+            text="популярные товары"
+            products={!error && !isLoading && data}
+            isCart
+          />
           <CustomButtonSecond
             width="100%"
             textColor={mainColor}
@@ -103,7 +112,11 @@ export const EmptyCart = () => {
         </>
       ) : (
         <>
-          <PopularProductsMini visibleCount={3} text="популярные товары" />
+          <PopularProductsMini
+            visibleCount={3}
+            text="популярные товары"
+            data={!error && !isLoading && data}
+          />
           <CustomButtonSecond
             width="100%"
             textColor={mainColor}

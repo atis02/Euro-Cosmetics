@@ -19,9 +19,7 @@ import { EmptyCart } from "./components/EmptyCart";
 import { PopularProductsMini } from "../../Components/utils/PopularProductsMini";
 import { CustomProductCart } from "./components/CustomProductCart";
 import { PromoCode } from "./components/PromoCode";
-import { Total } from "./components/Total";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
-import { CustomButtonSecond } from "../../Components/utils/CustomButtonSecond";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import useSWR from "swr";
 import { DeliveryDetails } from "./components/DeliveryDetails/DeliveryDetails";
@@ -107,7 +105,11 @@ const CartDrawer: FC = () => {
         </Stack>
       )}
 
-      <Stack direction="column" width="100%" gap={6}>
+      <Stack
+        direction="column"
+        width="100%"
+        gap={{ lg: 6, md: 5, sm: 4, xs: 3 }}
+      >
         {cartItems.length ? (
           <>
             {cartItems.map((item: Product, idx: number) => (
@@ -117,13 +119,6 @@ const CartDrawer: FC = () => {
             ))}
             <PromoCode />
             <DeliveryDetails />
-            {/* <Total />
-            <CustomButtonSecond
-              dontChange
-              width="100%"
-              text="ОФОРМИТЬ ЗАКАЗ"
-              mt={3}
-            /> */}
           </>
         ) : (
           <EmptyCart />
@@ -136,6 +131,7 @@ const CartDrawer: FC = () => {
                 products={categoryProduct}
                 isLoading={loadingCategoryProduct}
                 text="вам может понравиться"
+                isCart
               />
             </Stack>
           ) : (

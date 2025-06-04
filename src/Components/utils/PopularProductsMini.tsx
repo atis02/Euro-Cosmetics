@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { East } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { images, Product } from "../../Pages/Product/components/interfaces";
-import { itemVariants, VISIBLE_COUNT } from "./productsSwiper/constants";
+import { itemVariants } from "./productsSwiper/constants";
 import { imagesProps } from "./interfaces";
 import CustomSectionText from "./CustomSectionText";
 import Buttons from "./productsSwiper/Buttons";
@@ -122,22 +122,28 @@ export const PopularProductsMini: FC<Props> = ({
     if (index > 0) {
       setDirection(-1);
       setPrevImages(
-        data?.products ? data.products.slice(index, index + VISIBLE_COUNT) : []
+        data?.products
+          ? data.products.slice(
+              index,
+              index + (visibleCount ? visibleCount : 0)
+            )
+          : []
       );
-      setIndex((prev) => prev - VISIBLE_COUNT);
+      setIndex((prev) => prev - (visibleCount ? visibleCount : 0));
     }
   };
   const handleNavigate = (item: imagesProps) => {
     navigate(`/product/${item.category}`);
-    // localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
+  console.log(visibleImages);
+
   return (
     <>
       <Stack
         justifyContent="space-between"
         alignItems="center"
         direction="row"
-        sx={{ mt: 6, py: 1, position: "relative", zIndex: 2 }}
+        sx={{ mt: 4, position: "relative", zIndex: 2 }}
       >
         <CustomSectionText fz={25} text={text} />
         <Buttons
@@ -163,9 +169,10 @@ export const PopularProductsMini: FC<Props> = ({
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
               width: "100%",
               zIndex: 0,
+              gap: visibleCount && visibleCount < prevImages.length ? 0 : 10,
             }}
           >
             {prevImages.map((item, i) => (
@@ -175,9 +182,15 @@ export const PopularProductsMini: FC<Props> = ({
                   width: 180,
                   height: 180,
                   overflow: "hidden",
+                  display: i < visibleImages.length - 1 ? "block" : "none",
                 }}
               >
-                <CustomImageComponent product={item} notIsMobileHeight="100%" />
+                {item.imageOne !== "" && (
+                  <CustomImageComponent
+                    product={item}
+                    notIsMobileHeight={180}
+                  />
+                )}
 
                 <Stack
                   sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
@@ -200,10 +213,14 @@ export const PopularProductsMini: FC<Props> = ({
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent:
+                // visibleCount && visibleCount > visibleImages.length
+                // ?
+                "flex-start",
+              // : "space-between",
               width: "100%",
               zIndex: 1,
-              // gap: visibleImages.length > 3 ? 0 : 10,
+              gap: visibleCount && visibleCount < visibleImages.length ? 0 : 10,
             }}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">

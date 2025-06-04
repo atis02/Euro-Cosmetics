@@ -8,11 +8,13 @@ import { CustomButtonSecond } from "../../../../Components/utils/CustomButtonSec
 import { PaymentType } from "./PaymentType";
 import CustomAccordion from "../../../../Components/utils/CustomAccordion";
 import { DeliveryTime } from "./DeliveryTime";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CartItem } from "../../../../Components/utils/interfaces";
 import { BASE_URL } from "../../../../Fetcher/swrConfig";
 import { OpenNotification } from "../../../../Components/utils/CustomToast";
 import { CheckCircleOutlined } from "@mui/icons-material";
+import { setOpenCart } from "../../../../Components/redux/reducers/swiperSlice";
+import { clearCart } from "../../../../Components/redux/reducers/cartSlice";
 
 export const DeliveryDetails = () => {
   const [city, setCity] = useState("");
@@ -37,7 +39,7 @@ export const DeliveryDetails = () => {
     phoneNumber: false,
   });
   const cartItems = useSelector((state: any) => state.cart.items);
-  console.log(cartItems);
+  const dispatch = useDispatch();
 
   const handleDelMethodChange = (value: string) => {
     setDeliveryMethod(value);
@@ -76,7 +78,6 @@ export const DeliveryDetails = () => {
       setErrorFields((prev) => ({ ...prev, deliveryCity: false }));
     }
   };
-  console.log(deliveryMethod);
 
   const handleSubmit = async () => {
     const newErrors = {
@@ -131,6 +132,8 @@ export const DeliveryDetails = () => {
         text: "Успешно отправлено!",
         icon: <CheckCircleOutlined sx={{ color: "green" }} />,
       });
+      dispatch(setOpenCart(false));
+      dispatch(clearCart());
     } catch (err) {
       alert("Ошибка при отправке формы");
       console.error(err);
@@ -144,7 +147,7 @@ export const DeliveryDetails = () => {
         setDeliveryMethod={handleDelMethodChange}
         errorFields={errorFields}
       />
-      {(deliveryMethod === "Эскпресс" || deliveryMethod === "Kурьер") && (
+      {(deliveryMethod === "1" || deliveryMethod === "2") && (
         <CustomAccordion
           expanded={expanded}
           setExpanded={setExpanded}

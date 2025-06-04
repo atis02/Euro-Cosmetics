@@ -119,8 +119,6 @@ const ProductSwiper: FC<Props> = ({
   const handleNavigate = (item: imagesProps) => {
     navigate(`/product/${item.barcode}`);
   };
-  console.log(prevImages);
-  console.log(visibleImages);
 
   return (
     <CustomContainerMain>
@@ -155,7 +153,7 @@ const ProductSwiper: FC<Props> = ({
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent: prevImages.length > 3 ? "space-between" : "start",
+              justifyContent: "flex-start",
               width: "100%",
               zIndex: 0,
               gap: prevImages.length > 3 ? 0 : 10,
@@ -194,11 +192,10 @@ const ProductSwiper: FC<Props> = ({
               top: 0,
               left: 0,
               display: "flex",
-              justifyContent:
-                visibleImages.length > 3 ? "space-between" : "start",
+              justifyContent: "flex-start",
               width: "100%",
               zIndex: 1,
-              gap: visibleImages.length > 3 ? 0 : 10,
+              gap: 10,
             }}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">

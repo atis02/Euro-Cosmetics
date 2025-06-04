@@ -17,6 +17,42 @@ export const actionData = [
     image: "/images/aksiya3.webp",
     date: "6-31 мая",
   },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya.webp",
+    date: "5-7 мая",
+  },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya2.webp",
+    date: "5-18 мая",
+  },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya3.webp",
+    date: "6-31 мая",
+  },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya.webp",
+    date: "5-7 мая",
+  },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya2.webp",
+    date: "5-18 мая",
+  },
+  {
+    title: "Elemis & Thim",
+    desc: "матовая помада и гидрофильный бальзам в подарок",
+    image: "/images/aksiya3.webp",
+    date: "6-31 мая",
+  },
 ];
 export const VISIBLE_COUNT = 1.5;
 export const itemVariants = {

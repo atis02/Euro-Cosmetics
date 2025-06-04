@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
                     padding: "5px 18px 15px 18px",
                     "&:hover": {
                       borderRadius: 0,
-                      borderBottom: "2px solid #1E1E1E", // Change color on hover
+                      borderBottom: "2px solid #1E1E1E",
                     },
                   }}
                   onMouseEnter={onOpen}
@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
                       backgroundColor: "#fff",
                       boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
                       border: "1px solid #ddd",
-                      zIndex: 100,
+                      zIndex: 1000,
                       height: "100%",
                       minHeight: "100vh",
                       minWidth: "99.9%",

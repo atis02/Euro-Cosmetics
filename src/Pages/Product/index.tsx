@@ -168,6 +168,7 @@ const index = () => {
             isMobile
             p={1}
             width="100vw"
+            isProductDetail
           />
         </Stack>
       ) : (

@@ -14,6 +14,7 @@ import { fetcher } from "./Fetcher/swrConfig";
 import CategoryProducts from "./Pages/CategoryProducts";
 import NotFoundPage from "./Components/Loyout/NotFoundPage";
 import { ScrollToTop } from "./Components/utils/ScrollToTop";
+import { IsMainPage } from "./Components/utils/IsMainPage";
 
 function App() {
   const theme = useTheme();
@@ -37,6 +38,7 @@ function App() {
           <Navbar />
           <Toaster />
           <ScrollToTop />
+          <IsMainPage />
           {isMobile ? (
             <ToastContainer
               position="top-center"

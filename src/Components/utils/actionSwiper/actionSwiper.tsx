@@ -67,7 +67,6 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         modules={[Navigation, Parallax]}
         spaceBetween={isMobile ? 10 : 70}
-        slidesPerView={isMobile ? 1.2 : 1.7}
         centeredSlides={isMobile ? false : true}
         loop={true}
         speed={1000}
@@ -76,9 +75,11 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         pagination={{ clickable: true }}
         watchSlidesProgress
         style={{
+          width: "100%",
           paddingLeft: isMobile ? 0 : "5%",
           paddingRight: isMobile ? 0 : "5%",
           ...hoverStyle,
+          overflow: "hidden",
         }}
       >
         {data.map((slide, index) => (
@@ -89,7 +90,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
           >
             <Stack
               sx={{
-                maxWidth: 880,
+                width: "100%",
                 minHeight: 350,
                 display: "flex",
                 alignItems: "start",

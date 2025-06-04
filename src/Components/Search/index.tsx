@@ -59,6 +59,7 @@ const index: FC<Props> = ({ isMobile }) => {
               top: "60px",
               backgroundColor: "rgba(0, 0, 0, 0)",
               boxShadow: "none",
+              zIndex: 99,
             },
           },
         }}
@@ -71,11 +72,13 @@ const index: FC<Props> = ({ isMobile }) => {
             display: "flex",
             flexDirection: "column",
             p: 0,
+            zIndex: 99,
           },
         }}
         sx={{
           position: "fixed",
           top: "60px",
+          zIndex: 99,
         }}
       >
         <Box

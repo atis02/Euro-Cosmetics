@@ -56,7 +56,7 @@ export const ProductDetails: FC<Product> = ({ product }) => {
           decimals={2}
           duration={0.6}
           separator=" "
-          suffix="₽ "
+          suffix=" TMT "
           style={{
             fontSize: isMobile ? 30 : 40,
             fontWeight: 500,
@@ -69,7 +69,7 @@ export const ProductDetails: FC<Product> = ({ product }) => {
             duration={0.6}
             decimals={2}
             separator=" "
-            suffix="₽ "
+            suffix="TMT "
             style={{
               color: "#b3b3b3",
               fontSize: isMobile ? 30 : 40,

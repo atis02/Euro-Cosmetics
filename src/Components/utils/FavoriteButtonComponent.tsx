@@ -20,7 +20,7 @@ const FavoriteButton: FC<Product> = ({
   const favorites = useSelector((state: any) => state.favorites.items);
 
   const isFavorite: boolean = favorites.some(
-    (item: Product) => item.product?.articule === product.articule
+    (item: Product) => item.product?.barcode === product.barcode
   );
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>): void => {

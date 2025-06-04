@@ -34,7 +34,7 @@ export const PromoCode = () => {
       sx={{
         "& .MuiOutlinedInput-root": {
           transition: "border 0.3s",
-          mt: 5,
+          mt: { lg: 5, md: 4, sm: 3, xs: 1 },
           border: "2px dashed #000",
           "& fieldset": {
             border: "1px solid transparent", // default (invisible)
