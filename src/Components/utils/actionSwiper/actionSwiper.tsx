@@ -67,6 +67,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         modules={[Navigation, Parallax]}
         spaceBetween={isMobile ? 10 : 70}
+        slidesPerView={isMobile ? 1.2 : 1.7}
         centeredSlides={isMobile ? false : true}
         loop={true}
         speed={1000}
@@ -90,7 +91,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
           >
             <Stack
               sx={{
-                width: "100%",
+                maxWidth: 880,
                 minHeight: 350,
                 display: "flex",
                 alignItems: "start",

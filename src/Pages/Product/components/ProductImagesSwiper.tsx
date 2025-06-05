@@ -2,15 +2,12 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, Thumbs } from "swiper/modules";
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import {
-  West,
-  East,
-  ControlPointOutlined,
-  ExpandLess,
-  ExpandMore,
-} from "@mui/icons-material";
+import { West, East, ControlPointOutlined } from "@mui/icons-material";
 import { Product } from "./interfaces";
 import { BASE_URL } from "../../../Fetcher/swrConfig";
+import { ProductImageZoomModal } from "./ProductImageZoomModal";
+import SwiperImgThumbs from "./SwiperImgThumbs";
+import { ZoomedImg } from "./ZoomedImg";
 
 export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
   const swiperRef = useRef<SwiperClass | null>(null);
@@ -20,6 +17,7 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
   const [hoverSide, setHoverSide] = useState<
     "left" | "right" | "center" | null
   >(null);
+  const [openZoom, setOpenZoom] = useState<boolean>(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
@@ -108,7 +106,7 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
       {hoverSide === "center" && (
         <div
           className="cursor-arrow prev"
-          onClick={isMobile ? handleNext : handlePrev}
+          onClick={() => setOpenZoom(true)}
           style={{
             position: "absolute",
             background: "transparent",
@@ -200,96 +198,24 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
           <div className="swiper-pagination" />
         )}
       </Swiper>
-      {!isMobile && (
-        <Swiper
-          direction="vertical"
-          onSwiper={setThumbsSwiper}
-          spaceBetween={0}
-          slidesPerView={4}
-          freeMode={true}
-          watchSlidesProgress={true}
-          modules={[Thumbs, Navigation]}
-          style={{
-            width: 100,
-            height: 310,
-            left: 20,
-            position: "absolute",
-            top: "20%",
-            zIndex: 100,
-          }}
-          navigation={{
-            nextEl: ".swiper-button-next-thumbs",
-            prevEl: ".swiper-button-prev-thumbs",
-          }}
-        >
-          {swiperData
-            .filter((elem) => elem.image !== null)
-            .map((slide, index) => (
-              <SwiperSlide
-                key={`thumb-${index}`}
-                className="swiper-slide-thumb"
-              >
-                <img
-                  src={`${BASE_URL}/${slide.image}`}
-                  alt={`thumb-${index}`}
-                  style={{
-                    width: 68,
-                    height: 68,
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
-                  crossOrigin="anonymous"
-                />
-              </SwiperSlide>
-            ))}
-        </Swiper>
-      )}
-      {!isMobile && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(20% - 40px)",
-            left: 30,
-            zIndex: 101,
-            cursor: "pointer",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            width: 40,
-            height: 40,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            opacity: "70%",
-            borderRadius: 100,
-            backdropFilter: "blur(38px)",
-          }}
-          className="swiper-button-prev-thumbs"
-        >
-          <ExpandLess style={{ color: "#000" }} />
-        </div>
-      )}
-      {!isMobile && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(20% + 310px)",
-            left: 40,
-            zIndex: 101,
-            cursor: "pointer",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            width: 40,
-            height: 40,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            opacity: "70%",
-            borderRadius: 100,
-            backdropFilter: "blur(38px)",
-          }}
-          className="swiper-button-next-thumbs"
-        >
-          <ExpandMore style={{ color: "#000" }} />
-        </div>
-      )}
+
+      <SwiperImgThumbs
+        swiperData={swiperData}
+        isMobile={isMobile}
+        setThumbsSwiper={setThumbsSwiper}
+      />
+      <ProductImageZoomModal
+        open={openZoom}
+        onClose={() => setOpenZoom(false)}
+        children={
+          <ZoomedImg
+            swiperData={swiperData}
+            product={product}
+            onClose={() => setOpenZoom(false)}
+            isMobile={isMobile}
+          />
+        }
+      />
     </Stack>
   );
 };
