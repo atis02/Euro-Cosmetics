@@ -19,7 +19,7 @@ const Products: FC<Props> = ({ product }) => {
 
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
-    navigate(`/product/${item.category}`);
+    navigate(`/product/${item.barcode}`);
   };
 
   return (
@@ -38,7 +38,7 @@ const Products: FC<Props> = ({ product }) => {
                 key={item?.barcode + "-" + i}
                 sx={{
                   width: 310,
-                  height: 450,
+                  height: 400,
                   overflow: "hidden",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                   cursor: "pointer",
@@ -56,7 +56,7 @@ const Products: FC<Props> = ({ product }) => {
                 {showCartButton == item?.barcode && item?.imageOne && (
                   <Stack
                     position="absolute"
-                    bottom={190}
+                    bottom={130}
                     right={15}
                     zIndex={100}
                     bgcolor={"#000"}
@@ -92,10 +92,11 @@ const Products: FC<Props> = ({ product }) => {
                   >
                     <CustomProductTextConatiner
                       textCategory={item?.category}
-                      mainText={item?.nameRu}
-                      discountPrice={Number(item?.sellPrice)}
-                      sellPrice={Number(item?.currentSellPrice)}
-                      ta="left"
+                      mainText={item.nameRu || "Нет названия"}
+                      discountPrice={Number(item.discountValue) || 0}
+                      sellPrice={Number(item.currentSellPrice) || 0}
+                      discounted={Number(item.sellPrice) || 0}
+                      decimals={2}
                     />
                     <Button
                       sx={{
@@ -135,9 +136,11 @@ const Products: FC<Props> = ({ product }) => {
                     <Rating showtext={false} gap={1} product={item} />
                     <CustomProductTextConatiner
                       textCategory={item?.category}
-                      mainText={item?.nameRu}
-                      discountPrice={Number(item?.sellPrice)}
-                      sellPrice={Number(item?.currentSellPrice)}
+                      mainText={item.nameRu || "Нет названия"}
+                      discountPrice={Number(item.discountValue) || 0}
+                      sellPrice={Number(item.currentSellPrice) || 0}
+                      discounted={Number(item.sellPrice) || 0}
+                      decimals={2}
                     />
                   </Stack>
                 ) : (

@@ -1,10 +1,11 @@
-import React from "react";
 import Stories from "react-insta-stories";
 import { Story } from "react-insta-stories/dist/interfaces";
 import { Dialog, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { StoryInterface } from "../utils/interfaces";
 import { BASE_URL } from "../../Fetcher/swrConfig";
+import { useEffect, useState } from "react";
+import StoryContent from "./StoryContent";
 
 interface StoryModalProps {
   open: boolean;
@@ -12,16 +13,85 @@ interface StoryModalProps {
   stories: StoryInterface[];
 }
 
+const getVideoDuration = async (url: string): Promise<number> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+
+    return await new Promise((resolve) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.src = objectUrl;
+
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(video.duration || 8);
+        console.log(video.duration);
+      };
+
+      video.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(8);
+      };
+    });
+  } catch {
+    return 8;
+  }
+};
+
 const StoryModal: React.FC<StoryModalProps> = ({ open, onClose, stories }) => {
-  const storiesData: Story[] = stories.map((elem) => ({
-    url: `${BASE_URL}/${elem.video}`,
-    duration: 5000,
-    header: {
-      heading: elem.name,
-      subheading: elem.contentRu,
-      profileImage: elem.image,
-    },
-  }));
+  const [storiesData, setStoriesData] = useState<Story[]>([]);
+
+  useEffect(() => {
+    const loadDurations = async () => {
+      const updatedStories = await Promise.all(
+        stories.map(async (elem) => {
+          const hasVideo = elem.video && elem.video !== "null";
+          const videoUrl = `${BASE_URL}/${elem.video}`;
+          const imageUrl = `${BASE_URL}/${elem.image}`;
+
+          const durationInSeconds = hasVideo
+            ? await getVideoDuration(videoUrl)
+            : 8;
+
+          return {
+            content: ({ action }: any) => (
+              <StoryContent
+                videoUrl={videoUrl}
+                imageUrl={imageUrl}
+                hasVideo={hasVideo}
+                alt={elem.name}
+                action={action}
+              />
+            ),
+            duration: durationInSeconds * 1000 + 1000,
+            header: {
+              heading: elem.name,
+              subheading: elem.contentRu,
+              profileImage: imageUrl,
+            },
+          };
+        })
+      );
+
+      setStoriesData(updatedStories);
+    };
+
+    if (open) {
+      loadDurations();
+    }
+  }, [stories, open]);
+  // const storiesData: Story[] = stories.map((elem) => ({
+  //   type: elem.video ? "video" : "image", // optional: specify the type if needed
+  //   url: `${BASE_URL}/${elem.video || elem.image}`,
+  //   duration: 5000,
+  //   header: {
+  //     heading: elem.name,
+  //     subheading: elem.contentRu,
+  //     profileImage: elem.image,
+  //   },
+  // }));
 
   return (
     <Dialog
@@ -49,14 +119,18 @@ const StoryModal: React.FC<StoryModalProps> = ({ open, onClose, stories }) => {
           bgcolor: "black",
         }}
       >
-        <Stories
-          stories={storiesData}
-          defaultInterval={8000}
-          width="100%"
-          height="100%"
-          onAllStoriesEnd={onClose}
-          // crossOrigin="anonymous"
-        />
+        {storiesData.length > 0 ? (
+          <Stories
+            stories={storiesData}
+            defaultInterval={5000}
+            width="100%"
+            height="100%"
+            onAllStoriesEnd={onClose}
+            crossOrigin="anonymous"
+          />
+        ) : (
+          <Box sx={{ color: "white", p: 2 }}>Загрузка...</Box>
+        )}
 
         <IconButton
           onClick={onClose}

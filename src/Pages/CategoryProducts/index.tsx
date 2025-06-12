@@ -31,7 +31,8 @@ const Index = () => {
     Subcategory[] | Segment[] | null
   >(null);
 
-  const { categoryName, subCategoryName, segmentName } = useParams();
+  const { categoryName, subCategoryName, segmentName, statusName } =
+    useParams();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -74,29 +75,39 @@ const Index = () => {
     categoryId,
     subCategoryId,
     segmentId,
+    productStatusId,
   }: {
     categoryId: number | null;
     subCategoryId: number | null;
     segmentId: number | null;
+    productStatusId: number | null;
   }) => {
     try {
       const res = await axios.post(`${BASE_URL}/products/client`, {
         categoryId,
         subCategoryId,
         segmentId,
+        productStatusId,
       });
       setProducts(res.data);
     } catch (error) {
       console.error("Ошибка при загрузке продуктов:", error);
     }
   };
+  console.log(products);
 
   useEffect(() => {
     const fetchAndFilter = async () => {
       try {
         setLoading(true);
-
-        // Категория
+        if (statusName) {
+          await fetchProducts({
+            categoryId: null,
+            subCategoryId: null,
+            segmentId: null,
+            productStatusId: Number(statusName),
+          });
+        }
         const categoriesRes = await axios.get(
           `${BASE_URL}/categories/fetch/client`
         );
@@ -105,8 +116,6 @@ const Index = () => {
         );
         if (!foundCategory) return;
         setCategory(foundCategory);
-
-        // Подкатегория
         let subCatId = null;
         if (subCategoryName) {
           const subRes = await axios.get(
@@ -120,7 +129,6 @@ const Index = () => {
           subCatId = foundSub.id;
           setSubCategory(foundSub);
         }
-
         // Сегмент
         let segId = null;
         if (segmentName) {
@@ -141,6 +149,7 @@ const Index = () => {
           categoryId: foundCategory.id,
           subCategoryId: subCatId,
           segmentId: segId,
+          productStatusId: Number(statusName),
         });
       } catch (err) {
         console.error("Ошибка при загрузке данных:", err);
@@ -149,16 +158,16 @@ const Index = () => {
       }
     };
 
-    if (categoryName) {
+    if (categoryName || statusName) {
       fetchAndFilter();
     }
-  }, [categoryName, subCategoryName, segmentName]);
+  }, [statusName, categoryName, subCategoryName, segmentName]);
 
   return (
     <>
       <CustomContainerAll>
         <Stack sx={{ height: isMobile ? "32vh" : "50vh" }}>
-          <BannerImage image={category?.image ?? ""} isMobile={isMobile} />
+          <BannerImage image={category?.coverImage ?? ""} isMobile={isMobile} />
           <BannerImageText
             loading={loading}
             isMobile={isMobile}
@@ -169,9 +178,7 @@ const Index = () => {
           />
         </Stack>
       </CustomContainerAll>
-
       {subCategoryList && <SubCategories subCategories={subCategoryList} />}
-
       <Stack
         sx={{ padding: isMobile ? "10px 20px" : "15px 40px 0 40px" }}
         direction="row"
@@ -196,7 +203,7 @@ const Index = () => {
       </Stack>
 
       {isMobile ? (
-        <MobileProducts />
+        <MobileProducts product={products?.products ?? []} />
       ) : (
         <Products product={products?.products ?? []} />
       )}

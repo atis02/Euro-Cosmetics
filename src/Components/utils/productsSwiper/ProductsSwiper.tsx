@@ -53,7 +53,7 @@ const ProductSwiper: FC<Props> = ({
       feedBackNumb: 1,
       articule: "",
       desc: "",
-      productStatus: "",
+      productStatus: (products[0]?.Status && products[0]?.Status.id) || "",
       sellPrice: 0,
       discountPrice: 0,
       category: "",
@@ -117,7 +117,11 @@ const ProductSwiper: FC<Props> = ({
     }
   };
   const handleNavigate = (item: imagesProps) => {
-    navigate(`/product/${item.barcode}`);
+    if (item.barcode !== "") {
+      navigate(`/product/${item.barcode}`);
+    } else {
+      navigate(`/category/products/${item.productStatus}`);
+    }
   };
 
   return (
@@ -180,7 +184,7 @@ const ProductSwiper: FC<Props> = ({
                     discountPrice={Number(item.discountValue) || 0}
                     sellPrice={Number(item.currentSellPrice) || 0}
                     discounted={Number(item.sellPrice) || 0}
-                    decimals={0}
+                    decimals={1}
                   />
                 </Stack>
               </Box>
@@ -264,7 +268,7 @@ const ProductSwiper: FC<Props> = ({
                           discountPrice={Number(item.discountValue) || 0}
                           sellPrice={Number(item.currentSellPrice) || 0}
                           discounted={Number(item.sellPrice) || 0}
-                          decimals={0}
+                          decimals={1}
                           ta="left"
                         />
                         <Button
@@ -307,7 +311,7 @@ const ProductSwiper: FC<Props> = ({
                           discountPrice={Number(item.discountValue) || 0}
                           sellPrice={Number(item.currentSellPrice) || 0}
                           discounted={Number(item.sellPrice) || 0}
-                          decimals={0}
+                          decimals={2}
                         />
                       </Stack>
                     ) : (

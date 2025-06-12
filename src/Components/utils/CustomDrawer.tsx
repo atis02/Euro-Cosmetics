@@ -21,7 +21,7 @@ const CustomDrawer: React.FC<CustomDrawerProps> = ({
       <Box
         sx={{
           minWidth: width,
-          padding: { lg: 8, md: 8, sm: 6, xs: 2 },
+          padding: { lg: 6, md: 6, sm: 6, xs: 2 },
           pt: 2,
           mb: 2,
           position: "relative",

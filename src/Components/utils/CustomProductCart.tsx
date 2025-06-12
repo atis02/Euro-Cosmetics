@@ -11,7 +11,7 @@ import { CustomImageComponent } from "./CustomImageComponent";
 export const CustomProductCart: FC<Product> = ({ product }) => {
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
-    navigate(`/product/${item.title}`);
+    navigate(`/product/${item.barcode}`);
     localStorage.setItem("productEuroCos", JSON.stringify(item));
   };
   return (
@@ -28,17 +28,6 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
         <FavoriteButton product={product} />
       </Stack>
       <CustomImageComponent product={product} notIsMobileHeight="100%" />
-
-      {/* <img
-        src={product.image}
-        alt={`background-${product.title}`}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          cursor: "pointer",
-        }}
-      /> */}
       <Stack sx={{ p: 1, textAlign: "left", flexDirection: "column" }}>
         <Stack direction="row" alignItems="center" gap={1}>
           <CustomProductText fw={500} mainText={product.feedBackNumb} />

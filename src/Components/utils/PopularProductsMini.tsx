@@ -133,9 +133,8 @@ export const PopularProductsMini: FC<Props> = ({
     }
   };
   const handleNavigate = (item: imagesProps) => {
-    navigate(`/product/${item.category}`);
+    navigate(`/product/${item.barcode}`);
   };
-  console.log(visibleImages);
 
   return (
     <>

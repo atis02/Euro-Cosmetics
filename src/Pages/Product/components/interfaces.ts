@@ -13,6 +13,10 @@ export interface Category {
 export interface images {
   Category?: Category;
   image?: string;
+  Status?: {
+    nameRu: string;
+    id: string;
+  };
   video?: string;
   productStatus?: string;
   title: string;

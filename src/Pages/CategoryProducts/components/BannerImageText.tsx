@@ -68,14 +68,20 @@ const BannerImageText: FC<Props> = ({
       </Stack>
       <Stack
         position="absolute"
-        top={isMobile ? "37%" : "45%"}
+        top={isMobile ? "30%" : "45%"}
         zIndex={100}
         left={isMobile ? "3%" : "50%"}
       >
         <CustomProductText
           color="#fff"
           fw={500}
-          text={category?.nameRu}
+          text={
+            segmentName
+              ? segmentName.title
+              : subCategoryName
+              ? subCategoryName.title
+              : category?.nameRu
+          }
           fz={isMobile ? 35 : isTablet ? 45 : 60}
         />
       </Stack>

@@ -2,8 +2,8 @@ export interface Segment {
   nameRu: string;
   nameTm: string;
   id: string;
-  subCategoryId?:string
-  SubCategory:Subcategory
+  subCategoryId?: string;
+  SubCategory: Subcategory;
 }
 
 export interface Subcategory {
@@ -12,7 +12,7 @@ export interface Subcategory {
   nameTm: string;
   image?: string;
   Segments?: Segment[];
-  categoryId?:string
+  categoryId?: string;
 }
 
 export interface Category {
@@ -20,6 +20,7 @@ export interface Category {
   nameRu: string;
   nameTm: string;
   image: string;
+  coverImage: string;
   SubCategories: Subcategory[];
 }
 // export interface Category {

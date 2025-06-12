@@ -70,18 +70,18 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
     { image: product.imageFour || null },
     { image: product.imageFive || null },
   ];
-
+  const filtered = swiperData.filter((elem) => elem.image !== null);
   return (
     <Stack
       ref={containerRef}
       style={{
         overflow: "hidden",
         width: "100%",
-        height: isMobile ? "10%" : 670,
+        height: isMobile ? "10%" : 640,
         position: "relative",
       }}
     >
-      {hoverSide === "left" && (
+      {filtered.length != 1 && hoverSide === "left" && (
         <div
           className="cursor-arrow prev"
           onClick={isMobile ? handleNext : handlePrev}
@@ -127,7 +127,7 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
           />
         </div>
       )}
-      {hoverSide === "right" && (
+      {filtered.length > 1 && hoverSide === "right" && (
         <div
           className="cursor-arrow next"
           onClick={isMobile ? handlePrev : handleNext}
@@ -165,33 +165,31 @@ export const ProductImagesSwiper: FC<Product> = ({ product, isLoading }) => {
         slidesPerView={1}
         style={{ width: "100%" }}
       >
-        {swiperData
-          .filter((elem) => elem.image !== null)
-          .map((slide, index) => (
-            <SwiperSlide key={`${slide}-${index}`}>
-              <Stack
-                sx={{
-                  minWidth: 280,
-                  minHeight: isMobile ? 200 : 375,
-                  display: "flex",
-                  alignItems: "center",
+        {filtered.map((slide, index) => (
+          <SwiperSlide key={`${slide}-${index}`}>
+            <Stack
+              sx={{
+                minWidth: isMobile ? 280 : 800,
+                height: isMobile ? 200 : 640,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={`${BASE_URL}/${slide.image}`}
+                alt="Slide"
+                crossOrigin="anonymous"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  backgroundColor: "#fff",
                 }}
-              >
-                <img
-                  src={`${BASE_URL}/${slide.image}`}
-                  alt="Slide"
-                  crossOrigin="anonymous"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    backgroundColor: "#fff",
-                  }}
-                  className="swiper-img"
-                />
-              </Stack>
-            </SwiperSlide>
-          ))}
+                className="swiper-img"
+              />
+            </Stack>
+          </SwiperSlide>
+        ))}
         {isMobile ? (
           <div className="swiper-pagination-mobile" />
         ) : (

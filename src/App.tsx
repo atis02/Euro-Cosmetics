@@ -15,6 +15,7 @@ import CategoryProducts from "./Pages/CategoryProducts";
 import NotFoundPage from "./Components/Loyout/NotFoundPage";
 import { ScrollToTop } from "./Components/utils/ScrollToTop";
 import { IsMainPage } from "./Components/utils/IsMainPage";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function App() {
   const theme = useTheme();
@@ -68,6 +69,10 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path="/category/:categoryName"
+              element={<CategoryProducts />}
+            />
+            <Route
+              path="/category/products/:statusName"
               element={<CategoryProducts />}
             />
             <Route

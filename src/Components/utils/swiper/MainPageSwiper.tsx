@@ -6,14 +6,15 @@ import {
   EffectCreative,
   Autoplay,
 } from "swiper/modules";
-import { swiperData, swiperDataMobile } from "./swiperData";
 import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { West, East } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { setTextColor } from "../../redux/reducers/swiperSlice";
-import { FastAverageColor } from "fast-average-color";
+import { useSelector } from "react-redux";
 import { CustomButton } from "../CustomButton";
 import { mainPageTextDescStyle, mainPageTextStyle } from "../CustomStyles";
+import useSWR from "swr";
+import { BASE_URL } from "../../../Fetcher/swrConfig";
+import Skeleton from "react-loading-skeleton";
+import { useNavigate } from "react-router-dom";
 
 export const MainPageSwiper: React.FC = () => {
   const swiperRef = useRef<SwiperClass | null>(null);
@@ -21,38 +22,17 @@ export const MainPageSwiper: React.FC = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [isCursorInside, setIsCursorInside] = useState(false);
   const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
-  const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const fac = new FastAverageColor();
+  const navigate = useNavigate();
   const currentSlide = useSelector((state: any) => state.swiper.color);
-
-  const detectBackgroundColor = (slideIndex: number) => {
-    const slide = swiperRef.current?.slides[slideIndex];
-    const imgElement = slide?.querySelector(
-      ".swiper-img"
-    ) as HTMLImageElement | null;
-
-    if (imgElement) {
-      fac
-        .getColorAsync(imgElement)
-        .then((color) => {
-          const [r, g, b] = color.value;
-          const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-          if (luminance < 128) {
-            dispatch(setTextColor("#ffffff"));
-          } else {
-            dispatch(setTextColor("#000000"));
-          }
-        })
-        .catch((e) => {
-          console.warn("Error getting average color", e);
-        });
-    }
-  };
+  const { data, error, isLoading } = useSWR({
+    url: `/banners/active`,
+  });
 
   useEffect(() => {
+    if (isLoading) return;
+
     const container = containerRef.current;
     const handleMouseMove = (e: MouseEvent) => {
       if (!container) return;
@@ -79,18 +59,7 @@ export const MainPageSwiper: React.FC = () => {
       container?.removeEventListener("mouseenter", handleMouseEnter);
       container?.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
-
-  useEffect(() => {
-    const handleSlideChange = () => {
-      const activeSlideIndex = swiperRef.current?.realIndex ?? 0;
-      detectBackgroundColor(activeSlideIndex);
-    };
-    swiperRef.current?.on("slideChange", handleSlideChange);
-    return () => {
-      swiperRef.current?.off("slideChange", handleSlideChange);
-    };
-  }, []);
+  }, [isLoading]);
 
   const handleNext = () => {
     swiperRef.current?.slideNext();
@@ -99,7 +68,16 @@ export const MainPageSwiper: React.FC = () => {
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
   };
-
+  if (isLoading) {
+    return (
+      <Stack width="99vw" height={isMobile ? "68vh" : "87vh"}>
+        <Skeleton style={{ width: "100%", height: "68vh" }} />
+      </Stack>
+    );
+  }
+  if (error) {
+    return;
+  }
   return (
     <Stack
       ref={containerRef}
@@ -154,7 +132,9 @@ export const MainPageSwiper: React.FC = () => {
       )}
       {isMobile ? <div className="swiper-pagination-mobile" /> : ""}
       <Swiper
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
         modules={[
           Navigation,
           Pagination,
@@ -179,89 +159,97 @@ export const MainPageSwiper: React.FC = () => {
         }}
         speed={1000}
         slidesPerView={1}
-        style={{ width: "100vw" }}
+        style={{
+          width: "100vw",
+          height: !isMobile ? "87vh" : "",
+          marginTop: isMobile ? 65 : 0,
+        }}
       >
         {isMobile
-          ? swiperDataMobile.map((slide, index) => (
-              <SwiperSlide key={`${slide.img}-${index}`}>
-                <Stack
-                  sx={{
-                    minWidth: 280,
-                    minHeight: 375,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {slide.img ? (
-                    <img
-                      src={slide.img}
-                      alt="Slide"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        backgroundColor: "#fff",
-                      }}
-                      className="swiper-img"
-                    />
-                  ) : slide.video ? (
-                    <video
-                      src={slide.video}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        backgroundColor: "#fff",
-                      }}
-                      className="swiper-img"
-                    ></video>
-                  ) : (
-                    ""
-                  )}
+          ? data?.banners
+              .filter((item: any) => item.mobileImage !== null)
+              .map((slide: any, index: number) => (
+                <SwiperSlide key={`${slide.img}-${index}`}>
                   <Stack
-                    position="absolute"
-                    justifyContent="space-between"
-                    height="100%"
-                    top="5%"
-                    left="5%"
+                    sx={{
+                      minWidth: 280,
+                      minHeight: 375,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
                   >
-                    <Stack>
-                      <Typography color={currentSlide} sx={mainPageTextStyle}>
-                        {slide.title}
-                      </Typography>
-                      <Typography
-                        color={currentSlide}
-                        sx={mainPageTextDescStyle}
-                      >
-                        {slide.desc}
-                      </Typography>
+                    {slide.mobileImage !== null ? (
+                      <img
+                        src={`${BASE_URL}/${slide.mobileImage}`}
+                        alt="Slide"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          backgroundColor: "#fff",
+                        }}
+                        crossOrigin="anonymous"
+                        className="swiper-img"
+                      />
+                    ) : slide.video !== null ? (
+                      <video
+                        src={slide.video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          backgroundColor: "#fff",
+                        }}
+                        className="swiper-img"
+                      ></video>
+                    ) : (
+                      ""
+                    )}
+                    <Stack
+                      position="absolute"
+                      justifyContent="space-between"
+                      height="100%"
+                      top="5%"
+                      left="5%"
+                    >
+                      <Stack>
+                        <Typography color={currentSlide} sx={mainPageTextStyle}>
+                          {slide.name}
+                        </Typography>
+                        <Typography
+                          color={currentSlide}
+                          sx={mainPageTextDescStyle}
+                        >
+                          {slide.desc}
+                        </Typography>
+                      </Stack>
+                      <CustomButton
+                        isMobile={isMobile}
+                        text="Перейти к "
+                        textColor="#fff"
+                      />
                     </Stack>
-                    <CustomButton
-                      isMobile={isMobile}
-                      text="Перейти к бренду"
-                      textColor="#fff"
-                    />
                   </Stack>
-                </Stack>
-              </SwiperSlide>
-            ))
-          : swiperData.map((slide, index) => (
-              <SwiperSlide key={`${slide.img}-${index}`}>
+                </SwiperSlide>
+              ))
+          : data?.banners.map((slide: any, index: number) => (
+              <SwiperSlide key={`${slide.image}-${index}`}>
                 <Stack
                   sx={{
                     minWidth: 280,
                     minHeight: 375,
                     display: "flex",
                     alignItems: "center",
+                    height: "87vh",
                   }}
                 >
-                  {slide.img ? (
+                  {slide.image ? (
                     <img
-                      src={slide.img}
+                      src={`${BASE_URL}/${slide.image}`}
                       alt="Slide"
                       style={{
                         width: "100%",
@@ -270,10 +258,11 @@ export const MainPageSwiper: React.FC = () => {
                         backgroundColor: "#fff",
                       }}
                       className="swiper-img"
+                      crossOrigin="anonymous"
                     />
-                  ) : slide.video ? (
+                  ) : slide.video !== null ? (
                     <video
-                      src={slide.video}
+                      src={`${BASE_URL}/${slide.video}`}
                       autoPlay
                       loop
                       muted
@@ -292,12 +281,42 @@ export const MainPageSwiper: React.FC = () => {
 
                   <Stack position="absolute" top="40%" zIndex={10} left="50%">
                     <Typography color={currentSlide} sx={mainPageTextStyle}>
-                      {slide.title}
+                      {slide.name}
                     </Typography>
                     <Typography color={currentSlide} sx={mainPageTextDescStyle}>
                       {slide.desc}
                     </Typography>
-                    <CustomButton text="Перейти к бренду" textColor="#fff" />
+                    <CustomButton
+                      text={`Перейти к ${
+                        slide.Category?.nameRu
+                          ? "категории"
+                          : slide.SubCategory?.nameRu
+                          ? "подкатегории"
+                          : slide.Segment?.nameRu
+                          ? "сегментам"
+                          : slide.ProductsArray?.length
+                          ? "товарам"
+                          : slide.Product?.id
+                          ? "товару"
+                          : ""
+                      }`}
+                      width="auto"
+                      textColor="#fff"
+                      func={() => {
+                        if (slide.Product !== null) {
+                          return navigate(`/product/${slide.Product.barcode}`);
+                        }
+                        const parts = [
+                          slide.Category?.nameRu,
+                          slide.SubCategory?.nameRu,
+                          slide.Segment?.nameRu,
+                        ].filter(Boolean);
+
+                        if (parts.length) {
+                          navigate(`/category/${parts.join("/")}`);
+                        }
+                      }}
+                    />
                   </Stack>
                 </Stack>
               </SwiperSlide>
