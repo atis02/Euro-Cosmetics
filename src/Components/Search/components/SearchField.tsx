@@ -3,12 +3,14 @@ import { Box, IconButton, InputBase } from "@mui/material";
 import { FC } from "react";
 import { ChangeEvent } from "./interfaces";
 import { useTypewriter } from "react-simple-typewriter";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   shrink: boolean;
   searchValue: string;
   handleChange: (event: ChangeEvent) => void;
   isMobile: boolean | undefined;
+  handleClose: () => void;
 }
 
 export const SearchField: FC<Props> = ({
@@ -16,7 +18,14 @@ export const SearchField: FC<Props> = ({
   searchValue,
   handleChange,
   isMobile,
+  handleClose,
 }) => {
+  const navigate = useNavigate();
+  const handleSearch = () => {
+    handleClose();
+    navigate(`/search/result/${searchValue}`);
+  };
+
   const fontSizeMob = 28;
   const fontSizeMobileShrink = 33;
   const fontSizeDesktopShrink = 45;
@@ -97,6 +106,7 @@ export const SearchField: FC<Props> = ({
           transition: "transform 0.3s ease",
           transform: shrink ? "scale(0.8)" : "scale(1)",
         }}
+        onClick={handleSearch}
       >
         <East
           sx={{

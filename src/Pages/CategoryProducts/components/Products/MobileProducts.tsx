@@ -13,10 +13,12 @@ import { BASE_URL } from "../../../../Fetcher/swrConfig";
 
 interface Props {
   product: images[];
+  close?: () => void;
 }
-const MobileProducts: FC<Props> = ({ product }) => {
+const MobileProducts: FC<Props> = ({ product, close }) => {
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
+    close && close();
     navigate(`/product/${item.barcode}`);
   };
 

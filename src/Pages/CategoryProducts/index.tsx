@@ -17,6 +17,9 @@ import {
   Subcategory,
 } from "../../Components/Navbar/ui/NavCategories/interfaces";
 import { BASE_URL } from "../../Fetcher/swrConfig";
+import Skeleton from "react-loading-skeleton";
+import { ProductLoading } from "../Main/components/ProductLoading";
+import { SearchFieldResultText } from "./components/SearchField";
 
 interface Props {
   products: [];
@@ -31,8 +34,13 @@ const Index = () => {
     Subcategory[] | Segment[] | null
   >(null);
 
-  const { categoryName, subCategoryName, segmentName, statusName } =
-    useParams();
+  const {
+    categoryName,
+    subCategoryName,
+    segmentName,
+    statusName,
+    searchedValue,
+  } = useParams();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -76,11 +84,13 @@ const Index = () => {
     subCategoryId,
     segmentId,
     productStatusId,
+    query,
   }: {
     categoryId: number | null;
     subCategoryId: number | null;
     segmentId: number | null;
     productStatusId: number | null;
+    query: string | null;
   }) => {
     try {
       const res = await axios.post(`${BASE_URL}/products/client`, {
@@ -88,13 +98,13 @@ const Index = () => {
         subCategoryId,
         segmentId,
         productStatusId,
+        query,
       });
       setProducts(res.data);
     } catch (error) {
       console.error("Ошибка при загрузке продуктов:", error);
     }
   };
-  console.log(products);
 
   useEffect(() => {
     const fetchAndFilter = async () => {
@@ -106,6 +116,16 @@ const Index = () => {
             subCategoryId: null,
             segmentId: null,
             productStatusId: Number(statusName),
+            query: "",
+          });
+        }
+        if (searchedValue) {
+          await fetchProducts({
+            categoryId: null,
+            subCategoryId: null,
+            segmentId: null,
+            productStatusId: null,
+            query: searchedValue,
           });
         }
         const categoriesRes = await axios.get(
@@ -150,6 +170,7 @@ const Index = () => {
           subCategoryId: subCatId,
           segmentId: segId,
           productStatusId: Number(statusName),
+          query: "",
         });
       } catch (err) {
         console.error("Ошибка при загрузке данных:", err);
@@ -158,25 +179,53 @@ const Index = () => {
       }
     };
 
-    if (categoryName || statusName) {
+    if (categoryName || statusName || searchedValue) {
       fetchAndFilter();
     }
-  }, [statusName, categoryName, subCategoryName, segmentName]);
+  }, [statusName, searchedValue, categoryName, subCategoryName, segmentName]);
+
+  if (loading)
+    return (
+      <Stack gap={2} mb={2}>
+        <Skeleton width="100%" height={isMobile ? "32vh" : "60vh"} />
+        <Stack direction="row" justifyContent="center" gap={2}>
+          {Array.from({ length: isMobile ? 2 : 7 }, (_, i) => (
+            <Skeleton key={i} height={60} width={160} borderRadius={100} />
+          ))}
+        </Stack>
+        <Stack mt={isMobile ? 1 : 4} direction="row" ml={4} gap={2}>
+          <Skeleton height={40} width={64} />
+          <Skeleton height={40} width={isMobile ? 190 : 210} />
+          <Skeleton height={40} width={104} />
+        </Stack>
+        <ProductLoading isMobile />
+      </Stack>
+    );
 
   return (
     <>
       <CustomContainerAll>
-        <Stack sx={{ height: isMobile ? "32vh" : "50vh" }}>
-          <BannerImage image={category?.coverImage ?? ""} isMobile={isMobile} />
-          <BannerImageText
-            loading={loading}
+        {searchedValue ? (
+          <SearchFieldResultText
+            searchedValue={searchedValue}
             isMobile={isMobile}
-            isTablet={isTablet}
-            category={category}
-            subCategory={subCategory ?? undefined}
-            segment={segment ?? undefined}
           />
-        </Stack>
+        ) : (
+          <Stack sx={{ height: isMobile ? "32vh" : "50vh" }}>
+            <BannerImage
+              image={category?.coverImage ?? ""}
+              isMobile={isMobile}
+            />
+            <BannerImageText
+              loading={loading}
+              isMobile={isMobile}
+              isTablet={isTablet}
+              category={category}
+              subCategory={subCategory ?? undefined}
+              segment={segment ?? undefined}
+            />
+          </Stack>
+        )}
       </CustomContainerAll>
       {subCategoryList && <SubCategories subCategories={subCategoryList} />}
       <Stack

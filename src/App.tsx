@@ -83,6 +83,10 @@ function App() {
               path="/category/:categoryName/:subCategoryName/:segmentName"
               element={<CategoryProducts />}
             />
+            <Route
+              path="/search/result/:searchedValue"
+              element={<CategoryProducts />}
+            />
           </Routes>
           <Footer />
         </BrowserRouter>

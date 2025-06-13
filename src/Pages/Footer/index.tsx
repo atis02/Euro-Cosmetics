@@ -8,7 +8,7 @@ import {
   Telegram,
 } from "@mui/icons-material";
 import { FC } from "react";
-import { hoverStyle } from "../../Components/utils/CustomStyles";
+import { hoverStyle, mainColor } from "../../Components/utils/CustomStyles";
 import CustomContainerMain from "../../Components/utils/CustomContainerMain";
 
 const Footer: FC = () => {
@@ -44,7 +44,14 @@ const Footer: FC = () => {
               Euro Cosmetics
             </Typography>
             <Typography variant="body2">
-              © 2025 Alem Tilsimat. All Rights Reserved.
+              Ähli hukuklary goralan © 2025. Powered by{" "}
+              <a
+                target="_blank"
+                href="https://alemtilsimat.com"
+                style={{ textDecoration: "none", color: mainColor }}
+              >
+                Alem Tilsimat
+              </a>
             </Typography>
           </Stack>
 

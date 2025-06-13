@@ -112,6 +112,7 @@ const Main: React.FC = () => {
         mt={2}
         justifyContent="center"
         overflow="auto"
+        height="85px"
       >
         {loadingStory
           ? Array.from({ length: isMobile ? 5 : 7 }).map((_, i) => (

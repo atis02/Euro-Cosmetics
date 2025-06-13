@@ -22,6 +22,7 @@ export const CustomContainerAll: React.FC<CustomContainerProps> = ({
         display: "flex",
         flexDirection: "column",
         opacity: 0.95,
+        mb: 2,
       }}
     >
       {children}

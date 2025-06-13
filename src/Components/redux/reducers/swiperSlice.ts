@@ -6,6 +6,7 @@ const initialState = {
   scrolled: false,
   openSearch: false,
   openCart: false,
+  searchValue: "",
 };
 
 const textColorSlice = createSlice({
@@ -27,6 +28,9 @@ const textColorSlice = createSlice({
     setOpenCart: (state, action) => {
       state.openCart = action.payload;
     },
+    setSearchValue: (state, action) => {
+      state.searchValue = action.payload;
+    },
   },
 });
 
@@ -36,5 +40,6 @@ export const {
   setScrolled,
   setOpenSearch,
   setOpenCart,
+  setSearchValue,
 } = textColorSlice.actions;
 export default textColorSlice.reducer;

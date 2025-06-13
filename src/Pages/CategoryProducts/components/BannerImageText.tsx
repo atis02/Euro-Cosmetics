@@ -82,7 +82,7 @@ const BannerImageText: FC<Props> = ({
               ? subCategoryName.title
               : category?.nameRu
           }
-          fz={isMobile ? 35 : isTablet ? 45 : 60}
+          fz={isMobile ? 35 : isTablet ? 45 : 55}
         />
       </Stack>
     </>

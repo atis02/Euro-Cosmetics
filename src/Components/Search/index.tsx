@@ -4,6 +4,11 @@ import { SearchField } from "./components/SearchField";
 import { ChangeEvent } from "./components/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenSearch } from "../redux/reducers/swiperSlice";
+import { BASE_URL } from "../../Fetcher/swrConfig";
+import { images } from "../../Pages/Product/components/interfaces";
+import Products from "../../Pages/CategoryProducts/components/Products/Products";
+import { ProductLoading } from "../../Pages/Main/components/ProductLoading";
+import MobileProducts from "../../Pages/CategoryProducts/components/Products/MobileProducts";
 
 interface Props {
   isMobile: boolean | undefined;
@@ -15,6 +20,46 @@ const index: FC<Props> = ({ isMobile }) => {
   const scrollableRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const open = useSelector((state: any) => state.swiper.openSearch);
+  const searchVal = useSelector((state: any) => state.swiper.searchValue);
+  const [products, setProducts] = useState<images[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchProducts = useCallback(async (query: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${BASE_URL}/products/client`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      const data = await response.json();
+      setProducts(data.products); // Assuming `data` is an array of products
+    } catch (error) {
+      console.log(error);
+      error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSearchValue(searchVal);
+  }, [searchVal]);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchValue.trim().length > 1) {
+        fetchProducts(searchValue);
+      } else {
+        setProducts([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchValue, fetchProducts]);
 
   const handleScroll = useCallback(() => {
     if (scrollableRef.current) {
@@ -59,7 +104,7 @@ const index: FC<Props> = ({ isMobile }) => {
               top: "60px",
               backgroundColor: "rgba(0, 0, 0, 0)",
               boxShadow: "none",
-              zIndex: 99,
+              zIndex: 199,
             },
           },
         }}
@@ -72,13 +117,13 @@ const index: FC<Props> = ({ isMobile }) => {
             display: "flex",
             flexDirection: "column",
             p: 0,
-            zIndex: 99,
+            zIndex: 199,
           },
         }}
         sx={{
           position: "fixed",
           top: "60px",
-          zIndex: 99,
+          zIndex: 199,
         }}
       >
         <Box
@@ -104,14 +149,25 @@ const index: FC<Props> = ({ isMobile }) => {
               searchValue={searchValue}
               handleChange={handleChange}
               isMobile={isMobile}
+              handleClose={() => dispatch(setOpenSearch(false))}
             />
           </Stack>
-          <Stack height="200vh" p={2}>
-            {Array.from({ length: 100 }, (_, i) => (
-              <Box key={i} p={1} borderBottom="1px solid #ccc">
-                Продукт {i + 1}
+          <Stack>
+            {loading ? (
+              <Box>
+                <ProductLoading isMobile={isMobile} />
               </Box>
-            ))}
+            ) : products.length && isMobile ? (
+              <MobileProducts
+                product={products}
+                close={() => dispatch(setOpenSearch(false))}
+              />
+            ) : (
+              <Products
+                product={products}
+                close={() => dispatch(setOpenSearch(false))}
+              />
+            )}
           </Stack>
         </Box>
       </Drawer>
