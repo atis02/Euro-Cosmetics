@@ -14,8 +14,6 @@ const CustomSectionText: FC<Props> = ({ fz, text, sx }) => {
   return (
     <Stack
       alignItems="center"
-      // // justifyContent="space-between"
-      // direction="row"
     >
       <Stack></Stack>
       <Typography

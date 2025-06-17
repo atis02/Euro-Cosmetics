@@ -19,6 +19,7 @@ type Props = {
   subCategory?: Subcategory;
   segment?: Segment;
   loading?: boolean;
+  text?: string;
 };
 
 const BannerImageText: FC<Props> = ({
@@ -28,6 +29,7 @@ const BannerImageText: FC<Props> = ({
   subCategory,
   segment,
   loading = false,
+  text,
 }) => {
   const subCategoryName: Name | undefined = subCategory
     ? { title: subCategory.nameRu }
@@ -76,7 +78,9 @@ const BannerImageText: FC<Props> = ({
           color="#fff"
           fw={500}
           text={
-            segmentName
+            text
+              ? text
+              : segmentName
               ? segmentName.title
               : subCategoryName
               ? subCategoryName.title

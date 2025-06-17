@@ -2,7 +2,6 @@ import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import useSWR from "swr";
 import Skeleton from "react-loading-skeleton";
-
 import { MainPageSwiper } from "../../Components/utils/swiper/MainPageSwiper";
 import Story from "../../Components/Story";
 import StoryButton from "./components/StoryButton";
@@ -10,9 +9,9 @@ import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper"
 import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
 import { ProductLoading } from "./components/ProductLoading";
-
 import { actionData } from "../../Components/utils/actionSwiper/constants";
 import { BASE_URL } from "../../Fetcher/swrConfig";
+import PopupComponent from "../../Components/Popup";
 
 const PRODUCT_URL = `${BASE_URL}/products/client`;
 
@@ -32,7 +31,7 @@ const fetcher = async (key: string) => {
 
 const Main: React.FC = () => {
   const [openStory, setOpenStory] = useState(false);
-  const [selectedStory, setSelectedStory] = useState<any>(null);
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -61,8 +60,8 @@ const Main: React.FC = () => {
     isLoading: loadingStory,
   } = useSWR(createFetchKey({}, "GET", `${BASE_URL}/stories/active`), fetcher);
 
-  const handleOpenStory = (story: any) => {
-    setSelectedStory(story);
+  const handleOpenStory = (storyIndex: number) => {
+    setCurrentStoryIndex(storyIndex);
     setOpenStory(true);
   };
 
@@ -90,6 +89,7 @@ const Main: React.FC = () => {
     if (!error && data?.products?.length)
       return (
         <ProductSwiper
+        
           text={label}
           data={data}
           error={error}
@@ -104,6 +104,7 @@ const Main: React.FC = () => {
     <Box>
       <Stack>
         <MainPageSwiper />
+        <PopupComponent/>
       </Stack>
 
       <Stack
@@ -127,22 +128,31 @@ const Main: React.FC = () => {
               />
             ))
           : !storyError &&
-            storyData?.stories?.map((story: any) => (
+            storyData?.stories?.map((story: any, index: number) => (
               <StoryButton
                 key={story.id}
                 imageUrl={`${BASE_URL}/${story.image}`}
-                onClick={() => handleOpenStory(story)}
+                onClick={() => handleOpenStory(index)}
               />
             ))}
       </Stack>
 
-      {selectedStory && openStory && (
+      {openStory && storyData?.stories?.length > 0 && (
         <Story
           open={openStory}
-          stories={[selectedStory]}
+          stories={storyData.stories}
+          currentIndex={currentStoryIndex}
           onClose={() => {
             setOpenStory(false);
-            setSelectedStory(null);
+            setCurrentStoryIndex(0);
+          }}
+          onNextStory={() => {
+            if (currentStoryIndex < storyData.stories.length - 1) {
+              setCurrentStoryIndex(currentStoryIndex + 1);
+            } else {
+              setOpenStory(false);
+              setCurrentStoryIndex(0);
+            }
           }}
         />
       )}
@@ -150,7 +160,7 @@ const Main: React.FC = () => {
       {renderProducts(newData, newError, loadingNew, "новинки")}
       <ActionSwiper text="aкции" data={actionData} />
       {renderProducts(hitData, hitError, loadingHit, "хиты", false)}
-      <ActionSwiper text="клиентские дни" data={actionData} />
+      <ActionSwiper text="советы блогеров" data={actionData} />
     </Box>
   );
 };

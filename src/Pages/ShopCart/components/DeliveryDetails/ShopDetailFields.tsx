@@ -3,28 +3,33 @@ import { useState } from "react";
 import CustomAccordion from "../../../../Components/utils/CustomAccordion";
 
 type Props = {
+  nameClient:string;
   city: string;
   comment: string;
+  phoneNumber: string;
+  setNameClient: (value: string) => void;
   setComment: (value: string) => void;
   setCity: (value: string) => void;
+  setPhoneNumber: (value: string) => void;
   errorFields: {
+    nameClient: boolean;
     city: boolean;
     phoneNumber: boolean;
   };
-  phoneNumber: string;
-  setPhoneNumber: (value: string) => void;
 };
 
 const ShopDetailFields: React.FC<Props> = ({
+  nameClient,
   city,
-  setCity,
   comment,
-  setComment,
   phoneNumber,
-  setPhoneNumber,
   errorFields,
+  setNameClient,
+  setCity,
+  setComment,
+  setPhoneNumber,
 }) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const style = {
     "& .MuiInput-underline:after": {
       borderBottomColor: "#000",
@@ -64,7 +69,7 @@ const ShopDetailFields: React.FC<Props> = ({
                 <InputAdornment position="start">
                   <Stack
                     borderRight="1px solid lightgray"
-                    sx={{ paddingRight: 0.5 }}
+                    sx={{ paddingRight: 0.5,color: errorFields.phoneNumber?'tomato':'#000' }}
                   >
                     +993
                   </Stack>
@@ -73,12 +78,22 @@ const ShopDetailFields: React.FC<Props> = ({
             }}
             sx={{ ...style, mt: 2 }}
             fullWidth
-            // required
             error={errorFields.phoneNumber}
             helperText={errorFields.phoneNumber ? "Заполните поле" : ""}
           />
+           <TextField
+            label="Имя клиента"
+            value={nameClient}
+            onChange={(e) => setNameClient(e.target.value)}
+            fullWidth
+            variant="standard"
+            sx={style}
+            required
+            error={errorFields.nameClient}
+            helperText={errorFields.nameClient ? "Заполните поле" : ""}
+          />
           <TextField
-            label="Город"
+            label="Адрес"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             fullWidth

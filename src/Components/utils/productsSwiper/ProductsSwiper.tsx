@@ -14,6 +14,7 @@ import { AddToCartButton } from "../AddToCartButton";
 import { imagesProps } from "../interfaces";
 import { images, Product } from "../../../Pages/Product/components/interfaces";
 import { CustomImageComponent } from "../CustomImageComponent";
+import { ProductStatuses } from "../ProductsStatuses";
 
 interface Props {
   isLoading: boolean;
@@ -53,7 +54,8 @@ const ProductSwiper: FC<Props> = ({
       feedBackNumb: 1,
       articule: "",
       desc: "",
-      productStatus: (products[0]?.Status && products[0]?.Status.id) || "",
+      productStatus:
+        (products[0]?.Status && String(products[0]?.Status.id)) || "",
       sellPrice: 0,
       discountPrice: 0,
       category: "",
@@ -224,6 +226,7 @@ const ProductSwiper: FC<Props> = ({
                     onMouseEnter={() => setShowCartButton(item.barcode)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
+                    <ProductStatuses item={item} />
                     {item && item.imageOne !== "" && (
                       <Stack position="absolute" right={0} zIndex={100}>
                         <FavoriteButton product={item as any} />

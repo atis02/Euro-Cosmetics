@@ -228,10 +228,36 @@ export const MainPageSwiper: React.FC = () => {
                         </Typography>
                       </Stack>
                       <CustomButton
-                        isMobile={isMobile}
-                        text="Перейти к "
-                        textColor="#fff"
-                      />
+                      text={`Перейти к ${
+                        slide.Category?.nameRu
+                          ? "категории"
+                          : slide.SubCategory?.nameRu
+                          ? "подкатегории"
+                          : slide.Segment?.nameRu
+                          ? "сегментам"
+                          : slide.ProductsArray?.length
+                          ? "товарам"
+                          : slide.Product?.id
+                          ? "товару"
+                          : ""
+                      }`}
+                      width="auto"
+                      textColor="#fff"
+                      func={() => {
+                        if (slide.Product !== null) {
+                          return navigate(`/product/${slide.Product.barcode}`);
+                        }
+                        const parts = [
+                          slide.Category?.nameRu,
+                          slide.SubCategory?.nameRu,
+                          slide.Segment?.nameRu,
+                        ].filter(Boolean);
+
+                        if (parts.length) {
+                          navigate(`/category/${parts.join("/")}`);
+                        }
+                      }}
+                    />
                     </Stack>
                   </Stack>
                 </SwiperSlide>

@@ -207,6 +207,7 @@ import FavoriteButton from "./FavoriteButtonComponent";
 import { AddToCartButton } from "./AddToCartButton";
 import { CustomImageComponent } from "./CustomImageComponent";
 import { imagesProps } from "./interfaces";
+import { ProductStatuses } from "./ProductsStatuses";
 
 interface Props {
   products: any;
@@ -254,6 +255,8 @@ export const MobileSwipeProducts: FC<Props> = ({
         position: "relative",
       }}
     >
+      <ProductStatuses item={product} />
+
       <Stack position="absolute" right={-4} top={-4} zIndex={100}>
         <FavoriteButton product={product} />
       </Stack>

@@ -40,7 +40,9 @@ const getVideoDuration = async (url: string): Promise<number> => {
   }
 };
 
-const StoryModal: React.FC<StoryModalProps> = ({ open, onClose, stories }) => {
+const StoryModal: React.FC<
+  StoryModalProps & { currentIndex: number; onNextStory: () => void }
+> = ({ open, onClose, stories, currentIndex, onNextStory }) => {
   const [storiesData, setStoriesData] = useState<Story[]>([]);
 
   useEffect(() => {
@@ -82,16 +84,6 @@ const StoryModal: React.FC<StoryModalProps> = ({ open, onClose, stories }) => {
       loadDurations();
     }
   }, [stories, open]);
-  // const storiesData: Story[] = stories.map((elem) => ({
-  //   type: elem.video ? "video" : "image", // optional: specify the type if needed
-  //   url: `${BASE_URL}/${elem.video || elem.image}`,
-  //   duration: 5000,
-  //   header: {
-  //     heading: elem.name,
-  //     subheading: elem.contentRu,
-  //     profileImage: elem.image,
-  //   },
-  // }));
 
   return (
     <Dialog
@@ -122,10 +114,12 @@ const StoryModal: React.FC<StoryModalProps> = ({ open, onClose, stories }) => {
         {storiesData.length > 0 ? (
           <Stories
             stories={storiesData}
+            currentIndex={currentIndex}
             defaultInterval={5000}
             width="100%"
             height="100%"
             onAllStoriesEnd={onClose}
+            onStoryEnd={onNextStory}
             crossOrigin="anonymous"
           />
         ) : (

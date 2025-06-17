@@ -31,6 +31,12 @@
   src: url("/fonts/graphicLCG.woff2") format("woff2");
   font-weight: 600;
 }
+@font-face {
+  font-family: "DrukCy";
+  src: url("/fonts/DrukCy-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+
 body {
   font-family: "Graphic", sans-serif;
 }

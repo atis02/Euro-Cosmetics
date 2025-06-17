@@ -23,16 +23,14 @@ export interface Category {
   coverImage: string;
   SubCategories: Subcategory[];
 }
-// export interface Category {
-//   id: number;
-//   deliveryPrice: number | string;
-//   discountType: number | string;
-//   discountValue: number | string;
-//   image: string;
-//   isActive: boolean;
-//   nameRu: string;
-//   nameTm: string;
-//   order: number;
-
-//   subcategories: Subcategory[];
-// }
+export interface Brands {
+  id: string;
+  name: string;
+  image: string;
+}
+export interface Status {
+  id: number;
+  nameRu: string;
+  nameTm: string;
+  image: string;
+}

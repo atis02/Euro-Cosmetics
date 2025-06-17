@@ -28,6 +28,9 @@ const CustomAccordion: FC<Props> = ({
       onChange={() => setExpanded(!expanded)}
       sx={{
         border: isHasValue ? "1px solid red" : "1px solid #ccc",
+         "&.Mui-expanded": {
+      margin: 0,
+    },
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>

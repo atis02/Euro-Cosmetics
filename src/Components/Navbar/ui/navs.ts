@@ -1,11 +1,9 @@
 export const navs = [
   { label: "каталог", to: "/", type: "category" },
   { label: "бренды", to: "/brands" },
-  { label: "новинки", to: "/news" },
-  { label: "акции", to: "/sales" },
+  { label: "новинки", to: "/news/1" },
+  { label: "акции", to: "/sales/100" },
   { label: "магазины", to: "/markets" },
-  { label: "flacon", to: "/flacon" },
-  { label: "teens", to: "/teens", image: "/images/navImage3.png" },
   {
     label: "подарочные карты",
     to: "/gift-cards",

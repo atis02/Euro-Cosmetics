@@ -157,7 +157,7 @@ const index: FC<Props> = ({ isMobile }) => {
               <Box>
                 <ProductLoading isMobile={isMobile} />
               </Box>
-            ) : products.length && isMobile ? (
+            ) : products?.length && isMobile ? (
               <MobileProducts
                 product={products}
                 close={() => dispatch(setOpenSearch(false))}

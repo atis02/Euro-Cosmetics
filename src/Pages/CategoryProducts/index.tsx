@@ -14,18 +14,21 @@ import axios from "axios";
 import {
   Category,
   Segment,
+  Status,
   Subcategory,
 } from "../../Components/Navbar/ui/NavCategories/interfaces";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import Skeleton from "react-loading-skeleton";
 import { ProductLoading } from "../Main/components/ProductLoading";
 import { SearchFieldResultText } from "./components/SearchField";
+import { getBrands, getCategories, getSegments, getStatuses, getSubCategories } from "./components/hooks";
 
 interface Props {
   products: [];
 }
 const Index = () => {
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<Status | null>(null);
   const [products, setProducts] = useState<Props>();
   const [category, setCategory] = useState<Category>();
   const [subCategory, setSubCategory] = useState<Subcategory | null>(null);
@@ -40,23 +43,42 @@ const Index = () => {
     segmentName,
     statusName,
     searchedValue,
+    brandId,
   } = useParams();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
 
+  const fetchProducts = async (params: {
+    categoryId?: number | null;
+    subCategoryId?: number | null;
+    segmentId?: number | null;
+    productStatusId?: number | null;
+    query?: string | null;
+    brandId?: string | null | undefined;
+    hasDiscount?: boolean | null;
+  }) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/products/client`, params);
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Ошибка при загрузке продуктов:", error);
+    }
+  };
+
   useEffect(() => {
     setCategory(undefined);
     setSubCategory(null);
     setSegment(null);
+    setStatus(null)
   }, [categoryName, subCategoryName, segmentName]);
 
   useEffect(() => {
     const fetchSubCategoryList = async () => {
       if (category?.SubCategories?.length && !subCategoryName && !segmentName) {
         setSubCategoryList(category.SubCategories);
-      } else if (segmentName == undefined && subCategory?.id && !loading) {
+      } else if (subCategory?.id && !segmentName && !loading) {
         try {
           const res = await axios.get(
             `${BASE_URL}/subcategories/fetch/single/${subCategory.id}`
@@ -65,12 +87,6 @@ const Index = () => {
         } catch (err) {
           console.error("Ошибка при загрузке сегментов:", err);
         }
-      } else if (
-        category?.SubCategories?.length &&
-        !subCategoryName &&
-        !segmentName
-      ) {
-        return setSubCategoryList(category.SubCategories);
       } else {
         setSubCategoryList(null);
       }
@@ -79,98 +95,80 @@ const Index = () => {
     fetchSubCategoryList();
   }, [category, subCategory, subCategoryName, segmentName, loading]);
 
-  const fetchProducts = async ({
-    categoryId,
-    subCategoryId,
-    segmentId,
-    productStatusId,
-    query,
-  }: {
-    categoryId: number | null;
-    subCategoryId: number | null;
-    segmentId: number | null;
-    productStatusId: number | null;
-    query: string | null;
-  }) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/products/client`, {
-        categoryId,
-        subCategoryId,
-        segmentId,
-        productStatusId,
-        query,
-      });
-      setProducts(res.data);
-    } catch (error) {
-      console.error("Ошибка при загрузке продуктов:", error);
-    }
-  };
-
   useEffect(() => {
     const fetchAndFilter = async () => {
       try {
         setLoading(true);
+
+        if (brandId) {
+          const brands = await getBrands();
+          const foundBrand =
+            brands.length && brands.find((brand) => brand.name === brandId);
+          if (foundBrand) {
+            return await fetchProducts({ brandId: foundBrand.id });
+          }
+        }
+        if (statusName === "100") {
+          return await fetchProducts({ hasDiscount: true });
+        }
         if (statusName) {
-          await fetchProducts({
-            categoryId: null,
-            subCategoryId: null,
-            segmentId: null,
-            productStatusId: Number(statusName),
-            query: "",
-          });
+          const statuses = await getStatuses();
+          const foundStatus = statuses.find((status: Status) => status.id === Number(statusName));
+          setStatus(foundStatus ?? null);
+          if (foundStatus) {
+            return await fetchProducts({ productStatusId: Number(foundStatus.id) });
+          }
         }
         if (searchedValue) {
-          await fetchProducts({
-            categoryId: null,
-            subCategoryId: null,
-            segmentId: null,
-            productStatusId: null,
-            query: searchedValue,
-          });
+          return await fetchProducts({ query: searchedValue });
         }
-        const categoriesRes = await axios.get(
-          `${BASE_URL}/categories/fetch/client`
-        );
-        const foundCategory = categoriesRes.data.categories?.find(
-          (cat: Category) => cat.nameRu === categoryName
+
+        // Категории
+        const categories = await getCategories();
+        const foundCategory = categories.find(
+          (cat) => cat.nameRu === categoryName
         );
         if (!foundCategory) return;
+
         setCategory(foundCategory);
-        let subCatId = null;
+
+        // Подкатегория
+        let subCatId: number | null = null;
         if (subCategoryName) {
-          const subRes = await axios.get(
-            `${BASE_URL}/subcategories/fetch/client`
-          );
-          const foundSub = subRes.data.subCategories?.find(
-            (s: Subcategory) =>
-              s.nameRu === subCategoryName && s.categoryId === foundCategory.id
+          const subCategories = await getSubCategories();
+          const foundSub = subCategories.find(
+            (s) =>
+              s.nameRu === subCategoryName &&
+              String(s.categoryId) === String(foundCategory.id)
           );
           if (!foundSub) return;
-          subCatId = foundSub.id;
+
+          subCatId = Number(foundSub.id);
           setSubCategory(foundSub);
         }
+
         // Сегмент
-        let segId = null;
+        let segId: number | null = null;
         if (segmentName) {
-          const segRes = await axios.get(`${BASE_URL}/segments/fetch/client`);
-          const foundSegment = segRes.data.segments?.find(
-            (s: Segment) =>
+          const segments = await getSegments();
+          const foundSegment = segments.find(
+            (s) =>
               s.nameRu === segmentName &&
               (!subCatId || s.SubCategory?.nameRu === subCategoryName)
           );
           if (foundSegment) {
-            segId = foundSegment.id;
+            segId = Number(foundSegment.id);
             setSegment(foundSegment);
           }
         }
 
-        // Продукты
+        // Получаем продукты
         await fetchProducts({
           categoryId: foundCategory.id,
           subCategoryId: subCatId,
           segmentId: segId,
-          productStatusId: Number(statusName),
-          query: "",
+          productStatusId: statusName ? Number(statusName) : null,
+          brandId: brandId,
         });
       } catch (err) {
         console.error("Ошибка при загрузке данных:", err);
@@ -179,12 +177,20 @@ const Index = () => {
       }
     };
 
-    if (categoryName || statusName || searchedValue) {
+    if (categoryName || statusName || searchedValue || brandId) {
       fetchAndFilter();
     }
-  }, [statusName, searchedValue, categoryName, subCategoryName, segmentName]);
+  }, [
+    categoryName,
+    subCategoryName,
+    segmentName,
+    statusName,
+    searchedValue,
+    brandId,
+  ]);
 
-  if (loading)
+  // Loader
+  if (loading) {
     return (
       <Stack gap={2} mb={2}>
         <Skeleton width="100%" height={isMobile ? "32vh" : "60vh"} />
@@ -201,11 +207,18 @@ const Index = () => {
         <ProductLoading isMobile />
       </Stack>
     );
+  }
 
   return (
     <>
       <CustomContainerAll>
-        {searchedValue ? (
+        {brandId||statusName=='100' ? (
+          <SearchFieldResultText
+            disabled
+            searchedValue={statusName=='100' ? 'акции' : brandId ?? ''}
+            isMobile={isMobile}
+          />
+        ) : searchedValue ? (
           <SearchFieldResultText
             searchedValue={searchedValue}
             isMobile={isMobile}
@@ -213,7 +226,7 @@ const Index = () => {
         ) : (
           <Stack sx={{ height: isMobile ? "32vh" : "50vh" }}>
             <BannerImage
-              image={category?.coverImage ?? ""}
+              image={status?status.image:category?.coverImage ?? ""}
               isMobile={isMobile}
             />
             <BannerImageText
@@ -223,11 +236,14 @@ const Index = () => {
               category={category}
               subCategory={subCategory ?? undefined}
               segment={segment ?? undefined}
+              text={status?.nameRu}
             />
           </Stack>
         )}
       </CustomContainerAll>
+
       {subCategoryList && <SubCategories subCategories={subCategoryList} />}
+
       <Stack
         sx={{ padding: isMobile ? "10px 20px" : "15px 40px 0 40px" }}
         direction="row"

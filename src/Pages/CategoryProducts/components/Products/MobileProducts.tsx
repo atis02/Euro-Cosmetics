@@ -10,6 +10,7 @@ import { AddToCartButton } from "../../../../Components/utils/AddToCartButton";
 import { Rating } from "../../../Product/components/Rating";
 import { images, testData } from "../../../Product/components/interfaces";
 import { BASE_URL } from "../../../../Fetcher/swrConfig";
+import { ProductStatuses } from "../../../../Components/utils/ProductsStatuses";
 
 interface Props {
   product: images[];
@@ -45,6 +46,8 @@ const MobileProducts: FC<Props> = ({ product, close }) => {
               }}
               onClick={() => handleNavigate(item)}
             >
+                    <ProductStatuses item={item} />
+              
               {item.imageOne && (
                 <Stack position="absolute" right={0} zIndex={100}>
                   <FavoriteButton product={item as testData} />

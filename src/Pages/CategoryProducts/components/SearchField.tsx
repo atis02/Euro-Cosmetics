@@ -11,11 +11,13 @@ import {
 interface Props {
   searchedValue: string;
   isMobile: boolean;
+  disabled?: boolean;
 }
 
 export const SearchFieldResultText: FC<Props> = ({
   searchedValue,
   isMobile,
+  disabled = false,
 }) => {
   const dispatch = useDispatch();
   return (
@@ -30,17 +32,18 @@ export const SearchFieldResultText: FC<Props> = ({
     >
       {!isMobile && (
         <Typography
-          width={"50%"}
+          width="50%"
           color="#7F7F7F"
           fontSize={14}
           fontFamily="Graphic"
           textAlign="end"
         >
-          результаты по запросу
+          {!disabled&&'результаты по запросу'}
         </Typography>
       )}
       <Typography
         onClick={() => {
+          if(disabled)return
           dispatch(setSearchValue(searchedValue));
           dispatch(setOpenSearch(true));
         }}
@@ -51,19 +54,22 @@ export const SearchFieldResultText: FC<Props> = ({
         fontSize={isMobile ? 20 : 60}
         fontWeight={500}
         fontFamily="Graphic"
-        width={isMobile ? "100%" : "50%"}
+        width={isMobile||disabled ? "100%" : "50%"}
       >
         {searchedValue}
       </Typography>
-      <IconButton
+      {!disabled&&(
+
+        <IconButton
         onClick={() => {
           dispatch(setSearchValue(""));
           dispatch(setOpenSearch(true));
         }}
         sx={{ mb: isMobile ? 0 : 3 }}
-      >
+        >
         <Close />
       </IconButton>
+      )}
     </Stack>
   );
 };

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Rate } from "antd";
 import CustomProductText from "./CustomProductText";
 import { CustomImageComponent } from "./CustomImageComponent";
+import { ProductStatuses } from "./ProductsStatuses";
 
 export const CustomProductCart: FC<Product> = ({ product }) => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
       }}
       onClick={() => handleNavigate(product)}
     >
+      <ProductStatuses item={product} />
       <Stack position="absolute" right={0} zIndex={100}>
         <FavoriteButton product={product} />
       </Stack>

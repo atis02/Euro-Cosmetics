@@ -18,7 +18,6 @@ import { Divider } from "antd";
 import { EmptyCart } from "./components/EmptyCart";
 import { PopularProductsMini } from "../../Components/utils/PopularProductsMini";
 import { CustomProductCart } from "./components/CustomProductCart";
-import { PromoCode } from "./components/PromoCode";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import useSWR from "swr";
@@ -117,7 +116,6 @@ const CartDrawer: FC = () => {
                 <CustomProductCart product={item.product} />
               </Stack>
             ))}
-            <PromoCode />
             <DeliveryDetails />
           </>
         ) : (

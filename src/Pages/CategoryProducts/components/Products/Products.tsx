@@ -10,6 +10,7 @@ import { AddToCartButton } from "../../../../Components/utils/AddToCartButton";
 import { Rating } from "../../../Product/components/Rating";
 import { images } from "../../../Product/components/interfaces";
 import { BASE_URL } from "../../../../Fetcher/swrConfig";
+import { ProductStatuses } from "../../../../Components/utils/ProductsStatuses";
 
 interface Props {
   product: images[];
@@ -46,6 +47,7 @@ const Products: FC<Props> = ({ close, product }) => {
                     onMouseEnter={() => setShowCartButton(item?.barcode)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
+                    <ProductStatuses item={item} />
                     {item?.imageOne && (
                       <Stack position="absolute" right={0} zIndex={100}>
                         <FavoriteButton product={item} />

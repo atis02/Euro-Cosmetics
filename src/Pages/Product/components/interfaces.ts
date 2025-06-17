@@ -15,7 +15,7 @@ export interface images {
   image?: string;
   Status?: {
     nameRu: string;
-    id: string;
+    id: string|number;
   };
   video?: string;
   productStatus?: string;

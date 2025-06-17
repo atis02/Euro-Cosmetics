@@ -13,6 +13,7 @@ import { SWRConfig } from "swr";
 import { fetcher } from "./Fetcher/swrConfig";
 import CategoryProducts from "./Pages/CategoryProducts";
 import NotFoundPage from "./Components/Loyout/NotFoundPage";
+import Brands from "./Pages/Brands";
 import { ScrollToTop } from "./Components/utils/ScrollToTop";
 import { IsMainPage } from "./Components/utils/IsMainPage";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -67,6 +68,10 @@ function App() {
             <Route path="/product/:id" element={<Product />} />
             <Route path="/wishlist" element={<FavoriteProducts />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/brands" element={<Brands />} />
+            <Route path="/brands/:brandId" element={<CategoryProducts />} />
+            <Route path="/news/:statusName" element={<CategoryProducts />} />
+            <Route path="/sales/:statusName" element={<CategoryProducts />} />
             <Route
               path="/category/:categoryName"
               element={<CategoryProducts />}

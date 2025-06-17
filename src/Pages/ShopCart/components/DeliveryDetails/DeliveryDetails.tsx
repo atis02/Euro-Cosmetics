@@ -15,16 +15,18 @@ import { OpenNotification } from "../../../../Components/utils/CustomToast";
 import { CheckCircleOutlined } from "@mui/icons-material";
 import { setOpenCart } from "../../../../Components/redux/reducers/swiperSlice";
 import { clearCart } from "../../../../Components/redux/reducers/cartSlice";
+import  DeliveryTerms  from "./DeliveryTerms";
 
 export const DeliveryDetails = () => {
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [comment, setComment] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState("");
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const [expandedDelTime, setExpandedDelTime] = useState<boolean>(false);
+  const [nameClient, setNameClient] = useState("");
+  const [deliveryMethod, setDeliveryMethod] = useState("2");
+  const [expanded, setExpanded] = useState<boolean>(true);
+  const [expandedDelTime, setExpandedDelTime] = useState<boolean>(true);
   const [expandedPaymentType, setExpandedPaymentType] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [deliveryCity, setDeliveryCity] = useState<string | null>(null);
   const [selectedPaymentType, setSelectedPaymentType] = useState<string | null>(
     null
@@ -37,6 +39,7 @@ export const DeliveryDetails = () => {
     paymentType: false,
     deliveryTime: false,
     phoneNumber: false,
+    nameClient:false
   });
   const cartItems = useSelector((state: any) => state.cart.items);
   const dispatch = useDispatch();
@@ -51,6 +54,12 @@ export const DeliveryDetails = () => {
     setCity(value);
     if (value.trim() !== "") {
       setErrorFields((prev) => ({ ...prev, city: false }));
+    }
+  };
+    const handleNameClientChange = (value: string) => {
+    setNameClient(value);
+    if (value.trim() !== "") {
+      setErrorFields((prev) => ({ ...prev, nameClient: false }));
     }
   };
   const handlePhoneNumberChange = (value: string) => {
@@ -90,6 +99,7 @@ export const DeliveryDetails = () => {
       paymentType: !selectedPaymentType,
       deliveryTime: !deliveryTime,
       phoneNumber: !phoneNumber || phoneNumber.length < 8,
+      nameClient: !nameClient
     };
 
     setErrorFields(newErrors);
@@ -104,9 +114,10 @@ export const DeliveryDetails = () => {
       0
     );
     const formData = {
-      phoneNumber: `993 ${phoneNumber}`,
+      phoneNumber: `993${phoneNumber}`,
       sum: totalSum,
       address: city,
+      username: nameClient,
       comment: comment,
       orderItems: cartItems.map((item: any) => ({
         barcode: item.product?.barcode,
@@ -141,7 +152,7 @@ export const DeliveryDetails = () => {
   };
 
   return (
-    <Stack gap={2}>
+    <Stack gap={0.5} >
       <DeliveryType
         deliveryMethod={deliveryMethod}
         setDeliveryMethod={handleDelMethodChange}
@@ -153,6 +164,7 @@ export const DeliveryDetails = () => {
           setExpanded={setExpanded}
           isHasValue={errorFields.deliveryCity}
           text="Выберите город доставки"
+          
           children={
             <DeliveryCities
               selectedCity={deliveryCity}
@@ -164,6 +176,8 @@ export const DeliveryDetails = () => {
       )}
       <ShopDetailFields
         city={city}
+        nameClient={nameClient}
+        setNameClient={handleNameClientChange}
         setCity={handleCityChange}
         comment={comment}
         setComment={setComment}
@@ -199,11 +213,12 @@ export const DeliveryDetails = () => {
         }
       />
       <Total />
+      <DeliveryTerms/>
       <CustomButtonSecond
         dontChange
         width="100%"
         text="ОФОРМИТЬ ЗАКАЗ"
-        mt={3}
+        
         func={handleSubmit}
       />
     </Stack>
