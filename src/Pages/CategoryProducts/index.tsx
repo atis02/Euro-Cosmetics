@@ -1,4 +1,4 @@
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CustomContainerAll } from "../../Components/utils/CustomContainerAll";
 import BannerImage from "./components/BannerImage";
 import BannerImageText from "./components/BannerImageText";
@@ -18,13 +18,20 @@ import {
   Subcategory,
 } from "../../Components/Navbar/ui/NavCategories/interfaces";
 import { BASE_URL } from "../../Fetcher/swrConfig";
-import Skeleton from "react-loading-skeleton";
-import { ProductLoading } from "../Main/components/ProductLoading";
 import { SearchFieldResultText } from "./components/SearchField";
-import { getBrands, getCategories, getSegments, getStatuses, getSubCategories } from "./components/hooks";
+import {
+  getBrands,
+  getCategories,
+  getGiftCards,
+  getSegments,
+  getStatuses,
+  getSubCategories,
+} from "./components/hooks";
+import { useTranslation } from "react-i18next";
+import { CategoryLoader } from "./CategoryLoader";
 
 interface Props {
-  products: [];
+  products: any[];
 }
 const Index = () => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +43,7 @@ const Index = () => {
   const [subCategoryList, setSubCategoryList] = useState<
     Subcategory[] | Segment[] | null
   >(null);
-
+  const { t } = useTranslation();
   const {
     categoryName,
     subCategoryName,
@@ -58,10 +65,20 @@ const Index = () => {
     query?: string | null;
     brandId?: string | null | undefined;
     hasDiscount?: boolean | null;
+    limit?: number | null;
+    page?: number | null;
+    discount?: boolean | null;
   }) => {
     try {
       const res = await axios.post(`${BASE_URL}/products/client`, params);
-      setProducts(res.data);
+      if (params.discount == true) {
+        const filtered = res.data?.products.filter(
+          (item: any) => item.discountValue >= 50
+        );
+        setProducts({ products: filtered });
+      } else {
+        setProducts(res.data);
+      }
     } catch (error) {
       console.error("Ошибка при загрузке продуктов:", error);
     }
@@ -71,7 +88,7 @@ const Index = () => {
     setCategory(undefined);
     setSubCategory(null);
     setSegment(null);
-    setStatus(null)
+    setStatus(null);
   }, [categoryName, subCategoryName, segmentName]);
 
   useEffect(() => {
@@ -100,6 +117,10 @@ const Index = () => {
       try {
         setLoading(true);
 
+        if (statusName === "gift") {
+          const res = await getGiftCards();
+          return setProducts({ products: res });
+        }
         if (brandId) {
           const brands = await getBrands();
           const foundBrand =
@@ -108,15 +129,29 @@ const Index = () => {
             return await fetchProducts({ brandId: foundBrand.id });
           }
         }
+        if (statusName === "50") {
+          return await fetchProducts({
+            limit: 20,
+            hasDiscount: true,
+            discount: true,
+          });
+        }
         if (statusName === "100") {
-          return await fetchProducts({ hasDiscount: true });
+          return await fetchProducts({
+            limit: 20,
+            hasDiscount: true,
+          });
         }
         if (statusName) {
           const statuses = await getStatuses();
-          const foundStatus = statuses.find((status: Status) => status.id === Number(statusName));
+          const foundStatus = statuses.find(
+            (status: Status) => status.id === Number(statusName)
+          );
           setStatus(foundStatus ?? null);
           if (foundStatus) {
-            return await fetchProducts({ productStatusId: Number(foundStatus.id) });
+            return await fetchProducts({
+              productStatusId: Number(foundStatus.id),
+            });
           }
         }
         if (searchedValue) {
@@ -191,31 +226,27 @@ const Index = () => {
 
   // Loader
   if (loading) {
-    return (
-      <Stack gap={2} mb={2}>
-        <Skeleton width="100%" height={isMobile ? "32vh" : "60vh"} />
-        <Stack direction="row" justifyContent="center" gap={2}>
-          {Array.from({ length: isMobile ? 2 : 7 }, (_, i) => (
-            <Skeleton key={i} height={60} width={160} borderRadius={100} />
-          ))}
-        </Stack>
-        <Stack mt={isMobile ? 1 : 4} direction="row" ml={4} gap={2}>
-          <Skeleton height={40} width={64} />
-          <Skeleton height={40} width={isMobile ? 190 : 210} />
-          <Skeleton height={40} width={104} />
-        </Stack>
-        <ProductLoading isMobile />
-      </Stack>
-    );
+    return <CategoryLoader isMobile={isMobile} />;
   }
 
   return (
     <>
       <CustomContainerAll>
-        {brandId||statusName=='100' ? (
+        {statusName === "gift" ||
+        brandId ||
+        statusName == "100" ||
+        statusName === "50" ? (
           <SearchFieldResultText
             disabled
-            searchedValue={statusName=='100' ? 'акции' : brandId ?? ''}
+            searchedValue={
+              statusName === "50"
+                ? t("navbar.aksiya50")
+                : statusName === "gift"
+                ? t("navbar.giftCard")
+                : statusName == "100"
+                ? "акции"
+                : brandId ?? ""
+            }
             isMobile={isMobile}
           />
         ) : searchedValue ? (
@@ -226,7 +257,7 @@ const Index = () => {
         ) : (
           <Stack sx={{ height: isMobile ? "32vh" : "50vh" }}>
             <BannerImage
-              image={status?status.image:category?.coverImage ?? ""}
+              image={status ? status.image : category?.coverImage ?? ""}
               isMobile={isMobile}
             />
             <BannerImageText
@@ -254,7 +285,7 @@ const Index = () => {
         {!isMobile && <SortProducts />}
         <Stack alignItems="center" width={isMobile ? "55%" : "auto"}>
           <CountUp
-            end={products?.products.length ?? 0}
+            end={products?.products?.length ?? 0}
             duration={0.6}
             suffix=" продукта"
             separator=" "
@@ -267,7 +298,13 @@ const Index = () => {
         </Stack>
       </Stack>
 
-      {isMobile ? (
+      {!products?.products?.length ? (
+        <Stack minHeight="50vh" alignItems="center" justifyContent="center">
+          <Typography fontFamily="Graphic" fontSize={20}>
+            товар не найден
+          </Typography>
+        </Stack>
+      ) : isMobile ? (
         <MobileProducts product={products?.products ?? []} />
       ) : (
         <Products product={products?.products ?? []} />

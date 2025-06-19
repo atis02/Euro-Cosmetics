@@ -15,8 +15,9 @@ import { ProductStatuses } from "../../../../Components/utils/ProductsStatuses";
 interface Props {
   product: images[];
   close?: () => void;
+  color?: boolean;
 }
-const MobileProducts: FC<Props> = ({ product, close }) => {
+const MobileProducts: FC<Props> = ({ product, close, color }) => {
   const navigate = useNavigate();
   const handleNavigate = (item: any) => {
     close && close();
@@ -43,11 +44,11 @@ const MobileProducts: FC<Props> = ({ product, close }) => {
                 cursor: "pointer",
                 position: "relative",
                 mb: 1,
+                bgcolor:'#fff'
               }}
               onClick={() => handleNavigate(item)}
             >
-                    <ProductStatuses item={item} />
-              
+              <ProductStatuses item={item} />
               {item.imageOne && (
                 <Stack position="absolute" right={0} zIndex={100}>
                   <FavoriteButton product={item as testData} />
@@ -136,12 +137,13 @@ const MobileProducts: FC<Props> = ({ product, close }) => {
                   <Rating showtext={false} gap={1} product={item as testData} />
                   <CustomProductTextConatiner
                     textCategory={item?.category}
-                    mainText={item.nameRu || "Нет названия"}
+                    mainText={item.headerRu || item.nameRu || "Нет названия"}
                     discountPrice={Number(item.discountValue) || 0}
                     sellPrice={Number(item.currentSellPrice) || 0}
                     discounted={Number(item.sellPrice) || 0}
                     decimals={2}
                     fz={16}
+                    color={color}
                   />
                 </Stack>
               ) : (

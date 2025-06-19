@@ -5,13 +5,12 @@ import Skeleton from "react-loading-skeleton";
 import { MainPageSwiper } from "../../Components/utils/swiper/MainPageSwiper";
 import Story from "../../Components/Story";
 import StoryButton from "./components/StoryButton";
-import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper";
 import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
-import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
-import { ProductLoading } from "./components/ProductLoading";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import PopupComponent from "../../Components/Popup";
 import { useTranslation } from "react-i18next";
+import { BlogerAdvicesSwiper } from "../../Components/utils/actionSwiper/BlogerAdvicesSwiper ";
+import { RenderProducts } from "./components/RenderProducts";
 
 const PRODUCT_URL = `${BASE_URL}/products/client`;
 
@@ -60,61 +59,27 @@ const Main: React.FC = () => {
     isLoading: loadingStory,
   } = useSWR(createFetchKey({}, "GET", `${BASE_URL}/stories/active`), fetcher);
 
- const {
+  const {
     data: sales,
     error: salesError,
     isLoading: loadingSales,
-  } = useSWR(createFetchKey({}, "POST", `${BASE_URL}/minione/all`), fetcher);
-const {
+  } = useSWR(createFetchKey({}, "GET", `${BASE_URL}/minione/active`), fetcher);
+  const {
     data: adviceBloger,
     error: adviceBlogerError,
     isLoading: loadingAdviceBloger,
-  } = useSWR(createFetchKey({}, "POST", `${BASE_URL}/minitwo/all`), fetcher);
+  } = useSWR(createFetchKey({}, "GET", `${BASE_URL}/minitwo/active`), fetcher);
 
   const handleOpenStory = (storyIndex: number) => {
     setCurrentStoryIndex(storyIndex);
     setOpenStory(true);
   };
 
-  const renderProducts = (
-    data: any,
-    error: any,
-    loading: boolean,
-    label: string,
-    center?: boolean
-  ) => {
-    if (loading) return <ProductLoading />;
-    if (isMobile && loading) return <ProductLoading isMobile />;
-    if (isMobile)
-      return (
-        <MobileSwipeProducts
-          products={data}
-          text={label}
-          isMobile
-          p={1}
-          mt={3}
-          width="100vw"
-          isLoading={loading}
-        />
-      );
-    if (!error && data?.products?.length)
-      return (
-        <ProductSwiper
-          text={label}
-          data={data}
-          error={error}
-          isLoading={loading}
-          center={center}
-        />
-      );
-    return null;
-  };
-
   return (
     <Box>
       <Stack>
         <MainPageSwiper />
-        <PopupComponent/>
+        <PopupComponent />
       </Stack>
 
       <Stack
@@ -149,6 +114,7 @@ const {
 
       {openStory && storyData?.stories?.length > 0 && (
         <Story
+          isStory={true}
           open={openStory}
           stories={storyData.stories}
           currentIndex={currentStoryIndex}
@@ -166,15 +132,30 @@ const {
           }}
         />
       )}
-
-      {renderProducts(newData, newError, loadingNew, t("navbar.novinki"))}
-       {!salesError&&!loadingSales&& sales.banners?.length&&(
+      <RenderProducts
+        data={newData}
+        error={newError}
+        loading={loadingNew}
+        label={t("navbar.novinki")}
+        isMobile={isMobile}
+      />
+      {!salesError && !loadingSales && sales.banners?.length && (
         <ActionSwiper text={`${t("navbar.aksiya")}`} data={sales.banners} />
       )}
-      {renderProducts(hitData, hitError, loadingHit, t("navbar.hits"), false)}
-       {!adviceBlogerError&&!loadingAdviceBloger&& adviceBloger.banners?.length&&(
-         <ActionSwiper text={`${t("home.blogers")}`} data={adviceBloger.banners} />
-       )}
+      <RenderProducts
+        data={hitData}
+        error={hitError}
+        loading={loadingHit}
+        label={t("navbar.novinki")}
+      />
+      {!adviceBlogerError &&
+        !loadingAdviceBloger &&
+        adviceBloger.banners?.length && (
+          <BlogerAdvicesSwiper
+            text={`${t("home.blogers")}`}
+            data={adviceBloger.banners}
+          />
+        )}
     </Box>
   );
 };

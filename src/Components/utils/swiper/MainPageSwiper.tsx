@@ -14,22 +14,34 @@ import { mainPageTextDescStyle, mainPageTextStyle } from "../CustomStyles";
 import useSWR from "swr";
 import { BASE_URL } from "../../../Fetcher/swrConfig";
 import Skeleton from "react-loading-skeleton";
+import axios from "axios";
+import { handleNavigate } from "../actionSwiper/constants";
 import { useNavigate } from "react-router-dom";
 
 export const MainPageSwiper: React.FC = () => {
   const swiperRef = useRef<SwiperClass | null>(null);
+  const [categoriesData, setCategoriesData] = useState<any[]>([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [isCursorInside, setIsCursorInside] = useState(false);
   const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const navigate = useNavigate();
   const currentSlide = useSelector((state: any) => state.swiper.color);
   const { data, error, isLoading } = useSWR({
     url: `/banners/active`,
   });
+  const navigate = useNavigate();
 
+  const getCategories = async () => {
+    const res = await axios.get(`${BASE_URL}/categories/fetch/client`);
+    setCategoriesData(res.data.categories);
+  };
+  useEffect(() => {
+    try {
+      getCategories();
+    } catch (error) {}
+  }, []);
   useEffect(() => {
     if (isLoading) return;
 
@@ -244,22 +256,9 @@ export const MainPageSwiper: React.FC = () => {
                         }`}
                         width="auto"
                         textColor="#fff"
-                        func={() => {
-                          if (slide.Product !== null) {
-                            return navigate(
-                              `/product/${slide.Product.barcode}`
-                            );
-                          }
-                          const parts = [
-                            slide.Category?.nameRu,
-                            slide.SubCategory?.nameRu,
-                            slide.Segment?.nameRu,
-                          ].filter(Boolean);
-
-                          if (parts.length) {
-                            navigate(`/category/${parts.join("/")}`);
-                          }
-                        }}
+                        func={() =>
+                          handleNavigate(navigate, slide, categoriesData)
+                        }
                       />
                     </Stack>
                   </Stack>
@@ -331,18 +330,7 @@ export const MainPageSwiper: React.FC = () => {
                       width={250}
                       textColor="#fff"
                       func={() => {
-                        if (slide.Product !== null) {
-                          return navigate(`/product/${slide.Product.barcode}`);
-                        }
-                        const parts = [
-                          slide.Category?.nameRu,
-                          slide.SubCategory?.nameRu,
-                          slide.Segment?.nameRu,
-                        ].filter(Boolean);
-
-                        if (parts.length) {
-                          navigate(`/category/${parts.join("/")}`);
-                        }
+                        handleNavigate(navigate, slide, categoriesData);
                       }}
                     />
                   </Stack>

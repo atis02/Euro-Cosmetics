@@ -2,16 +2,17 @@ import { Navigation, Parallax } from "swiper/modules";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import CustomSectionText from "../CustomSectionText";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import Buttons from "../productsSwiper/Buttons";
 import CustomContainerMain from "../CustomContainerMain";
 import { hoverStyle, mainColor } from "../CustomStyles";
 import { BASE_URL } from "../../../Fetcher/swrConfig";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
-import { handleNavigate } from "./constants";
-import { useNavigate } from "react-router-dom";
-interface ImageData {
+import Story from "../../../Components/Story";
+import { Category, Subcategory } from "../../Navbar/ui/NavCategories/interfaces";
+
+export interface ImageData {
+  id:number
   headerRu: string;
   headerTm: string;
   descriptionRu: string;
@@ -20,15 +21,12 @@ interface ImageData {
   date: string;
   startDate: string;
   endDate: string;
-  Category: {
-    nameRu: string;
-    id: string;
-  };
-  SubCategory: {
-    nameRu: string;
-    id: string;
-    categoryId: string;
-  };
+  video: string;
+  videoDuration: number;
+  ProductsArray: string[];
+  Category:Category;
+  SubCategory:Subcategory
+
 }
 
 interface Props {
@@ -36,9 +34,9 @@ interface Props {
   data: ImageData[];
 }
 
-export const ActionSwiper: FC<Props> = ({ text, data }) => {
+export const BlogerAdvicesSwiper: FC<Props> = ({ text, data }) => {
+  const [storyIndex, setStoryIndex] = useState<number | null>(null);
   const swiperRef = useRef<SwiperClass | null>(null);
-  const [categoriesData, setCategoriesData] = useState<any[]>([]);
   const [isHovered, setIsHovered] = useState<number>(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
@@ -49,7 +47,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
   };
-  const navigate = useNavigate();
+
   const getTitle = (nameTm: string, nameRu: string) => {
     const currentLanguage = i18n.language;
     switch (currentLanguage) {
@@ -61,15 +59,6 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
         return nameRu;
     }
   };
-  const getCategories = async () => {
-    const res = await axios.get(`${BASE_URL}/categories/fetch/client`);
-    setCategoriesData(res.data.categories);
-  };
-  useEffect(() => {
-    try {
-      getCategories();
-    } catch (error) {}
-  }, []);
 
   return (
     <>
@@ -123,12 +112,12 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
           overflow: "hidden",
         }}
       >
-        {data.map((slide, index) => (
+        {data.map((slide, index: number) => (
           <SwiperSlide
             key={index}
             onMouseEnter={() => setIsHovered(index)}
             onMouseLeave={() => setIsHovered(index)}
-            onClick={() => handleNavigate(navigate, slide, categoriesData)}
+            onClick={() => setStoryIndex(index)}
           >
             <Stack
               sx={{
@@ -153,9 +142,10 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                   <Typography
                     fontWeight={500}
                     fontFamily="Graphic"
-                    fontSize={isMobile ? 30 : 60}
+                    fontSize={isMobile ? 20 : 35}
+                    textAlign={isMobile?'justify':'start'}
                     sx={{
-                      mt: isMobile ? 1 : -2,
+                      mt: 1,
                       ml: isMobile ? 2 : 0,
                       transition: "all 0.3s",
                       lineHeight: 1.2,
@@ -177,25 +167,23 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                     {getTitle(slide.descriptionTm, slide.descriptionRu)}
                   </Box>
                 </Box>
-                <Box
-                  data-swiper-parallax="-40%"
-                  sx={{
-                    mt: isMobile ? 1 : -2,
-                  }}
-                  fontSize={isMobile ? 15 : 20}
-                  fontWeight={500}
-                >
-                  {new Date(slide.startDate).getDate()} -{" "}
-                  {new Date(slide.endDate).getDate()}{" "}
-                  {new Date(slide.endDate).toLocaleDateString("ru", {
-                    month: "long",
-                  })}
-                </Box>
+               
               </Stack>
             </Stack>
           </SwiperSlide>
         ))}
       </Swiper>
+      {storyIndex !== null && (
+        <Story
+          open={storyIndex !== null}
+          url={`${BASE_URL}/${data[storyIndex].video}`}
+          duration={data[storyIndex].videoDuration}
+          id={data[storyIndex].id}
+          currentIndex={storyIndex}
+          onClose={() => setStoryIndex(null)}
+          isMobile={isMobile}
+        />
+      )}
     </>
   );
 };

@@ -2,6 +2,7 @@ import { Box, Drawer, IconButton, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { KeyboardArrowLeftOutlined } from "@mui/icons-material";
 import { rowSpaceStyle } from "../../../utils/CustomStyles";
+import { useTranslation } from "react-i18next";
 
 interface CategoryDrawer {
   open: boolean;
@@ -9,6 +10,7 @@ interface CategoryDrawer {
 }
 
 export const NavbarCategoryMobile: FC<CategoryDrawer> = ({ open, onClose }) => {
+  const {t} = useTranslation()
   return (
     <Stack pt={4}>
       <Drawer
@@ -65,7 +67,7 @@ export const NavbarCategoryMobile: FC<CategoryDrawer> = ({ open, onClose }) => {
                 ml: -2,
               }}
             >
-              каталог
+              {t('navbar.catalog')}
             </Typography>
             <Stack></Stack>
           </Stack>

@@ -76,3 +76,37 @@ export const itemVariants = {
     zIndex: 0,
   }),
 };
+type NavigateFunction = (
+  to: string,
+  options?: { replace?: boolean; state?: any }
+) => void;
+
+export const navigator = (navigate: NavigateFunction, path: string) => {
+  navigate(path);
+};
+
+export const handleNavigate = (
+  navigate: NavigateFunction,
+  slide: any,
+  categoriesData: any
+) => {
+  const parts = [slide.Category?.nameRu, slide.SubCategory?.nameRu].filter(
+    Boolean
+  );
+
+  if (slide.Category?.nameRu) {
+    navigator(navigate, `/category/${parts[0]}`);
+  } else if (slide.SubCategory?.nameRu) {
+    const filtered = categoriesData.find(
+      (item: any) => item.id === slide.SubCategory?.categoryId
+    );
+    if (filtered) {
+      navigator(navigate, `/category/${filtered.nameRu}/${parts[0]}`);
+    } else {
+      console.warn(
+        "Category not found for subcategory:",
+        slide.SubCategory?.nameRu
+      );
+    }
+  }
+};

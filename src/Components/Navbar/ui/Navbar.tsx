@@ -29,12 +29,12 @@ const Navbar: React.FC = () => {
     { label: t("navbar.markets"), to: "/markets" },
     {
       label: t("navbar.giftCard"),
-      to: "/gift-cards",
+      to: "/giftCard/gift",
       image: "/images/navImage2.png",
     },
     {
       label: t('navbar.aksiya50'),
-      to: "/sales50",
+      to: "/sales/50",
       color: "#FF329A",
       image: "/images/navImage.png",
     },
@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
         <Logo />
         <Box>
           {navs.map((nav, index) =>
-            nav.type === "category" ? (
+            index==0 ? (
               <>
                 <Button
                   key={index}

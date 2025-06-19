@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const StoryContent = ({ videoUrl, imageUrl, hasVideo, alt, action }: any) => {
+const StoryContent = ({ videoUrl, imageUrl, hasVideo, alt, action ,controls=false}: any) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const StoryContent = ({ videoUrl, imageUrl, hasVideo, alt, action }: any) => {
         ref={videoRef}
         autoPlay
         playsInline
-        controls={false}
+        controls={controls}
         crossOrigin="anonymous"
         style={{
           width: "100%",

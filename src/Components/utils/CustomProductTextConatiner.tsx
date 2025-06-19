@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import {
+  Box,
   Divider,
   IconButton,
   Stack,
@@ -43,7 +44,8 @@ type Props = {
   quantity?: number;
   discounted?: number | undefined;
   decimals?: number;
-  height?:number|string
+  height?: number | string;
+  color?: boolean;
 };
 const CustomProductTextConatiner: FC<Props> = ({
   textCategory,
@@ -60,7 +62,8 @@ const CustomProductTextConatiner: FC<Props> = ({
   id,
   quantity,
   decimals = 2,
-  height="100%"
+  height = "100%",
+  color = false,
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -142,7 +145,13 @@ const CustomProductTextConatiner: FC<Props> = ({
       )}
 
       {/* PRICE BLOCK */}
-      <CustomProductText fz={fz} fw={500} mainText={mainText} ta={ta} />
+      <CustomProductText
+        fz={fz}
+        fw={500}
+        mainText={mainText}
+        color={color ? "gray" : "#000"}
+        ta={ta}
+      />
       <Stack direction="column">
         {isCart &&
         discountPrice &&
@@ -169,17 +178,26 @@ const CustomProductTextConatiner: FC<Props> = ({
         )}
         <Stack direction="row" gap={2} justifyContent={jc}>
           {sellPrice !== 0 && sellPrice && (
-            <CountUp
-              end={sellPrice ? sellPrice * (quantity ?? 1) : 0}
-              duration={0.6}
-              decimals={decimals}
-              separator=" "
-              suffix=" TMT"
-              style={{
+            <Box
+              sx={{
+                "&:hover": {
+                  color: mainColor,
+                  transform: "scale(1.05)", 
+                  transition: "all 0.3s ease",
+                },
+                color: color ? "gray" : "#000",
                 fontWeight: 500,
                 fontFamily: "Graphic",
               }}
-            />
+            >
+              <CountUp
+                end={sellPrice ? sellPrice * (quantity ?? 1) : 0}
+                duration={0.6}
+                decimals={decimals}
+                separator=" "
+                suffix=" TMT"
+              />
+            </Box>
           )}
           {discountPrice != sellPrice &&
           discountPrice &&

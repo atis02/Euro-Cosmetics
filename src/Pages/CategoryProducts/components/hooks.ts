@@ -16,7 +16,10 @@ export const getBrands = async () => {
     const res = await axios.get(`${BASE_URL}/categories/fetch/client`);
     return res.data.categories as Category[];
   };
-
+export const  getGiftCards = async () => {
+    const res = await axios.get(`${BASE_URL}/giftcard/active`);
+    return res.data.banners as Category[];
+  };
  export const getSubCategories = async () => {
     const res = await axios.get(`${BASE_URL}/subcategories/fetch/client`);
     return res.data.subCategories as Subcategory[];

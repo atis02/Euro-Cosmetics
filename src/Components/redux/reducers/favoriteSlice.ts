@@ -14,14 +14,13 @@ const favoritesSlice = createSlice({
   initialState,
   reducers: {
     toggleFavorite: (state, action: PayloadAction<Product>) => {
-      console.log(action.payload);
 
       const exists = state.items.find(
-        (item) => item.product?.barcode === action.payload.product.barcode
+        (item) => item.product?.id === action.payload.product.id
       );
       if (exists) {
         state.items = state.items.filter(
-          (item) => item.product?.barcode !== action.payload.product.barcode
+          (item) => item.product?.id !== action.payload.product.id
         );
       } else {
         state.items.push(action.payload);

@@ -17,7 +17,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
   };
   return (
     <Box
-      key={`bg-${product.articule}`}
+      key={`bg-${product.id}`}
       sx={{
         width: 182,
         height: 182,
@@ -27,7 +27,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
     >
       <ProductStatuses item={product} />
       <Stack position="absolute" right={0} zIndex={100}>
-        <FavoriteButton product={product} />
+        <FavoriteButton product={product as any} />
       </Stack>
       <CustomImageComponent product={product} notIsMobileHeight="100%" />
       <Stack sx={{ p: 1, textAlign: "left", flexDirection: "column" }}>
@@ -40,7 +40,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           textCategory={product.category || ""}
           mainText={product.title}
           discountPrice={product.discountPrice || 0}
-          sellPrice={Number(product.sellPrice) || 0}
+          sellPrice={Number(product.currentSellPrice) || 0}
           jc="start"
         />
       </Stack>

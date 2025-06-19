@@ -9,23 +9,43 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { rowSpaceStyle } from "../../../utils/CustomStyles";
-import { navs } from "../navs";
 import NavbarIconsPath from "../NavbarIconsPath";
 import { Link } from "react-router-dom";
 import { NavigateNextOutlined } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavbarCategoryMobile } from "./NavbarCategoryMobile";
 import ContainerMobile from "../../../utils/ContainerMobile";
+import { useTranslation } from "react-i18next";
+import Language from "../../../Language/Language";
 
 const NavbarMobile: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const { t } = useTranslation();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const toggleDrawer = () => () => {
     setDrawerOpen(!drawerOpen);
   };
+  const navs = [
+    { label: t("navbar.catalog"), to: "/", type: "category" },
+    { label: t("navbar.brands"), to: "/brands" },
+    { label: t("navbar.novinki"), to: "/news/1" },
+    { label: t("navbar.aksiya"), to: "/sales/100" },
+    { label: t("navbar.markets"), to: "/markets" },
+    {
+      label: t("navbar.giftCard"),
+      to: "/giftCard/gift",
+      image: "/images/navImage2.png",
+    },
+    {
+      label: t("navbar.aksiya50"),
+      to: "/sales/50",
+      color: "#FF329A",
+      image: "/images/navImage.png",
+    },
+  ];
 
   return (
     <ContainerMobile borderBottom>
@@ -57,7 +77,7 @@ const NavbarMobile: React.FC = () => {
             PaperProps={{
               sx: {
                 position: "fixed",
-                top: "60px", // Height of your navbar
+                top: "60px",
                 height: "calc(100% - 60px)",
                 boxShadow: "none",
               },
@@ -81,21 +101,21 @@ const NavbarMobile: React.FC = () => {
                       padding: 2,
                     }}
                     role="presentation"
-                    //   onClick={() => setDrawerOpen(false)}
-                    //   onKeyDown={() => setDrawerOpen(false)}
                   >
                     <Stack>
-                      {navs.map((nav, index) => (
+                      {navs.map((nav: any, index: number) => (
                         <ListItem
                           key={index}
                           component={Link}
                           sx={{
                             padding: "5px 5px",
                           }}
-                          to={isMobile && nav.label == "каталог" ? "/" : nav.to}
+                          to={isMobile && index == 0 ? "/" : nav.to}
                           onClick={() => {
-                            if (nav.label === "каталог") {
+                            if (index == 0) {
                               setCategoryDrawerOpen(true);
+                            } else {
+                              setDrawerOpen(false);
                             }
                           }}
                         >
@@ -119,13 +139,23 @@ const NavbarMobile: React.FC = () => {
                           >
                             {nav.label}
                           </Typography>
-                          {nav.label === "каталог" && (
+                          {index == 0 && (
                             <Stack width="100%" alignItems="end">
                               <NavigateNextOutlined sx={{ color: "#000" }} />
                             </Stack>
                           )}
                         </ListItem>
                       ))}
+                    </Stack>
+                    <Stack direction="row" mt={3} alignItems="center"justifyContent='center' gap={6}>
+                      <Typography
+                        fontFamily="Graphic"
+                        fontWeight={500}
+                        fontSize={24}
+                      >
+                        {t('navbar.language')}
+                      </Typography>
+                      <Language />
                     </Stack>
                   </Box>
                 </motion.div>

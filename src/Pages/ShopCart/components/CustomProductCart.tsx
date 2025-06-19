@@ -78,7 +78,7 @@ export const CustomProductCart: FC<Product> = ({ product }) => {
           textCategory={product.category || ""}
           mainText={product.nameRu}
           discountPrice={Number(product.discountValue) || 0}
-          sellPrice={Number(product.currentSellPrice) || 0}
+          sellPrice={Number(product.currentSellPrice)|| 0}
           discounted={Number(product.sellPrice) || 0}
           jc="flex-end"
           justifyContCart

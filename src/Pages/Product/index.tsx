@@ -4,7 +4,6 @@ import { ProductImagesComponent } from "./components/ProductImagesComponent";
 import { ProductDetails } from "./components/ProductDetails";
 import { ProductTitleFeedBack } from "./components/ProductTitleFeedBack";
 import { ProductBreadCrumbs } from "./components/ProductBreadCrumbs";
-import CustomProductText from "../../Components/utils/CustomProductText";
 import { CustomButton } from "../../Components/utils/CustomButton";
 import { mainColor } from "../../Components/utils/CustomStyles";
 import FavoriteButton from "../../Components/utils/FavoriteButtonComponent";
@@ -17,6 +16,7 @@ import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { ProductDetailSkeleton } from "./components/ProductDetailSkeleton";
 import { BASE_URL } from "../../Fetcher/swrConfig";
+import TabComponent from "./components/TabComponent";
 
 const index = () => {
   const product = JSON.parse(localStorage.getItem("productEuroCos") || "{}");
@@ -108,26 +108,16 @@ const index = () => {
           </Stack>
         </Stack>
 
-        <Stack direction="column" m={isMobile ? 0 : 2} gap={2} width="100%">
-          <CustomProductText
-            width={isMobile ? "100%" : "60%"}
-            sai="end"
-            fw={500}
-            mainText={data?.nameRu}
-          />
-          <CustomProductText
-            width={isMobile ? "100%" : "60%"}
-            color="gray"
-            sai="end"
-            mainText={data?.barcode}
-          />
-          <CustomProductText
-            sai="end"
-            width={isMobile ? "100%" : "60%"}
-            mainText={data?.desc}
-          />
+        <Stack
+          direction="row"
+          m={isMobile ? 0 : 2}
+          gap={2}
+          width="100%"
+          alignItems="end"
+          justifyContent='flex-end'
+        >
+          <TabComponent product={data} />
         </Stack>
-
         {isMobile && (
           <Stack
             direction="row"

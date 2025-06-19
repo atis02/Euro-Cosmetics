@@ -11,6 +11,7 @@ interface Props {
   height?: number | string;
   func?: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
   dontChange?: boolean;
+  border?:string
 }
 export const CustomButton: FC<Props> = ({
   isMobile,
@@ -21,6 +22,7 @@ export const CustomButton: FC<Props> = ({
   showIcon = true,
   func,
   dontChange = false,
+  border
 }) => {
   const currentSlideColor = useSelector((state: any) => state.swiper.color);
   const currentSlide = dontChange ? textColor : currentSlideColor;
@@ -40,6 +42,7 @@ export const CustomButton: FC<Props> = ({
         fontWeight: 400,
         backgroundColor: currentSlide === "#ffffff" ? textColor : "#000",
         borderRadius: "0",
+        border:border,
         marginBottom: { lg: 0, md: 0, sm: 0, xs: 7 },
         transition: "color 0.4s ease-in-out",
         "&::before": {

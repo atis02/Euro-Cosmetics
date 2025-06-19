@@ -65,7 +65,6 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
           borderBottom && currentSlide
             ? "0.5px solid #c6b09f4d"
             : "0.5px solid #e6e5e5",
-            overflow: "auto",
       }}
       onMouseEnter={() => dispatch(setHoveredNavbar(true))}
       onMouseLeave={() => dispatch(setHoveredNavbar(false))}

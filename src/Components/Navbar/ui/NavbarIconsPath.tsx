@@ -202,7 +202,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                 );
               })}
       </Stack>
-      <Language />
+      {!isMobile && <Language />}
       <Search isMobile={isMobile} />
       <ShopCart />
     </>

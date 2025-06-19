@@ -20,7 +20,7 @@ const FavoriteButton: FC<Product> = ({
   const favorites = useSelector((state: any) => state.favorites.items);
 
   const isFavorite: boolean = favorites.some(
-    (item: Product) => item.product?.barcode === product.barcode
+    (item: Product) => item.product?.id === product.id
   );
 
   const handleToggle = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -31,7 +31,7 @@ const FavoriteButton: FC<Product> = ({
           image: product.imageOne,
           text: "добавлен в избранное!",
           icon: <FavoriteBorderOutlined />,
-          title: product.title,
+          title: product.nameRu,
         })
       : "";
   };

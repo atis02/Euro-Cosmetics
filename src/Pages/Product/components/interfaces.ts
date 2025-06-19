@@ -15,9 +15,12 @@ export interface images {
   image?: string;
   Status?: {
     nameRu: string;
-    id: string|number;
+    id: string | number;
   };
+  link?:string
   video?: string;
+  ingredientsTm?:string;
+  ingredientsRu?:string;
   productStatus?: string;
   title: string;
   discountPrice?: number;
@@ -47,6 +50,8 @@ export interface images {
   incomePrice: string;
   isActive: boolean;
   isDisabled: boolean;
+  headerRu?: string;
+  headerTm?: string;
   limit: string;
   nameRu: string;
   nameTm: string;
@@ -71,6 +76,7 @@ export interface Product {
   height?: string | number;
   br?: number | string;
   isLoading?: boolean;
+  link?:string
 }
 export interface testData {
   Category?: Category;
@@ -94,6 +100,8 @@ export interface testData {
   descriptionRu: string;
   descriptionTm: string;
   discountType: string;
+  headerRu: string;
+  headerTm: string;
   discountValue: string;
   hashtags: [];
   id: string;
