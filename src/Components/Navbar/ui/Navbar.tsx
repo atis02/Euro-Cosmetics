@@ -3,11 +3,11 @@ import { Button, Box, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import CustomContainer from "../../utils/CustomContainer";
 import { rowSpaceStyle } from "../../utils/CustomStyles";
-import { navs } from "./navs";
 import NavbarIconsPath from "./NavbarIconsPath";
 import Logo from "./Logo";
 import { useSelector } from "react-redux";
 import CategoriesComponent from "./NavCategories/index";
+import { useTranslation } from "react-i18next";
 
 const Navbar: React.FC = () => {
   const [openNavCategory, setOpenNavCategory] = useState(false);
@@ -19,7 +19,26 @@ const Navbar: React.FC = () => {
   const scrolled = useSelector((state: any) => state.swiper.scrolled);
   const onOpen = () => setOpenNavCategory(true);
   const onClose = () => setOpenNavCategory(false);
+  const { t } = useTranslation();
 
+  const navs = [
+    { label: t("navbar.catalog"), to: "/", type: "category" },
+    { label: t("navbar.brands"), to: "/brands" },
+    { label: t("navbar.novinki"), to: "/news/1" },
+    { label: t("navbar.aksiya"), to: "/sales/100" },
+    { label: t("navbar.markets"), to: "/markets" },
+    {
+      label: t("navbar.giftCard"),
+      to: "/gift-cards",
+      image: "/images/navImage2.png",
+    },
+    {
+      label: t('navbar.aksiya50'),
+      to: "/sales50",
+      color: "#FF329A",
+      image: "/images/navImage.png",
+    },
+  ];
   return (
     <CustomContainer borderBottom>
       <Stack
@@ -54,7 +73,7 @@ const Navbar: React.FC = () => {
                   onMouseEnter={onOpen}
                   onMouseLeave={onClose}
                 >
-                  каталог
+                  {t("navbar.catalog")}
                 </Button>
                 {openNavCategory && (
                   <Box

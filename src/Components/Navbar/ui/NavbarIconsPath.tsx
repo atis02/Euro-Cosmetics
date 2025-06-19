@@ -16,6 +16,7 @@ import Search from "../../Search";
 import { setOpenCart, setOpenSearch } from "../../redux/reducers/swiperSlice";
 import { CustomBadge } from "./BadgeComponent";
 import ShopCart from "../../../Pages/ShopCart";
+import Language from "../../Language/Language";
 
 interface isMobileProps {
   isMobile?: boolean;
@@ -201,6 +202,7 @@ const NavbarIconsPath: React.FC<isMobileProps> = ({
                 );
               })}
       </Stack>
+      <Language />
       <Search isMobile={isMobile} />
       <ShopCart />
     </>

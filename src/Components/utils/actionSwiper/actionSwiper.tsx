@@ -6,11 +6,17 @@ import { FC, useRef, useState } from "react";
 import Buttons from "../productsSwiper/Buttons";
 import CustomContainerMain from "../CustomContainerMain";
 import { hoverStyle, mainColor } from "../CustomStyles";
+import { BASE_URL } from "../../../Fetcher/swrConfig";
+import { useTranslation } from "react-i18next";
 interface ImageData {
-  title: string;
-  desc: string;
+  headerRu: string;
+  headerTm: string;
+  descriptionRu: string;
+  descriptionTm: string;
   image: string;
   date: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface Props {
@@ -26,11 +32,23 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
   const handleNext = () => {
     swiperRef.current?.slideNext();
   };
-
+  const { i18n } = useTranslation();
   const handlePrev = () => {
     swiperRef.current?.slidePrev();
   };
+  console.log(i18n.language);
 
+  const getTitle = (nameTm: string, nameRu: string) => {
+    const currentLanguage = i18n.language;
+    switch (currentLanguage) {
+      case "ru":
+        return nameRu;
+      case "tkm":
+        return nameTm;
+      default:
+        return nameRu;
+    }
+  };
   return (
     <>
       <CustomContainerMain>
@@ -98,13 +116,14 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
               }}
             >
               <img
-                src={slide.image}
-                alt={slide.title}
+                src={`${BASE_URL}/${slide.image}`}
+                alt={slide.image}
                 style={{
                   width: "100%",
                   height: "70%",
                   objectFit: "cover",
                 }}
+                crossOrigin="anonymous"
               />
               <Stack direction="row" justifyContent="space-around" width="100%">
                 <Box data-swiper-parallax="-40%" sx={{ pointerEvents: "auto" }}>
@@ -121,7 +140,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                         isHovered == index ? "scale(1.02)" : "scale(1)",
                     }}
                   >
-                    {slide.title}
+                    {getTitle(slide.headerTm, slide.headerRu)}
                   </Typography>
 
                   <Box
@@ -131,7 +150,7 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                     }}
                     fontWeight={400}
                   >
-                    {slide.desc}
+                    {getTitle(slide.descriptionTm, slide.descriptionRu)}
                   </Box>
                 </Box>
                 <Box
@@ -142,7 +161,11 @@ export const ActionSwiper: FC<Props> = ({ text, data }) => {
                   fontSize={isMobile ? 15 : 20}
                   fontWeight={500}
                 >
-                  {slide.date}
+                  {new Date(slide.startDate).getDate()} -{" "}
+                  {new Date(slide.endDate).getDate()}{" "}
+                  {new Date(slide.endDate).toLocaleDateString("ru", {
+                    month: "long",
+                  })}
                 </Box>
               </Stack>
             </Stack>

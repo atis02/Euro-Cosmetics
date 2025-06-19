@@ -1,0 +1,15 @@
+{
+  "navbar": {
+    "catalog": "katalog",
+    "brands": "brendler",
+    "novinki": "täze harytlar",
+    "aksiya": "aksiýalar",
+    "markets": "dükanlar",
+    "giftCard": "sowgat kartlary",
+    "aksiya50": "skidka -50%"
+  },
+  "home":{
+    "hits":"хиты",
+    "blogers":"blogerleriň maslahatlary"
+  }
+}

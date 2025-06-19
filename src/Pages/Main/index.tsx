@@ -9,9 +9,9 @@ import ProductSwiper from "../../Components/utils/productsSwiper/ProductsSwiper"
 import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
 import { MobileSwipeProducts } from "../../Components/utils/MobileSwipeProducts";
 import { ProductLoading } from "./components/ProductLoading";
-import { actionData } from "../../Components/utils/actionSwiper/constants";
 import { BASE_URL } from "../../Fetcher/swrConfig";
 import PopupComponent from "../../Components/Popup";
+import { useTranslation } from "react-i18next";
 
 const PRODUCT_URL = `${BASE_URL}/products/client`;
 
@@ -32,7 +32,7 @@ const fetcher = async (key: string) => {
 const Main: React.FC = () => {
   const [openStory, setOpenStory] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
@@ -59,6 +59,17 @@ const Main: React.FC = () => {
     error: storyError,
     isLoading: loadingStory,
   } = useSWR(createFetchKey({}, "GET", `${BASE_URL}/stories/active`), fetcher);
+
+ const {
+    data: sales,
+    error: salesError,
+    isLoading: loadingSales,
+  } = useSWR(createFetchKey({}, "POST", `${BASE_URL}/minione/all`), fetcher);
+const {
+    data: adviceBloger,
+    error: adviceBlogerError,
+    isLoading: loadingAdviceBloger,
+  } = useSWR(createFetchKey({}, "POST", `${BASE_URL}/minitwo/all`), fetcher);
 
   const handleOpenStory = (storyIndex: number) => {
     setCurrentStoryIndex(storyIndex);
@@ -89,7 +100,6 @@ const Main: React.FC = () => {
     if (!error && data?.products?.length)
       return (
         <ProductSwiper
-        
           text={label}
           data={data}
           error={error}
@@ -157,10 +167,14 @@ const Main: React.FC = () => {
         />
       )}
 
-      {renderProducts(newData, newError, loadingNew, "новинки")}
-      <ActionSwiper text="aкции" data={actionData} />
-      {renderProducts(hitData, hitError, loadingHit, "хиты", false)}
-      <ActionSwiper text="советы блогеров" data={actionData} />
+      {renderProducts(newData, newError, loadingNew, t("navbar.novinki"))}
+       {!salesError&&!loadingSales&& sales.banners?.length&&(
+        <ActionSwiper text={`${t("navbar.aksiya")}`} data={sales.banners} />
+      )}
+      {renderProducts(hitData, hitError, loadingHit, t("navbar.hits"), false)}
+       {!adviceBlogerError&&!loadingAdviceBloger&& adviceBloger.banners?.length&&(
+         <ActionSwiper text={`${t("home.blogers")}`} data={adviceBloger.banners} />
+       )}
     </Box>
   );
 };

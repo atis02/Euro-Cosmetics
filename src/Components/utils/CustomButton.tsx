@@ -32,6 +32,7 @@ export const CustomButton: FC<Props> = ({
         color: currentSlide === "#ffffff" ? "#000" : "#fff",
         padding: "12px 20px",
         fontSize: "12px",
+        width:'auto',
         maxWidth: width,
         minWidth: width,
         height: height,

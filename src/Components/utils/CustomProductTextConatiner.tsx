@@ -43,6 +43,7 @@ type Props = {
   quantity?: number;
   discounted?: number | undefined;
   decimals?: number;
+  height?:number|string
 };
 const CustomProductTextConatiner: FC<Props> = ({
   textCategory,
@@ -59,6 +60,7 @@ const CustomProductTextConatiner: FC<Props> = ({
   id,
   quantity,
   decimals = 2,
+  height="100%"
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -106,7 +108,7 @@ const CustomProductTextConatiner: FC<Props> = ({
   return (
     <Stack
       direction={dr}
-      height="100%"
+      height={height}
       sx={{ ...(justifyContCart ? "" : hoverStyle) }}
       justifyContent="space-between"
       gap={1}

@@ -37,6 +37,14 @@
   font-weight: 500;
 }
 
+::-webkit-scrollbar {
+  width: 0px;
+  background-color: var(--background-color);
+}
+::-webkit-scrollbar-thumb {
+  background-image:  var(--background-color) ;
+  border-radius: 10px;
+}
 body {
   font-family: "Graphic", sans-serif;
 }

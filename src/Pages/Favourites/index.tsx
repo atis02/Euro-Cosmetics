@@ -6,10 +6,15 @@ import { CustomProductCart } from "../../Components/utils/CustomProductCart";
 import { useSelector } from "react-redux";
 import { Product } from "../Product/components/interfaces";
 import { PopularProductsMini } from "../../Components/utils/PopularProductsMini";
+import useSWR from "swr";
 
 const index: FC = () => {
   const favorites = useSelector((state: any) => state.favorites.items);
 
+    const { data, error, isLoading } = useSWR({
+    url: "/products/client",
+    method: "POST",
+  });
   return (
     <CustomContainerAll>
       <Typography
@@ -45,7 +50,11 @@ const index: FC = () => {
               </svg>
               , чтобы добавить продукт в избранное.
             </Typography>
-            <PopularProductsMini text="популярные товары" />
+            <PopularProductsMini
+            visibleCount={5}
+            text="популярные товары"
+            data={!error && !isLoading && data}
+            />
           </Stack>
         )}
       </Stack>

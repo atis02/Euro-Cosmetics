@@ -71,13 +71,14 @@ export const MainPageSwiper: React.FC = () => {
   if (isLoading) {
     return (
       <Stack width="99vw" height={isMobile ? "68vh" : "87vh"}>
-        <Skeleton style={{ width: "100%", height: "68vh" }} />
+        <Skeleton style={{ width: "100%", height: "87vh" }} />
       </Stack>
     );
   }
   if (error) {
     return;
   }
+
   return (
     <Stack
       ref={containerRef}
@@ -228,36 +229,38 @@ export const MainPageSwiper: React.FC = () => {
                         </Typography>
                       </Stack>
                       <CustomButton
-                      text={`Перейти к ${
-                        slide.Category?.nameRu
-                          ? "категории"
-                          : slide.SubCategory?.nameRu
-                          ? "подкатегории"
-                          : slide.Segment?.nameRu
-                          ? "сегментам"
-                          : slide.ProductsArray?.length
-                          ? "товарам"
-                          : slide.Product?.id
-                          ? "товару"
-                          : ""
-                      }`}
-                      width="auto"
-                      textColor="#fff"
-                      func={() => {
-                        if (slide.Product !== null) {
-                          return navigate(`/product/${slide.Product.barcode}`);
-                        }
-                        const parts = [
-                          slide.Category?.nameRu,
-                          slide.SubCategory?.nameRu,
-                          slide.Segment?.nameRu,
-                        ].filter(Boolean);
+                        text={`Перейти к ${
+                          slide.Category?.nameRu
+                            ? "категории"
+                            : slide.SubCategory?.nameRu
+                            ? "подкатегории"
+                            : slide.Segment?.nameRu
+                            ? "сегментам"
+                            : slide.ProductsArray?.length
+                            ? "товарам"
+                            : slide.Product?.id
+                            ? "товару"
+                            : ""
+                        }`}
+                        width="auto"
+                        textColor="#fff"
+                        func={() => {
+                          if (slide.Product !== null) {
+                            return navigate(
+                              `/product/${slide.Product.barcode}`
+                            );
+                          }
+                          const parts = [
+                            slide.Category?.nameRu,
+                            slide.SubCategory?.nameRu,
+                            slide.Segment?.nameRu,
+                          ].filter(Boolean);
 
-                        if (parts.length) {
-                          navigate(`/category/${parts.join("/")}`);
-                        }
-                      }}
-                    />
+                          if (parts.length) {
+                            navigate(`/category/${parts.join("/")}`);
+                          }
+                        }}
+                      />
                     </Stack>
                   </Stack>
                 </SwiperSlide>
@@ -304,13 +307,12 @@ export const MainPageSwiper: React.FC = () => {
                   ) : (
                     ""
                   )}
-
                   <Stack position="absolute" top="40%" zIndex={10} left="50%">
                     <Typography color={currentSlide} sx={mainPageTextStyle}>
-                      {slide.name}
+                      {slide.headerRu}
                     </Typography>
                     <Typography color={currentSlide} sx={mainPageTextDescStyle}>
-                      {slide.desc}
+                      {slide.descriptionRu}
                     </Typography>
                     <CustomButton
                       text={`Перейти к ${
@@ -326,7 +328,7 @@ export const MainPageSwiper: React.FC = () => {
                           ? "товару"
                           : ""
                       }`}
-                      width="auto"
+                      width={250}
                       textColor="#fff"
                       func={() => {
                         if (slide.Product !== null) {

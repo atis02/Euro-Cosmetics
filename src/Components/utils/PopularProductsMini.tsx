@@ -42,6 +42,7 @@ export const PopularProductsMini: FC<Props> = ({
   const products = Array.isArray(data?.products) ? data.products : [];
   const extendedImages = [...products];
 
+  
   if (
     visibleCount &&
     products.length > 5 &&
@@ -53,7 +54,8 @@ export const PopularProductsMini: FC<Props> = ({
       feedBackNumb: 1,
       articule: "",
       desc: "",
-      productStatus: "",
+      productStatus:
+        (products[0]?.Status && String(products[0]?.Status.id)) || "",
       sellPrice: 0,
       discountPrice: 0,
       category: "",
@@ -133,7 +135,11 @@ export const PopularProductsMini: FC<Props> = ({
     }
   };
   const handleNavigate = (item: imagesProps) => {
-    navigate(`/product/${item.barcode}`);
+    if (item.barcode !== "") {
+      navigate(`/product/${item.barcode}`);
+    } else {
+      navigate(`/category/products/${item.productStatus}`);
+    }
   };
 
   return (
@@ -191,18 +197,20 @@ export const PopularProductsMini: FC<Props> = ({
                   />
                 )}
 
-                <Stack
-                  sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
-                >
-                  <CustomProductTextConatiner
-                    textCategory={item?.category}
-                    mainText={item.nameRu || "Нет названия"}
-                    discountPrice={Number(item.discountValue) || 0}
-                    sellPrice={Number(item.currentSellPrice) || 0}
-                    discounted={Number(item.sellPrice) || 0}
-                    decimals={0}
-                  />
-                </Stack>
+                {item.imageOne !== "" && (
+                  <Stack
+                    sx={{ p: 1, textAlign: "right", flexDirection: "column" }}
+                  >
+                    <CustomProductTextConatiner
+                      textCategory={item?.category}
+                      mainText={item.nameRu || "Нет названия"}
+                      discountPrice={Number(item.discountValue) || 0}
+                      sellPrice={Number(item.currentSellPrice) || 0}
+                      discounted={Number(item.sellPrice) || 0}
+                      decimals={0}
+                    />
+                  </Stack>
+                )}
               </Box>
             ))}
           </Box>
@@ -233,8 +241,8 @@ export const PopularProductsMini: FC<Props> = ({
                     exit="exit"
                     variants={itemVariants}
                     style={{
-                      width: 180,
-                      height: 450,
+                      width: 200,
+                      height: 460,
                       overflow: "hidden",
                       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                       cursor: "pointer",
@@ -244,23 +252,25 @@ export const PopularProductsMini: FC<Props> = ({
                     onMouseEnter={() => setShowCartButton(item.id)}
                     onMouseLeave={() => setShowCartButton(null)}
                   >
-                    {item && (
+                    {item.imageOne !== "" && item && (
                       <Stack position="absolute" right={0} zIndex={100}>
                         <FavoriteButton product={item as any} />
                       </Stack>
                     )}
-                    {showCartButton == item.id && item && (
-                      <Stack
-                        position="absolute"
-                        bottom={280}
-                        right={10}
-                        zIndex={100}
-                        bgcolor={"#000"}
-                        borderRadius="100%"
-                      >
-                        <AddToCartButton product={item} />
-                      </Stack>
-                    )}
+                    {item.imageOne !== "" &&
+                      showCartButton == item.id &&
+                      item && (
+                        <Stack
+                          position="absolute"
+                          bottom={280}
+                          right={10}
+                          zIndex={100}
+                          bgcolor={"#000"}
+                          borderRadius="100%"
+                        >
+                          <AddToCartButton product={item} />
+                        </Stack>
+                      )}
                     {item.imageOne !== "" ? (
                       <CustomImageComponent
                         product={item}
@@ -274,21 +284,23 @@ export const PopularProductsMini: FC<Props> = ({
                           display: "flex",
                           alignItems: "start",
                           flexDirection: "column",
-                          justifyContent: "center",
+                          justifyContent: "flex-start",
                           backgroundColor: "#fff",
                           ...hoverStyle,
-                          gap: 2,
+                          gap: -2,
                         }}
                       >
-                        <CustomProductTextConatiner
-                          textCategory={item?.category}
-                          mainText={item.nameRu || "Нет названия"}
-                          discountPrice={Number(item.discountValue) || 0}
-                          sellPrice={Number(item.currentSellPrice) || 0}
-                          discounted={Number(item.sellPrice) || 0}
-                          decimals={0}
-                          ta="left"
-                        />
+                             
+                             <CustomProductTextConatiner
+                             textCategory={item?.category}
+                             mainText={item.nameRu || "Больше популярных товаров"}
+                             discountPrice={Number(item.discountValue) || 0}
+                             sellPrice={Number(item.currentSellPrice) || 0}
+                             discounted={Number(item.sellPrice) || 0}
+                             decimals={0}
+                             ta="left"
+                             height={'60%'}
+                             />
                         <Button
                           sx={{
                             gap: 2,
