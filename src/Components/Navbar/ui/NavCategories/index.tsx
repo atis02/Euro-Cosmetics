@@ -1,7 +1,6 @@
 import { Container } from "@mui/material";
 import { FC, useState } from "react";
 import { NavSubCategories } from "./NavSubCategories";
-import { NavSegments } from "./NavSegments";
 import { NavCategories } from "./NavCategories";
 import useSWR from "swr";
 import LoadingSkeleton from "./LoadingSkeleton";
@@ -15,7 +14,6 @@ const index: FC<Close> = ({ onClose }) => {
     number | null
   >(null);
   // const [hoverSegment, setHoverSegment] = useState<number | null>(null);
-  const [existSegments, setExistSegments] = useState<string | null>(null);
   const { data, error, isLoading } = useSWR({
     url: "/categories/fetch/client",
   });
@@ -23,13 +21,7 @@ const index: FC<Close> = ({ onClose }) => {
     data && data.categories.filter((item: any) => item.id === hoveredLink);
   console.log(categoryLink);
 
-  const activeSubCategory = data?.categories
-    .find((item: any) =>
-      item.SubCategories?.some((sub: any) => sub.id === existSegments)
-    )
-    ?.SubCategories?.find((sub: any) => sub.id === existSegments);
 
-  const subCategoryTitle = activeSubCategory?.nameRu || "";
 
   if (error) {
     return;
@@ -53,19 +45,17 @@ const index: FC<Close> = ({ onClose }) => {
       <NavSubCategories
         data={data?.categories}
         hoveredLink={hoveredLink}
-        existSegments={existSegments}
         hoveredLinkSubCategory={hoveredLinkSubCategory}
         setHoveredLinkSubCategory={setHoveredLinkSubCategory}
-        setExistSegments={setExistSegments}
         onClose={onClose}
       />
-      <NavSegments
+      {/* <NavSegments
         data={data?.categories}
         existSegments={existSegments}
         categoryTitle={categoryLink && categoryLink[0]?.nameRu}
         subCategoryTitle={subCategoryTitle}
         onClose={onClose}
-      />
+      /> */}
     </Container>
   );
 };

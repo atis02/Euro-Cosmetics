@@ -27,10 +27,11 @@ const index = () => {
   });
 
   const url = BASE_URL + "/products/client";
+console.log(data);
 
   const fetchNewKey = JSON.stringify({
     url: url,
-    body: { page: 1, limit: 10, categoryId: data?.Category.id },
+    body: { page: 1, limit: 10, categoryId: data?.Category?.id },
     method: "POST",
   });
 

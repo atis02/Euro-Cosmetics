@@ -1,25 +1,28 @@
-import { useState } from "react";
+import { FC, } from "react";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { mainColor } from "../../../../../Components/utils/CustomStyles";
 import { ExpandMore } from "@mui/icons-material";
 
 const options = [
   { value: "popular", label: "по популярности" },
-  { value: "rating", label: "по рейтингу" },
   { value: "sale", label: "по величине скидки" },
-  { value: "cheap", label: "сначала дешевые" },
-  { value: "expensive", label: "сначала дороже" },
+  { value: "currentSellPrice-asc", label: "сначала дешевые" },
+  { value: "currentSellPrice-desc", label: "сначала дороже" },
 ];
-const SortProducts = () => {
-  const [value, setValue] = useState(options[0].value);
+interface Props {
+ setSelectedSort: (value: string) => void;
+  selectedSort: string;
+}
+const SortProducts: FC<Props> = ({ selectedSort, setSelectedSort }) => {
+  // const [value, sortBy] = useState(options[0].value);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value);
+    setSelectedSort(event.target.value);
   };
 
   return (
     <Select
-      value={value}
+      value={selectedSort}
       onChange={handleChange}
       variant="standard"
       disableUnderline
@@ -52,7 +55,7 @@ const SortProducts = () => {
           sx={{
             "&:hover": { color: mainColor },
             bgcolor: "#fff",
-            fontWeight: value === option.value ? 500 : 400,
+            fontWeight: selectedSort === option.value ? 500 : 400,
             fontFamily: "Graphic",
           }}
           value={option.value}

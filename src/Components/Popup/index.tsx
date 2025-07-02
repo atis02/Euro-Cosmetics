@@ -51,7 +51,7 @@ const PopupComponent: React.FC = () => {
       timer = window.setInterval(() => {
         setCounter((prev) => {
           if (prev <= 1) {
-            localStorage.setItem("EuroPopupId", popupData?.id || "");
+            localStorage.setItem("EuroPopupId", popupData?.id || '1');
             clearInterval(timer);
             return 0;
           }
@@ -63,7 +63,7 @@ const PopupComponent: React.FC = () => {
   }, [open, imageLoaded]);
 
   const handleClose = () => {
-    localStorage.setItem("EuroPopupId", popupData?.id || "");
+    localStorage.setItem("EuroPopupId", popupData?.id || "1");
     setOpen(false);
   };
 
@@ -74,6 +74,8 @@ const PopupComponent: React.FC = () => {
         closeAfterTransition
         open={open}
         onClose={handleClose}
+        sx={{width:{xs:'95vw'},height:{xs:'90vh'}}}
+       
       >
         <Box
           sx={{

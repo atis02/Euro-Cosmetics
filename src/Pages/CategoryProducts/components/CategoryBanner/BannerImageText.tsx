@@ -1,12 +1,11 @@
 import { Skeleton, Stack } from "@mui/material";
 import { FC } from "react";
-import { CustomBreadcrumb } from "../../../Components/utils/CustomBreadCrumb";
-import CustomProductText from "../../../Components/utils/CustomProductText";
+import { CustomBreadcrumb } from "../../../../Components/utils/CustomBreadCrumb";
+import CustomProductText from "../../../../Components/utils/CustomProductText";
 import {
   Category,
-  Segment,
   Subcategory,
-} from "../../../Components/Navbar/ui/NavCategories/interfaces";
+} from "../../../../Components/Navbar/ui/NavCategories/interfaces";
 
 interface Name {
   title: string;
@@ -17,7 +16,6 @@ type Props = {
   isTablet: boolean;
   category?: Category;
   subCategory?: Subcategory;
-  segment?: Segment;
   loading?: boolean;
   text?: string;
 };
@@ -27,15 +25,11 @@ const BannerImageText: FC<Props> = ({
   isTablet,
   category,
   subCategory,
-  segment,
   loading = false,
   text,
 }) => {
   const subCategoryName: Name | undefined = subCategory
     ? { title: subCategory.nameRu }
-    : undefined;
-  const segmentName: Name | undefined = segment
-    ? { title: segment.nameRu }
     : undefined;
 
   return (
@@ -56,14 +50,13 @@ const BannerImageText: FC<Props> = ({
         ) : (
           category &&
           (!subCategoryName || subCategory) &&
-          (!segmentName || segment) && (
+          (
             <CustomBreadcrumb
               color="#fff"
               category={{ title: category.nameRu }}
               subCategory={
                 subCategory ? { title: subCategory.nameRu } : undefined
               }
-              segment={segment ? { title: segment.nameRu } : undefined}
             />
           )
         )}
@@ -80,8 +73,6 @@ const BannerImageText: FC<Props> = ({
           text={
             text
               ? text
-              : segmentName
-              ? segmentName.title
               : subCategoryName
               ? subCategoryName.title
               : category?.nameRu

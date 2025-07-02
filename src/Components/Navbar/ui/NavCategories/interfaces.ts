@@ -1,17 +1,9 @@
-export interface Segment {
-  nameRu: string;
-  nameTm: string;
-  id: string;
-  subCategoryId?: string;
-  SubCategory: Subcategory;
-}
 
 export interface Subcategory {
   id: string;
   nameRu: string;
   nameTm: string;
   image?: string;
-  Segments?: Segment[];
   categoryId?: string;
 }
 

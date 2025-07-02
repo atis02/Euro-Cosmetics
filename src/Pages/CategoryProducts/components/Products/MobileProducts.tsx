@@ -37,7 +37,7 @@ const MobileProducts: FC<Props> = ({ product, close, color }) => {
             <Stack
               key={item.articule + "-" + i}
               sx={{
-                width: 203,
+                width: 190,
                 height: 350,
                 overflow: "hidden",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.2)",

@@ -7,7 +7,6 @@ import Story from "../../Components/Story";
 import StoryButton from "./components/StoryButton";
 import { ActionSwiper } from "../../Components/utils/actionSwiper/actionSwiper";
 import { BASE_URL } from "../../Fetcher/swrConfig";
-import PopupComponent from "../../Components/Popup";
 import { useTranslation } from "react-i18next";
 import { BlogerAdvicesSwiper } from "../../Components/utils/actionSwiper/BlogerAdvicesSwiper ";
 import { RenderProducts } from "./components/RenderProducts";
@@ -79,7 +78,6 @@ const Main: React.FC = () => {
     <Box>
       <Stack>
         <MainPageSwiper />
-        <PopupComponent />
       </Stack>
 
       <Stack
@@ -146,7 +144,7 @@ const Main: React.FC = () => {
         data={hitData}
         error={hitError}
         loading={loadingHit}
-        label={t("navbar.novinki")}
+        label={t("home.hits")}
       />
       {!adviceBlogerError &&
         !loadingAdviceBloger &&

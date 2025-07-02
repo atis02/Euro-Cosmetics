@@ -4,8 +4,9 @@ import { FC } from "react";
 
 interface Props {
   isMobile: boolean;
+  func:()=>void
 }
-const CustomFilterButton: FC<Props> = ({ isMobile }) => {
+const CustomFilterButton: FC<Props> = ({ isMobile ,func}) => {
   return (
     <Button
       sx={{
@@ -27,6 +28,7 @@ const CustomFilterButton: FC<Props> = ({ isMobile }) => {
           color: mainColor,
         },
       }}
+      onClick={func}
     >
       <svg viewBox="0 0 20 18" style={{ width: 20, height: 20 }}>
         <path

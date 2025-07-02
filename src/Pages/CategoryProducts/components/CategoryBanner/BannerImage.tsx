@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { FC } from "react";
-import { BASE_URL } from "../../../Fetcher/swrConfig";
+import { BASE_URL } from "../../../../Fetcher/swrConfig";
 interface Props {
   image: string;
   isMobile: boolean;
@@ -8,7 +8,7 @@ interface Props {
 const BannerImage: FC<Props> = ({ isMobile, image }) => {
   return (
     <Stack
-      height={isMobile ? 200 : "60vh"}
+      height={isMobile ? 300 : "60vh"}
       zIndex={10}
       position="absolute"
       left={0}

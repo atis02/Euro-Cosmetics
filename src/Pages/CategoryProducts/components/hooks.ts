@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "../../../Fetcher/swrConfig";
-import { Brands, Category, Segment, Status, Subcategory } from "../../../Components/Navbar/ui/NavCategories/interfaces";
+import { Brands, Category, Status, Subcategory } from "../../../Components/Navbar/ui/NavCategories/interfaces";
 
 export const getBrands = async () => {
     const res = await axios.post(`${BASE_URL}/brands/fetch/admin`);
@@ -25,7 +25,3 @@ export const  getGiftCards = async () => {
     return res.data.subCategories as Subcategory[];
   };
 
- export const getSegments = async () => {
-    const res = await axios.get(`${BASE_URL}/segments/fetch/client`);
-    return res.data.segments as Segment[];
-  };

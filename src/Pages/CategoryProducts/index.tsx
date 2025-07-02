@@ -1,7 +1,7 @@
 import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CustomContainerAll } from "../../Components/utils/CustomContainerAll";
-import BannerImage from "./components/BannerImage";
-import BannerImageText from "./components/BannerImageText";
+import BannerImage from "./components/CategoryBanner/BannerImage";
+import BannerImageText from "./components/CategoryBanner/BannerImageText";
 import SubCategories from "./components/SubCategories";
 import Products from "./components/Products/Products";
 import SortProducts from "./components/Products/components/SortProducts";
@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Category,
-  Segment,
   Status,
   Subcategory,
 } from "../../Components/Navbar/ui/NavCategories/interfaces";
@@ -23,12 +22,12 @@ import {
   getBrands,
   getCategories,
   getGiftCards,
-  getSegments,
   getStatuses,
   getSubCategories,
 } from "./components/hooks";
 import { useTranslation } from "react-i18next";
 import { CategoryLoader } from "./CategoryLoader";
+import DrawerFilters from "./components/DrawerFilter/DrawerFilters";
 
 interface Props {
   products: any[];
@@ -38,20 +37,20 @@ const Index = () => {
   const [status, setStatus] = useState<Status | null>(null);
   const [products, setProducts] = useState<Props>();
   const [category, setCategory] = useState<Category>();
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [subCategory, setSubCategory] = useState<Subcategory | null>(null);
-  const [segment, setSegment] = useState<Segment | null>(null);
-  const [subCategoryList, setSubCategoryList] = useState<
-    Subcategory[] | Segment[] | null
-  >(null);
+  const [subCategoryList, setSubCategoryList] = useState<Subcategory[] | null>(
+    null
+  );
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [getDiscount, setGetDiscount] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("currentSellPrice-asc");
+
+  console.log(selectedSort.split('-'));
+  
   const { t } = useTranslation();
-  const {
-    categoryName,
-    subCategoryName,
-    segmentName,
-    statusName,
-    searchedValue,
-    brandId,
-  } = useParams();
+  const { categoryName, subCategoryName, statusName, searchedValue, brandId } =
+    useParams();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -60,7 +59,6 @@ const Index = () => {
   const fetchProducts = async (params: {
     categoryId?: number | null;
     subCategoryId?: number | null;
-    segmentId?: number | null;
     productStatusId?: number | null;
     query?: string | null;
     brandId?: string | null | undefined;
@@ -68,18 +66,31 @@ const Index = () => {
     limit?: number | null;
     page?: number | null;
     discount?: boolean | null;
+    minPrice?: number;
+    maxPrice?: number;
+    sortBy?: string;
+    order?: string;
   }) => {
     try {
       const res = await axios.post(`${BASE_URL}/products/client`, params);
+      console.log(res.data);
+
       if (params.discount == true) {
         const filtered = res.data?.products.filter(
           (item: any) => item.discountValue >= 50
         );
         setProducts({ products: filtered });
+      } else if (res.data.message == "Товары не были найдены.") {
+        setProducts({ products: [] });
       } else {
         setProducts(res.data);
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message === "Request failed with status code 404") {
+          setProducts({ products: [] });
+        }
+      }
       console.error("Ошибка при загрузке продуктов:", error);
     }
   };
@@ -87,15 +98,14 @@ const Index = () => {
   useEffect(() => {
     setCategory(undefined);
     setSubCategory(null);
-    setSegment(null);
     setStatus(null);
-  }, [categoryName, subCategoryName, segmentName]);
+  }, [categoryName, subCategoryName]);
 
   useEffect(() => {
     const fetchSubCategoryList = async () => {
-      if (category?.SubCategories?.length && !subCategoryName && !segmentName) {
+      if (category?.SubCategories?.length && !subCategoryName) {
         setSubCategoryList(category.SubCategories);
-      } else if (subCategory?.id && !segmentName && !loading) {
+      } else if (subCategory?.id && !loading) {
         try {
           const res = await axios.get(
             `${BASE_URL}/subcategories/fetch/single/${subCategory.id}`
@@ -110,7 +120,7 @@ const Index = () => {
     };
 
     fetchSubCategoryList();
-  }, [category, subCategory, subCategoryName, segmentName, loading]);
+  }, [category, subCategory, subCategoryName, , loading]);
 
   useEffect(() => {
     const fetchAndFilter = async () => {
@@ -183,25 +193,11 @@ const Index = () => {
         }
 
         // Сегмент
-        let segId: number | null = null;
-        if (segmentName) {
-          const segments = await getSegments();
-          const foundSegment = segments.find(
-            (s) =>
-              s.nameRu === segmentName &&
-              (!subCatId || s.SubCategory?.nameRu === subCategoryName)
-          );
-          if (foundSegment) {
-            segId = Number(foundSegment.id);
-            setSegment(foundSegment);
-          }
-        }
 
         // Получаем продукты
         await fetchProducts({
           categoryId: foundCategory.id,
           subCategoryId: subCatId,
-          segmentId: segId,
           productStatusId: statusName ? Number(statusName) : null,
           brandId: brandId,
         });
@@ -215,14 +211,30 @@ const Index = () => {
     if (categoryName || statusName || searchedValue || brandId) {
       fetchAndFilter();
     }
-  }, [
-    categoryName,
-    subCategoryName,
-    segmentName,
-    statusName,
-    searchedValue,
-    brandId,
-  ]);
+  }, [categoryName, subCategoryName, statusName, searchedValue, brandId]);
+  useEffect(() => {
+    const runFilters = async () => {
+      const [sortBy, order] = selectedSort.split("-");
+
+      const filters: any = {
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+      };
+      filters.sortBy = sortBy
+      filters.order = order
+      if (getDiscount) {
+        filters.hasDiscount = true;
+      }
+
+      // Add other filters as needed (like categoryId, etc.)
+      if (category?.id) filters.categoryId = category.id;
+      if (subCategory?.id) filters.subCategoryId = subCategory.id;
+
+      await fetchProducts(filters);
+    };
+
+    runFilters();
+  }, [priceRange, getDiscount, category, subCategory,selectedSort]);
 
   // Loader
   if (loading) {
@@ -266,7 +278,6 @@ const Index = () => {
               isTablet={isTablet}
               category={category}
               subCategory={subCategory ?? undefined}
-              segment={segment ?? undefined}
               text={status?.nameRu}
             />
           </Stack>
@@ -281,8 +292,22 @@ const Index = () => {
         alignItems="center"
         spacing={3}
       >
-        <CustomFilterButton isMobile />
-        {!isMobile && <SortProducts />}
+        <CustomFilterButton isMobile func={() => setIsFilterDrawerOpen(true)} />
+        <DrawerFilters
+          isFilterDrawerOpen={isFilterDrawerOpen}
+          setIsFilterDrawerOpen={setIsFilterDrawerOpen}
+          setPriceRange={setPriceRange}
+          priceRange={priceRange}
+          setGetDiscount={setGetDiscount}
+          getDiscount={getDiscount}
+          productsLength={products?.products?.length ?? 0}
+        />
+        {!isMobile && (
+          <SortProducts
+            selectedSort={selectedSort}
+            setSelectedSort={setSelectedSort}
+          />
+        )}
         <Stack alignItems="center" width={isMobile ? "55%" : "auto"}>
           <CountUp
             end={products?.products?.length ?? 0}

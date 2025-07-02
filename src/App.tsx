@@ -17,6 +17,7 @@ import Brands from "./Pages/Brands";
 import { ScrollToTop } from "./Components/utils/ScrollToTop";
 import { IsMainPage } from "./Components/utils/IsMainPage";
 import "react-loading-skeleton/dist/skeleton.css";
+import PopupComponent from "./Components/Popup";
 
 function App() {
   const theme = useTheme();
@@ -34,14 +35,14 @@ function App() {
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-      width:"100%"
-
+          width: "100%",
         }}
       >
         <BrowserRouter>
           <Navbar />
           <Toaster />
           <ScrollToTop />
+          <PopupComponent />
           <IsMainPage />
           {isMobile ? (
             <ToastContainer
@@ -74,7 +75,10 @@ function App() {
             <Route path="/brands/:brandId" element={<CategoryProducts />} />
             <Route path="/news/:statusName" element={<CategoryProducts />} />
             <Route path="/sales/:statusName" element={<CategoryProducts />} />
-            <Route path="/giftCard/:statusName" element={<CategoryProducts />} />
+            <Route
+              path="/giftCard/:statusName"
+              element={<CategoryProducts />}
+            />
             <Route
               path="/category/:categoryName"
               element={<CategoryProducts />}

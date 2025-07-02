@@ -28,6 +28,11 @@ export const ProductStatuses = ({ item }: Props) => {
           <img src="/images/new.png" style={{ width: 30, height: 30 }} alt="" />
         </Stack>
       )}
+       {item.Status?.id == 2 && (
+        <Stack>
+          <img src="/images/hit.png" style={{ width: 30, height: 30 }} alt="" />
+        </Stack>
+      )}
     </Stack>
   );
 };
